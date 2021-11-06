@@ -1,0 +1,289 @@
+body
+{
+    background-color: #f5dec5;
+}
+
+/* Chrome, Safari, Edge, Opera*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.front_card
+{
+    background-color: rgba(0, 0, 0, 0.09);
+    font-family:cursive;
+}
+
+
+/*form*/
+
+
+.card_form{
+    background-color: #fdfdfda8;
+
+}
+
+legend
+{
+    font-family:cursive;
+    font-size:20pt;
+}
+
+input[readonly]{
+    background-color:#ffffff!important;
+}
+
+/*form label*/
+.ln
+{
+    font-size: 15pt;
+    font-family: serif;
+}
+
+.form-control.no-validate:valid {
+    border-color: #ced4da;
+    padding-right: .75rem;
+    background: #ffffff;
+}
+
+/*buttons*/
+.btn_find
+{
+    background: rgba(255, 234, 171, 0.77) ;
+}
+
+.btn_find:hover{
+    background: rgb(255, 234, 171);
+}
+
+.btn_find_all
+{
+    background: rgba(181, 185, 206, 0.75);
+}
+
+.btn_find_all:hover{
+    background: rgb(181, 185, 206);
+}
+
+.btn_add
+{
+    background: rgba(147, 212, 133, 0.67);
+}
+
+.btn_add:hover{
+
+    background: rgb(147, 212, 133);
+}
+
+.btn_form_add
+{
+    background: rgba(145, 228, 127, 0.83)
+}
+
+.btn_form_add:hover{
+    background: rgb(157, 247, 138);
+}
+
+.btn_form_safe
+{
+    background: rgba(255, 175, 67, 0.78);
+}
+
+.btn_form_safe:hover{
+    background: rgb(255, 175, 67);
+}
+
+/*circle return btn*/
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+
+.btn-circle.btn-lg {
+    width: 45px;
+    height: 45px;
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33;
+    border-radius: 25px;
+    background-color: rgb(212 133 133);
+}
+.ar
+{
+    color: #ffffff;
+    font-size:1.8rem;
+}
+
+#return {
+    position: absolute;
+    margin-top: 7px;
+    margin-left: 8px;
+}
+
+#add{
+    position: absolute;
+    bottom: 5%;
+    right: 24%;
+
+}
+
+.dang
+{
+    font-size:1.6rem;
+}
+
+
+
+/*nav*/
+header{
+    background-color: rgb(210 193 193);
+}
+
+.logo {
+    font-family: "Exo2-Bold", cursive, sans-serif;
+    font-size: 40px;
+    text-decoration: none;
+}
+
+.navbar-nav > li{
+    margin-left:10px;
+    margin-right:10px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.nav-item a{
+    font-family: "JetBrains Mono";
+    font-size: 21px;
+}
+
+.nav-item a:after {
+    background-color: #ffffff;
+    display: block;
+    content: "";
+    height: 3px;
+    width: 15px;
+    -webkit-transition: width .3s ease-in-out;
+    -moz--transition: width .3s ease-in-out;
+    transition: width .3s ease-in-out;
+}
+.nav-item a:hover:after,
+.nav-item a:focus:after {
+    width: 100%;
+}
+
+/* for custom scrollbar for webkit browser. not working with firefox*/
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+/*h*/
+h1{
+    font-size: 30px;
+    color: #000000;
+    font-weight: 500;
+    text-align: center;
+    font-family:serif;
+}
+
+h2{
+    font-weight: 600;
+    color: #000000;
+    text-align: center;
+    font-family:serif;
+}
+
+
+/*table*/
+.my-custom-scrollbar {
+    position: relative;
+    height: 310px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: rgb(236 225 225);
+    font-weight:normal;
+    font-family:serif;
+    font-size: 14pt;
+}
+
+td
+{
+    border-bottom: 1px solid rgb(250, 180, 180);
+}
+
+tr{
+    background: #ffffff;
+}
+
+tr:hover{
+    background: #fff6e7;
+    cursor: pointer;
+}
+
+#medicine_table:hover{
+    background: #ffffff;
+}
+
+/*choose_form_style*/
+.border {
+    list-style: none;
+    padding: 0;
+    border:none !important;
+}
+.border li {
+    font-family: "Trebuchet MS", "Lucida Sans";
+    padding: 7px 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 10px solid #8bc63e;
+    font-size: 20px;
+    letter-spacing: 2px;
+    transition: 0.3s all linear;
+    background-color: white;
+
+    box-shadow: 2px -2px 5px 0 rgb(236 227 227),
+    -2px -2px 5px 0 rgb(236 227 227),
+    2px 2px 5px 0 rgb(236 227 227),
+    -2px 2px 5px 0 rgb(241, 183, 183);
+}
+.border li:nth-child(2){border-color: #f05d22; }
+
+.border li:hover {border-left: 10px solid transparent;}
+.border li:nth-child(1):hover {border-right: 10px solid #8bc63e;}
+.border li:nth-child(2):hover {border-right: 10px solid  #f05d22;}
+
+.border a {
+    color: #000000;
+    text-decoration: none;
+    display:block;
+}
+
+

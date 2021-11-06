@@ -1,0 +1,126 @@
+/*nav*/
+
+.responsive__offer-icon{
+    display: inline-block;
+    color: #343a40;
+}
+
+.responsive__offer:hover  > *{
+    color: #000000;
+}
+
+
+
+.responsive__offer-text{
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+    color: #343a40;
+    display: inline-block;
+}
+
+.c{
+    /*font-size: 26px;
+    margin-right: 10px;*/
+
+    vertical-align: middle;
+
+}
+
+
+h2{
+    font-family: "Exo2-Bold", cursive, sans-serif;
+}
+/*table*/
+td, th {
+    padding: 5px;
+    text-align:center;
+
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 310px;
+    overflow: auto;
+}
+
+.table-wrapper-scroll-y {
+    display: block;
+}
+
+.tableFixHead thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    background-color: #646467;
+    color:#ffffff;
+    font-weight:normal;
+    font-family:serif;
+    font-size: 14pt;
+}
+
+/*btn*/
+.btn_find
+{
+    background: rgba(255, 234, 171, 0.77) ;
+}
+
+.btn_find:hover{
+    background: rgb(255, 234, 171);
+}
+
+.btn_find_all
+{
+    background: rgba(181, 185, 206, 0.75);
+}
+
+.btn_find_all:hover{
+    background: rgb(181, 185, 206);
+}
+
+
+.btn_add
+{
+    background: rgba(147, 212, 133, 0.67);
+}
+
+.btn_add:hover{
+
+    background: rgb(147, 212, 133);
+}
+
+.btn_edit_form
+{
+    background-color: #ffc1077a;
+}
+
+.btn_edit
+{
+    background-color: #ffc1077a;
+    border-color:#ffc107;
+}
+
+.btn_edit:hover
+{
+    background-color: #ffc107;
+
+}
+
+.btn_delete
+{
+    background-color: #dc35458a;
+
+}
+
+.btn_delete:hover
+{
+    background-color: #dc3545;
+
+}
+
+/*from*/
+.ln
+{
+    font-size: 15pt;
+    font-family: serif;
+}
