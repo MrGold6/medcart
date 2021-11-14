@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="<c:url value="/res/style.css"/>">
     <link rel="icon" type="image/png" href="<c:url value="/res/medicine.png"/>"/>
 
-    <title>Visits</title>
+    <title>Doctors</title>
 </head>
 
 <body style="background-color: #ffffff;">
@@ -38,6 +38,7 @@
                             <li class="nav-item ">
                                 <a class="nav-link link active" aria-current="page" href= '/logout'>Вийти</a>
                             </li>
+
                             <li class="nav-item">
                                 <a class="nav-link link active" href= '/patient/directions'>Доступні лікарі</a>
                             </li>
@@ -49,6 +50,7 @@
                             <li class="nav-item ">
                                 <a class="nav-link link active" aria-current="page" href= '/patient/'>Медична карта</a>
                             </li>
+
 
                             <li class="nav-item">
                                 <a class="nav-link link active" href= '/patient/profile'>${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.</a>
@@ -67,43 +69,38 @@
 
             <div style="background-color: #ffffff;">
                 <content>
-
-                    <h1 class="pt-4">Електронна медична картка. Пацієнт: ${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.  </h1>
-                    <h2 class="text-center">Список візитів</h2>
-
-                    <c:if test="${!visitsList.isEmpty()}">
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-                        <table class="table tableFixHead">
-                            <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Діагноз</th>
-                                <th>Лікар</th>
-                                <th>Виписані ліки</th>
-                            </tr>
-                            </thead>
+                    <h2 class="text-center">Список доступних лікарів</h2>
 
 
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
-                            <tbody>
-                            <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/patient/${visit.number}/visit'/>"'>
-                                    <td>${visit.date}</td>
-                                    <td>${visit.disease.name}</td>
-                                    <td>${visit.doctor.specialization.name}</td>
-                                    <td>${empty visit.medicine ? "-" : visit.medicine }</td>
+                            <table class="table tableFixHead">
+                                <thead>
+                                <tr>
+                                    <th>Спеціалізація</th>
+
                                 </tr>
-                            </c:forEach>
+                                </thead>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    </c:if>
+                                <tbody>
 
-                    <c:if test="${visitsList.isEmpty()}">
-                        <h2 class="pt-5"><em><center>Візитів немає</center></em></h2>
-                    </c:if>
+                                <c:if test="${exist==false}">
+
+                                    <tr onclick='document.location="<c:url value='/patient/${1}/doctorsBySpecialization'/>"'>
+                                        <td>Сімейний лікар</td>
+                                    </tr>
+                                </c:if>
+
+                                <c:forEach var="directions" items="${directionsList}" varStatus="i">
+                                    <tr onclick='document.location="<c:url value='/patient/${directions.specialization.id}/doctorsBySpecialization'/>"'>
+                                        <td>${directions.specialization.name}</td>
+                                    </tr>
+                                </c:forEach>
+
+
+                                </tbody>
+                            </table>
+                        </div>
 
 
                 </content>

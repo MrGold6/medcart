@@ -43,11 +43,13 @@
                             <li class="nav-item ">
                                 <a class="nav-link link active" aria-current="page" href= '/logout'>Вийти</a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link link active" href= '/patients'>Пацієнти</a>
+                                <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
                             </li>
+
                             <li class="nav-item">
-                                <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
+                                <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization.name} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
                             </li>
 
                         </ul>

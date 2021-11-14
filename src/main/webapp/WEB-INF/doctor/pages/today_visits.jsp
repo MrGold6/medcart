@@ -38,22 +38,12 @@
                             <li class="nav-item ">
                                 <a class="nav-link link active" aria-current="page" href= '/logout'>Вийти</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link link active" href= '/patient/directions'>Доступні лікарі</a>
-                            </li>
 
                             <li class="nav-item">
-                                <a class="nav-link link active" href= '/patient/allActiveVisits'>Мої записи</a>
-                            </li>
-
-                            <li class="nav-item ">
-                                <a class="nav-link link active" aria-current="page" href= '/patient/'>Медична карта</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link link active" href= '/patient/profile'>${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.</a>
+                                <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization.name} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
                             </li>
 
                         </ul>
@@ -68,43 +58,46 @@
             <div style="background-color: #ffffff;">
                 <content>
 
-                    <h1 class="pt-4">Електронна медична картка. Пацієнт: ${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.  </h1>
                     <h2 class="text-center">Список візитів</h2>
 
-                    <c:if test="${!visitsList.isEmpty()}">
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-                        <table class="table tableFixHead">
-                            <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Діагноз</th>
-                                <th>Лікар</th>
-                                <th>Виписані ліки</th>
-                            </tr>
-                            </thead>
-
-
-
-                            <tbody>
-                            <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/patient/${visit.number}/visit'/>"'>
-                                    <td>${visit.date}</td>
-                                    <td>${visit.disease.name}</td>
-                                    <td>${visit.doctor.specialization.name}</td>
-                                    <td>${empty visit.medicine ? "-" : visit.medicine }</td>
-                                </tr>
-                            </c:forEach>
-
-                            </tbody>
-                        </table>
+                    <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">
+                        <form class="d-flex" id="search" method="GET" action="/visitsByDay">
+                            <input class="form-control me-2 shadow bg-body rounded rounded-pill border-0" id="search_input" type="date" name="date" placeholder="номер телефону"  required>
+                            <button class="btn btn_find mx-2" id="search_button" type="submit">Знайти</button>
+                            <a href="/today_visits" class="btn btn_find_all">Cьогодні</a>
+                        </form>
                     </div>
+
+                    <c:if test="${!visitsList.isEmpty()}">
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table class="table tableFixHead">
+                                <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Діагноз</th>
+
+                                </tr>
+                                </thead>
+
+
+
+                                <tbody>
+                                <c:forEach var="visit" items="${visitsList}" varStatus="i">
+                                    <tr onclick='document.location="<c:url value='/${visit.number}/visits'/>"'>
+                                        <td>${visit.date}</td>
+                                        <td>${visit.patient.name}</td>
+                                    </tr>
+                                </c:forEach>
+
+                                </tbody>
+                            </table>
+                        </div>
                     </c:if>
 
                     <c:if test="${visitsList.isEmpty()}">
                         <h2 class="pt-5"><em><center>Візитів немає</center></em></h2>
                     </c:if>
-
 
                 </content>
                 <footer></footer>

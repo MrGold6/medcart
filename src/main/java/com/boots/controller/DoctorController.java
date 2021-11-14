@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,15 +41,7 @@ public class DoctorController {
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
         int year = cal.get(Calendar.YEAR);
-        String str= day+"."+month+"."+year;
-        return str;
-    }
-
-    public java.sql.Date currentDate()
-    {
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date currentDate = calendar.getTime();
-        return new java.sql.Date(currentDate.getTime());
+        return day+"."+month+"."+year;
     }
 
     public Long getIdPatientSplit(String id_visit)
@@ -71,13 +64,15 @@ public class DoctorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doctor", doctor);
-        modelAndView.addObject("visitsList", doctor.getVisits());
+        modelAndView.addObject("visitsList", doctor.getDoneVisits());
+       // modelAndView.addObject("schedules", doctor.getSchedules());
+
         modelAndView.setViewName("doctor/pages/doctor");
 
         return modelAndView;
     }
 
-    //patients
+    /*
     @RequestMapping(value = "/patients", method = RequestMethod.GET)
     public ModelAndView allPatientsPage() {
         List<Patient> patients = patientService.allPatients();
@@ -89,6 +84,7 @@ public class DoctorController {
         modelAndView.setViewName("doctor/pages/patients");
         return modelAndView;
     }
+
 
     @RequestMapping(value = "/patients/searchTelephone_number", method = RequestMethod.GET)
     public ModelAndView allPatientsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
@@ -102,58 +98,93 @@ public class DoctorController {
         return modelAndView;
     }
 
+*/
 
-
-    @RequestMapping(value = "/{id_patient}/visits/edit_patient", method = RequestMethod.GET)
-    public ModelAndView editPagePatient(@PathVariable("id_patient") Long id_patient,
+    @RequestMapping(value = "/{id_visit}/visits/edit_patient", method = RequestMethod.GET)
+    public ModelAndView editPagePatient(@PathVariable("id_visit") String id_visit,
                                         @ModelAttribute("message") String message) {
-        Patient patient = patientService.getById(id_patient);
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("doctor/form/edit_form/edit_patient");
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("id_patient", id_patient);
+        modelAndView.addObject("id_visit", id_visit);
         return modelAndView;
     }
 
     @RequestMapping(value = "/edit_patient", method = RequestMethod.POST)
-    public ModelAndView editPatient(@ModelAttribute("patient") Patient patient, @ModelAttribute("sex") String sex) {
+    public ModelAndView editPatient(@ModelAttribute("patient") Patient patient,
+                                    @ModelAttribute("sex") String sex,
+                                    @ModelAttribute("id_visit") String id_visit) {
         patient.setSex(Integer.parseInt(sex));
         patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+patient.getRNTRC()+"/visits");
+        modelAndView.setViewName("redirect:/"+id_visit+"/visits");
 
         return modelAndView;
     }
 
     //visits
-
-    @RequestMapping(value = "/{id_patient}/visits", method = RequestMethod.GET)
-    public ModelAndView allVisits(@PathVariable("id_patient") Long id) {
+    @RequestMapping(value = "/today_visits", method = RequestMethod.GET)
+    public ModelAndView today_Visits() {
         Doctor doctor=getAuthDoc();
-        Patient patient = patientService.getById(id);
 
         ModelAndView modelAndView = new ModelAndView();
 
+        modelAndView.addObject("visitsList", doctor.getActiveVisitsByDay(LocalDate.now()));
+        modelAndView.addObject("doctor", doctor);
+
+
+        modelAndView.setViewName("doctor/pages/today_visits");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/visitsByDay", method = RequestMethod.GET)
+    public ModelAndView visitsByDay(@ModelAttribute("date1") String date) {
+        Doctor doctor=getAuthDoc();
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("visitsList", doctor.getActiveVisitsByDay(Date.valueOf(date).toLocalDate()));
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.setViewName("doctor/pages/today_visits");
+
+        return modelAndView;
+    }
+
+
+
+    @RequestMapping(value = "/{id_visit}/visits", method = RequestMethod.GET)
+    public ModelAndView allVisits(@PathVariable("id_visit") String id_visit) {
+        Doctor doctor=getAuthDoc();
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("isActive", !patient.findVisit(id_visit).getStatus());
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("visitsList", patient.getVisits());
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("visitsList", patient.getDoneVisits());
         modelAndView.addObject("doctor", doctor);
         modelAndView.setViewName("doctor/pages/visits");
 
         return modelAndView;
     }
 
-    @RequestMapping(value = "/{id_patient}/add_visit", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_visit}/add_visit", method = RequestMethod.GET)
     public ModelAndView addPageVisit(@ModelAttribute("message") String message,
-                                     @PathVariable("id_patient") Long id){
+                                     @PathVariable("id_visit") String id_visit){
         List<Disease> diseases = patientService.allDiseases();
+        Patient patient= patientService.getById(getIdPatientSplit(id_visit));
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("visit", new Visit());
+        modelAndView.addObject("visit",  patient.findVisit(id_visit));
+        modelAndView.addObject("id_visit", id_visit);
         modelAndView.addObject("diseasesList", diseases);
-        modelAndView.addObject("id_patient",id);
         modelAndView.addObject("notes", "");
+
         modelAndView.setViewName("doctor/form/create_form/new_visit");
 
         return modelAndView;
@@ -163,43 +194,85 @@ public class DoctorController {
     public ModelAndView addVisit(@ModelAttribute("visit") Visit visit,
                                  @ModelAttribute("selected_disease") String selected_disease,
                                  @ModelAttribute("notes") String notes,
-                                 @ModelAttribute("id_patient") Long id) {
+                                 @ModelAttribute("id_visit") String id_visit) {
         Doctor doctor=getAuthDoc();
-        Patient patient = patientService.getById(id);
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Disease disease = patientService.getByIdDisease(selected_disease);
-
-        String id_visit=(patient.getVisits().size()+1) +"_"+patient.getRNTRC();
         visit.setNumber(id_visit);
 
         if(notes==null)
             visit.setNotes("");
 
-        visit.setDate(currentDate());
-        visit.setPatient(patient);
         visit.setDoctor(doctor);
+        visit.setPatient(patient);
         visit.setDisease(disease);
+        visit.setStatus(true);
         patient.addVisit(visit);
 
         patientService.add(patient);
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_med");
+        if(doctor.getSpecialization() == doctorService.getByIdSpecialization(1))
+            modelAndView.setViewName("redirect:/"+visit.getNumber()+"/choose_action_direction");
+        else
+            modelAndView.setViewName("redirect:/"+visit.getNumber()+"/choose_action_med");
+
 
         return modelAndView;
     }
 
-    @RequestMapping(value = "{id_patient}/{id_visit}/visit", method = RequestMethod.GET)
+    @RequestMapping(value = "{id_c_visit}/{id_visit}/visit", method = RequestMethod.GET)
     public ModelAndView PageVisit(@ModelAttribute("message") String message,
                                   @PathVariable("id_visit") String id_visit,
-                                  @PathVariable("id_patient") Long id) {
-        Patient patient = patientService.getById(id);
+                                  @PathVariable("id_c_visit") String id_c_visit) {
+
+        Patient patient = patientService.getById(getIdPatientSplit(id_c_visit));
         Visit visit = patient.findVisit(id_visit);
 
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_c_visit);
         modelAndView.addObject("visit", visit);
-        modelAndView.addObject("id_patient", id);
         modelAndView.setViewName("doctor/pages/visit");
+
+        return modelAndView;
+    }
+//direction
+    @RequestMapping(value = "/{id_visit}/choose_action_direction", method = RequestMethod.GET)
+    public ModelAndView choose_actionPageDirection(@ModelAttribute("message") String message,
+                                                   @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("doctor/form/choose_form/choose_action_direction");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/add_new_direction", method = RequestMethod.GET)
+    public ModelAndView addPageDirection(@ModelAttribute("message") String message,
+                                         @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("direction", new Direction());
+        modelAndView.setViewName("doctor/form/create_form/direction");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_direction", method = RequestMethod.POST)
+    public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
+                                     @ModelAttribute("direction") Direction direction,
+                                     @ModelAttribute("id_visit") String id_visit) {
+        Patient patient =  patientService.getById(getIdPatientSplit(id_visit));
+        String id_direction=(patient.getDirections().size()+1) +"_"+patient.getRNTRC();
+
+        direction.setNumber(id_direction);
+        direction.setSpecialization(doctorService.getByIdSpecialization(selected_spec));
+        direction.setStatus(true);
+        patient.addDirection(direction);
+        patientService.add(patient);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_med");
 
         return modelAndView;
     }
@@ -287,7 +360,6 @@ public class DoctorController {
     public ModelAndView choose_actionPageSickLeave(@ModelAttribute("message") String message,
                                                    @PathVariable("id_visit") String id_visit){
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("id_patient", getIdPatientSplit(id_visit));
         modelAndView.setViewName("doctor/form/choose_form/choose_action_sickLeave");
         return modelAndView;
     }
@@ -320,8 +392,7 @@ public class DoctorController {
     public ModelAndView addSickLeave(@ModelAttribute("selected_disease1") String selected_disease1,
                                      @ModelAttribute("sick_leaveJSP") Sick_leave sick_leave,
                                      @ModelAttribute("id_visit") String id_visit) {
-        Long id_patient=getIdPatientSplit(id_visit);
-        Patient patient = patientService.getById(id_patient);
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
         Disease disease =patientService.getByIdDisease(selected_disease1);
 
@@ -331,19 +402,19 @@ public class DoctorController {
         sick_leave.setStart_disease(disease);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+id_patient+"/sick_leave");
+        modelAndView.setViewName("redirect:/"+id_visit+"/sick_leave");
 
         return modelAndView;
     }
 
-    @RequestMapping(value = "/{id_patient}/sick_leave", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id_visit}/sick_leave", method = RequestMethod.GET)
     public ModelAndView SickLeave(@ModelAttribute("message") String message,
                                   @ModelAttribute("recipeJSP") Recipe recipe,
                                   @ModelAttribute("sick_leaveJSP") Sick_leave sick_leave,
-                                  @PathVariable("id_patient") Long id){
+                                  @PathVariable("id_visit") String id_visit){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("sick_leave", sick_leave);
-        modelAndView.addObject("id_patient",id);
+        modelAndView.addObject("id_visit", id_visit);
         modelAndView.addObject("date",dateToString(sick_leave.getVisit().getDate()));
         modelAndView.addObject("start_date",dateToString(sick_leave.getStart_date()));
         modelAndView.setViewName("doctor/document/sick_leave");

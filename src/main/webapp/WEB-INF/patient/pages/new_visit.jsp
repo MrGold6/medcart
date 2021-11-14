@@ -35,61 +35,57 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/${id_visit}/visits/';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/patient/${doctor.specialization.id}/doctorsBySpecialization';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
 
-
                     <div class="card-body">
-                        <legend class="card-title text-center">Візит</legend>
-                        <form:form  method="POST" modelAttribute="visit" action="/add_visit_act">
-                            <input class="form-control" type="hidden" name="id_visit" value="${visit.number}">
+<legend class="card-title text-center">Візит</legend>
+                        <form:form  method="POST" modelAttribute="visit" action="/patient/add_visit_act">
 
-                            <input class="form-control" type="hidden" name="date" value="${visit.date}">
+                            <input name="id_doctor" type="hidden" value="${doctor.RNTRC}" maxlength="100" readonly>
+
+                            <input name="id_schedule" type="hidden" value="${schedule.id}" maxlength="100" readonly>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Діагноз:</label>
+                                <label class="col-sm-6 col-form-label ln">Дата:</label>
                                 <div class="col-sm-6">
-                                    <select  name="selected_disease"  class="form-select">
-                                        <c:forEach var="disease" items="${diseasesList}" varStatus="i">
-                                            <option value="${disease.ICD_10}">${disease.name}</option>
-                                        </c:forEach>
-                                    </select>
+                                         <input type="date" name="date" value="${date}" class="form-control" maxlength="20" data-inputmask="'alias': 'date','placeholder': '*'" readonly>
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Cкарги:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" name="complaints" value="${visit.complaints}" maxlength="50">
+                            <div class="row mb-9">
+                                <div>
+
+                                    <table class="table tableFixHead">
+                                        <thead>
+                                        <tr>
+                                            <th>Час</th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>${schedule.time}</td>
+                                        </tr>
+
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Проведені дії:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" name="actions" value="${visit.actions}" maxlength="100">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Нотатки:</label>
-                                <div class="col-sm-6">
-                                    <form:textarea path = "notes" class="form-control" rows = "3"/>
-
-                                </div>
-                            </div>
 
 
                             <c:set value="add_visit_act" var="add_visit_act"/>
                             <center>
-                            <input type="submit" id="in" name="${add_visit_act}" class="btn btn_form_add" value="Далі">
+                                <input type="submit" id="in" name="${add_visit_act}" class="btn btn_form_add" value="Далі">
                             </center>
                             <p>${message}</p>
 
-
                         </form:form >
+
+
                     </div>
                 </div>
             </div>

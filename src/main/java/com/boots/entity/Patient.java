@@ -36,14 +36,42 @@ public class Patient extends Human {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Visit> visits = new ArrayList <>();
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Direction> directions = new ArrayList <>();
+
     public Patient() {}
 
 
 
     public List<Visit> getVisits() {
-
         visits.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
         return visits;
+    }
+
+    public List<Visit> getDoneVisits() {
+        List<Visit> done = new ArrayList<>();
+        for (Visit visit : this.visits)
+            if(visit.getStatus())
+                done.add(visit);
+
+        done.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        return done;
+    }
+
+    public List<Visit> getActiveVisits() {
+        List<Visit> active = new ArrayList<>();
+        for (Visit visit : this.visits)
+            if(!visit.getStatus())
+                active.add(visit);
+        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        return active;
+    }
+
+    public boolean findActiveVisitBySpecialization(Specialization specialization) {
+        for (Visit visit : this.visits)
+            if((!visit.getStatus()) && visit.getDoctor().getSpecialization().getName().equals(specialization.getName()))
+                return true;
+        return false;
     }
 
     public void setVisits(List<Visit> visits) {
@@ -55,6 +83,57 @@ public class Patient extends Human {
 
         visit.setPatient(this);
         this.visits.add(visit);
+    }
+
+
+    public List<Direction> getDirections() {
+
+        return directions;
+    }
+
+    public List<Direction> getActiveDirections() {
+        List<Direction> active = new ArrayList<>();
+        for (Direction direction : this.directions)
+            if(direction.getStatus())
+                active.add(direction);
+        return active;
+    }
+
+
+    public void setDirections(List<Direction> directions) {
+
+        this.directions = directions;
+    }
+
+    public void addDirection(Direction direction1) {
+        boolean canAdd=true;
+
+        if (this.directions.isEmpty()) {
+            direction1.setPatient(this);
+            this.directions.add(direction1);
+        }
+
+        else {
+            for (Direction direction : this.directions)
+                if (direction.getStatus() && direction.getSpecialization().getName().equals(direction1.getSpecialization().getName())) {
+                    canAdd = false;
+                    break;
+                }
+
+            if(canAdd) {
+                direction1.setPatient(this);
+                this.directions.add(direction1);
+            }
+        }
+    }
+
+    public Direction findDirection(Specialization specialization) {
+
+        for (Direction direction :  this.directions)
+            if (direction.getStatus() && direction.getSpecialization().getName().equals(specialization.getName()))
+                return direction;
+
+        return null;
     }
 
     public Visit findVisit(String id)

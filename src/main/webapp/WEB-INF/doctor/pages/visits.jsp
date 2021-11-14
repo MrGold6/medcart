@@ -39,13 +39,14 @@
                                 <a class="nav-link link active" aria-current="page" href= '/logout'>Вийти</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link link active" href= '/patients'>Пацієнти</a>
+                                <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link link active" href= '/${id_visit}/visits/edit_patient'>Профіль пацієнта</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link link active" href= '/${id_patient}/visits/edit_patient'>Профіль пацієнта</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
+                                <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization.name} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
                             </li>
 
                         </ul>
@@ -80,10 +81,10 @@
 
                             <tbody>
                             <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/${id_patient}/${visit.number}/visit'/>"'>
+                                <tr onclick='document.location="<c:url value='/${id_visit}/${visit.number}/visit'/>"'>
                                     <td>${visit.date}</td>
                                     <td>${visit.disease.name}</td>
-                                    <td>${visit.doctor.specialization}</td>
+                                    <td>${visit.doctor.specialization.name}</td>
                                     <td>${empty visit.medicine ? "-" : visit.medicine }</td>
                                 </tr>
                             </c:forEach>
@@ -96,12 +97,13 @@
                     <c:if test="${visitsList.isEmpty()}">
                         <h2 class="pt-5"><em><center>Візитів немає</center></em></h2>
                     </c:if>
+                    <c:if test="${isActive==true}">
                     <center>
-                        <button onclick="document.location = '/${id_patient}/add_visit';" type="button" class="btn my-2 btn_add">
-                            Створити новий візит
+                        <button onclick="document.location = '/${id_visit}/add_visit';" type="button" class="btn my-2 btn_find">
+                            Розпочати візит
                         </button>
                     </center>
-
+                    </c:if>
                 </content>
                 <footer></footer>
             </div>

@@ -17,11 +17,11 @@
 <body>
 
   <sec:authorize access="hasRole('ROLE_DOCTOR1')">"
-    <c:redirect url="/patients"/>
+    <c:redirect url="/today_visits"/>
   </sec:authorize>
 
   <sec:authorize access="hasRole('ROLE_DOCTOR2')">"
-    <c:redirect url="/patients"/>
+    <c:redirect url="/today_visits"/>
   </sec:authorize>
 
 
