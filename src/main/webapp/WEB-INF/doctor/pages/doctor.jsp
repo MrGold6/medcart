@@ -23,7 +23,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/patients';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/today_visits';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
@@ -44,7 +44,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Спеціалізація:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="specialization" value="${doctor.specialization}" readonly>
+                                    <input type="text" class="form-control" placeholder="specialization" value="${doctor.specialization.name}" readonly>
 
                                 </div>
                             </div>
@@ -92,11 +92,19 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів::</label>
+                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів за цей місяць:</label>
                                 <div class="col-sm-6">
                                     <input type="number" class="form-control" placeholder="telephone_number" value="${visitsList.size()}" readonly>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів за сьогодні:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" placeholder="telephone_number" value="${todayVisitsList.size()}" readonly>
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Електронна пошта:</label>
                                 <div class="col-sm-6">
@@ -113,6 +121,8 @@
 
 
                         </div>
+
+
                     </div>
                 </div>
             </div>

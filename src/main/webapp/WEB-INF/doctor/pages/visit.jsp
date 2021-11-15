@@ -26,7 +26,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/${id_patient}/visits';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/${id_visit}/visits/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
@@ -54,7 +54,7 @@
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Спеціалізація лікаря:</label>
                                 <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="doctor" value="${visit.doctor.specialization}" readonly>
+                                    <input class="form-control" type="text" placeholder="doctor" value="${visit.doctor.specialization.name}" readonly>
                                 </div>
                             </div>
 

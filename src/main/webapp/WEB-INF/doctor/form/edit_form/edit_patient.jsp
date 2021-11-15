@@ -33,7 +33,7 @@
                 <div class="card card_form">
 
                             <div id="return">
-                                <button onclick="document.location = '/${id_patient}/visits';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                                <button onclick="document.location = '/${id_visit}/visits/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                                     <i class="bi bi-arrow-left ar"></i>
                                 </button>
                             </div>
@@ -43,6 +43,7 @@
                         <legend class="card-title text-center">Пацієнт</legend>
                         <c:url value="/edit_patient" var="editUrl"/>
                         <form action="${editUrl}" name="patient" method="POST">
+                            <input type="hidden" name="id_visit" value="${id_visit}">
 
 
                                 <div class="row mb-3">

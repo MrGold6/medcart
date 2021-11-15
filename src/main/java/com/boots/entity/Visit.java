@@ -24,6 +24,9 @@ public class Visit {
     @Column(name = "notes")
     private String notes;
 
+    @Column(name = "status")
+    private Boolean status;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "electronic_card", referencedColumnName = "RNTRC")
     private Patient patient;
@@ -31,6 +34,10 @@ public class Visit {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor", referencedColumnName = "RNTRC")
     private Doctor doctor;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="schedule")
+    private Schedule schedule;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ICD_10")
@@ -124,5 +131,21 @@ public class Visit {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 }

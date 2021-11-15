@@ -1,8 +1,6 @@
 package com.boots.service;
 
-import com.boots.entity.Doctor;
-import com.boots.entity.Patient;
-import com.boots.entity.User;
+import com.boots.entity.*;
 import com.boots.repository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +41,22 @@ public class DoctorService {
        return doctorFromDb.orElse(new Doctor());
 
    }
+    public  List<Doctor> doctorBySpecialization(Specialization specialization) {
+        return (List<Doctor>) em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
+                .setParameter("specialization", specialization).getResultList();
+    }
+
+    public Specialization getByIdSpecialization(int id) {
+
+        return (Specialization) em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
+                .setParameter("paramId", id).getSingleResult();
+    }
+
+    public List<Specialization> allSpecializations() {
+        return  (List<Specialization>) em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
+    }
+
+
     @Transactional
     public int doctorsCount() {
         return (int) doctorRepository.count();
@@ -52,7 +66,6 @@ public class DoctorService {
         return (Doctor) em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
                 .setParameter("user", user).getSingleResult();
     }
-
 /*
     public boolean checkRNTRC(String id) {
         if (em.createQuery("SELECT d FROM Doctor d WHERE d.RNTRC = :id", Doctor.class)

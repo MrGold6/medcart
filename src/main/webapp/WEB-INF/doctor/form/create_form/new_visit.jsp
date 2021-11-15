@@ -35,7 +35,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/${id_patient}/visits/';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/${id_visit}/visits/';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
@@ -44,8 +44,10 @@
                     <div class="card-body">
                         <legend class="card-title text-center">Візит</legend>
                         <form:form  method="POST" modelAttribute="visit" action="/add_visit_act">
-                            <input name="id_patient" type="hidden" value="${id_patient}" maxlength="100" readonly>
+                            <input class="form-control" type="hidden" name="id_visit" value="${visit.number}">
 
+                            <input class="form-control" type="hidden" name="date" value="${visit.date}">
+                            <input class="form-control" type="hidden" name="id_schedule" value="${visit.schedule.id}">
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Діагноз:</label>

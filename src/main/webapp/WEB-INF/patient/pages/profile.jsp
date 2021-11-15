@@ -33,7 +33,7 @@
                 <div class="card card_form">
 
                             <div id="return">
-                                <button onclick="document.location = '/patient';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                                <button onclick="document.location = '/patient/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                                     <i class="bi bi-arrow-left ar"></i>
                                 </button>
                             </div>
@@ -41,7 +41,7 @@
 
                     <div class="card-body">
                         <legend class="card-title text-center">Пацієнт</legend>
-                        <c:url value="/edit_patient" var="editUrl"/>
+                        <c:url value="/patient/edit_patient" var="editUrl"/>
                         <form action="${editUrl}" name="patient" method="POST">
 
 
@@ -55,21 +55,21 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Прізвище:</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="surname" class="form-control" placeholder="surname" value="${patient.surname}" readonly>
+                                        <input type="text" name="surname" class="form-control" placeholder="surname" value="${patient.surname}" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Ім'я:</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="name" class="form-control" placeholder="name" value="${patient.name}" maxlength="100" readonly>
+                                        <input type="text" name="name" class="form-control" placeholder="name" value="${patient.name}" maxlength="100" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">По-батькові:</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="middle_name" class="form-control" placeholder="middle_name" value="${patient.middle_name}" readonly>
+                                        <input type="text" name="middle_name" class="form-control" placeholder="middle_name" value="${patient.middle_name}" required>
                                     </div>
                                 </div>
 
@@ -98,21 +98,21 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Номер телефону:</label>
                                     <div class="col-sm-6">
-                                        <input type="number" name="telephone_number" class="form-control" value="${patient.telephone_number}" readonly>
+                                        <input type="number" name="telephone_number" class="form-control" value="${patient.telephone_number}" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Електронна пошта:</label>
                                     <div class="col-sm-6">
-                                        <input type="email"  name="email" class="form-control" value="${patient.email}" readonly>
+                                        <input type="email"  name="email" class="form-control" value="${patient.email}" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Адреса проживання:</label>
                                     <div class="col-sm-6">
-                                        <input type="text"  name="address" class="form-control" value="${patient.address}" readonly>
+                                        <input type="text"  name="address" class="form-control" value="${patient.address}" required>
                                     </div>
                                 </div>
 
@@ -144,7 +144,10 @@
                                     </div>
                                 </div>
 
-
+                            <c:set value="/patient/edit_patient" var="edit_patient"/>
+                            <center>
+                                <input type="submit" id="in"  class="btn btn_form_add" name="${edit_patient}" value="Змінити">
+                            </center>
 
 
                         </form>
