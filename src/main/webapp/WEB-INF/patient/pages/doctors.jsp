@@ -44,7 +44,7 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link link active" aria-current="page" href= '/patient/'>Медична карта</a>
+                                <a class="nav-link link active" aria-current="page" href= '/patient/1'>Медична карта</a>
                             </li>
 
                             <li class="nav-item">

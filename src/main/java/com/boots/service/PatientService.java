@@ -1,14 +1,13 @@
 package com.boots.service;
 
 import com.boots.entity.*;
-import com.boots.repository.DoctorRepository;
 import com.boots.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +29,16 @@ public class PatientService {
     public void delete(Patient patient) {
         patientRepository.delete(patient);
     }
+
+    @Transactional
+    public void deleteVisit(String id_visit) {
+
+        Query query = em.createQuery("DELETE FROM Visit d WHERE d.number= :id_visit");
+        query.setParameter("id_visit", id_visit);
+        int result = query.executeUpdate();
+
+    }
+
 
     public  Patient patientByUser(User user) {
         return (Patient) em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)

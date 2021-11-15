@@ -39,7 +39,7 @@
                                     <a href="/${id_visit}/add_sick_leave">Так</a>
                                 </li>
                                 <li>
-                                    <a href="/${id_visit}/visits">Ні</a>
+                                    <a href="/${id_visit}/visits/1">Ні</a>
                                 </li>
                             </ul>
                         </div>

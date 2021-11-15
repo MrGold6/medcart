@@ -47,7 +47,7 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link link active" aria-current="page" href= '/patient/'>Медична карта</a>
+                                <a class="nav-link link active" aria-current="page" href= '/patient/1'>Медична карта</a>
                             </li>
 
                             <li class="nav-item">
@@ -78,6 +78,7 @@
                                 <tr>
                                     <th>Дата</th>
                                     <th>Лікар</th>
+                                    <th>Дії</th>
                                 </tr>
                                 </thead>
 
@@ -85,9 +86,10 @@
 
                                 <tbody>
                                 <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                    <tr onclick='document.location="<c:url value='/${id_visit}/visit'/>"'>
+                                    <tr>
                                         <td>${visit.date}</td>
                                         <td>${visit.doctor.specialization.name}</td>
+                                        <td><a href="/patient/deleteVisit/${visit.number}"><i class="bi bi-x-lg"></i></a> </td>
                                     </tr>
                                 </c:forEach>
 

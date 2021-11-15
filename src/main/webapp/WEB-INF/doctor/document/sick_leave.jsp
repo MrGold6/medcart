@@ -45,7 +45,7 @@
                             <p>з <u>${start_date}</u> по <u>${date}</u>
                         </div>
                         <center>
-                            <a href="/${id_visit}/visits" class="btn btn_form_add">Далі</a>
+                            <a href="/${id_visit}/visits/1" class="btn btn_form_add">Далі</a>
                         </center>
                     </div>
                 </div>

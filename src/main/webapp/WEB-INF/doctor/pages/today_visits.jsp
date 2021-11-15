@@ -84,7 +84,7 @@
 
                                 <tbody>
                                 <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                    <tr onclick='document.location="<c:url value='/${visit.number}/visits'/>"'>
+                                    <tr onclick='document.location="<c:url value='/${visit.number}/visits/1'/>"'>
                                         <td>${visit.date}</td>
                                         <td>${visit.patient.name}</td>
                                     </tr>

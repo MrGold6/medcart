@@ -64,8 +64,11 @@ public class DoctorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doctor", doctor);
-        modelAndView.addObject("visitsList", doctor.getDoneVisits());
-       // modelAndView.addObject("schedules", doctor.getSchedules());
+        modelAndView.addObject("visitsList", doctor.getDoneVisitsByMonth(LocalDate.now()));
+        modelAndView.addObject("todayVisitsList", doctor.getDoneVisitsByDay(LocalDate.now()));
+
+
+        // modelAndView.addObject("schedules", doctor.getSchedules());
 
         modelAndView.setViewName("doctor/pages/doctor");
 
@@ -156,8 +159,9 @@ public class DoctorController {
 
 
 
-    @RequestMapping(value = "/{id_visit}/visits", method = RequestMethod.GET)
-    public ModelAndView allVisits(@PathVariable("id_visit") String id_visit) {
+    @RequestMapping(value = "/{id_visit}/visits/{sort_int}", method = RequestMethod.GET)
+    public ModelAndView allVisits(@PathVariable("id_visit") String id_visit,
+                                  @PathVariable("sort_int") int sort_int) {
         Doctor doctor=getAuthDoc();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
 
@@ -166,7 +170,7 @@ public class DoctorController {
         modelAndView.addObject("isActive", !patient.findVisit(id_visit).getStatus());
         modelAndView.addObject("patient", patient);
         modelAndView.addObject("id_visit", id_visit);
-        modelAndView.addObject("visitsList", patient.getDoneVisits());
+        modelAndView.addObject("visitsList", patient.getDoneVisits(sort_int));
         modelAndView.addObject("doctor", doctor);
         modelAndView.setViewName("doctor/pages/visits");
 
@@ -194,11 +198,14 @@ public class DoctorController {
     public ModelAndView addVisit(@ModelAttribute("visit") Visit visit,
                                  @ModelAttribute("selected_disease") String selected_disease,
                                  @ModelAttribute("notes") String notes,
-                                 @ModelAttribute("id_visit") String id_visit) {
+                                 @ModelAttribute("id_visit") String id_visit,
+                                 @ModelAttribute("id_schedule") int id_schedule) {
         Doctor doctor=getAuthDoc();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Disease disease = patientService.getByIdDisease(selected_disease);
+
         visit.setNumber(id_visit);
+        visit.setSchedule(doctor.findSchedule(id_schedule));
 
         if(notes==null)
             visit.setNotes("");

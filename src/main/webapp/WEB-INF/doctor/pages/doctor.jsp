@@ -92,11 +92,19 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів::</label>
+                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів за цей місяць:</label>
                                 <div class="col-sm-6">
                                     <input type="number" class="form-control" placeholder="telephone_number" value="${visitsList.size()}" readonly>
                                 </div>
                             </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість проведених візитів за сьогодні:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" placeholder="telephone_number" value="${todayVisitsList.size()}" readonly>
+                                </div>
+                            </div>
+
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Електронна пошта:</label>
                                 <div class="col-sm-6">

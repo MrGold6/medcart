@@ -30,7 +30,7 @@
   </sec:authorize>
 
   <sec:authorize access="hasRole('ROLE_PATIENT')">"
-    <c:redirect url="/patient"/>
+    <c:redirect url="/patient/1"/>
   </sec:authorize>
 
 

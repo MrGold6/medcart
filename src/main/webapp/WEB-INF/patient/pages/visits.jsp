@@ -47,7 +47,7 @@
                             </li>
 
                             <li class="nav-item ">
-                                <a class="nav-link link active" aria-current="page" href= '/patient/'>Медична карта</a>
+                                <a class="nav-link link active" aria-current="page" href= '/patient/1'>Медична карта</a>
                             </li>
 
                             <li class="nav-item">
@@ -77,9 +77,9 @@
                         <table class="table tableFixHead">
                             <thead>
                             <tr>
-                                <th>Дата</th>
-                                <th>Діагноз</th>
-                                <th>Лікар</th>
+                                <th>Дата<a href="/patient/1" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                               <th>Діагноз<a href="/patient/2" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                               <th>Лікар<a href="/patient/3" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                                 <th>Виписані ліки</th>
                             </tr>
                             </thead>

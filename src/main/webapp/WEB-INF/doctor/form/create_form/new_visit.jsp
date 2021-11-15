@@ -47,6 +47,7 @@
                             <input class="form-control" type="hidden" name="id_visit" value="${visit.number}">
 
                             <input class="form-control" type="hidden" name="date" value="${visit.date}">
+                            <input class="form-control" type="hidden" name="id_schedule" value="${visit.schedule.id}">
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Діагноз:</label>

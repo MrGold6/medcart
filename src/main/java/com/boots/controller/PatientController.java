@@ -43,15 +43,15 @@ public class PatientController{
         return patientService.patientByUser(user);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ModelAndView allDoneVisits() {
+    @RequestMapping(value = "/{sort_int}", method = RequestMethod.GET)
+    public ModelAndView allDoneVisits(@PathVariable("sort_int") int sort_int) {
 
         Patient patient = getAuthPatient();
 
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("visitsList", patient.getDoneVisits());
+        modelAndView.addObject("visitsList", patient.getDoneVisits(sort_int));
 
         modelAndView.setViewName("patient/pages/visits");
 
@@ -154,12 +154,31 @@ public class PatientController{
         visit.setSchedule(doctor.findSchedule(id_schedule));
 
         if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
-            patient.findDirection(doctor.getSpecialization()).setStatus(false);
+            patient.findActiveDirection(doctor.getSpecialization()).setStatus(false);
 
         doctor.addVisit(visit);
 
         patientService.add(patient);
         doctorService.add(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/patient/directions");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/deleteVisit/{id_visit}", method = RequestMethod.GET)
+    public ModelAndView deleteVisit(@PathVariable("id_visit") String id_visit) {
+        Patient patient = getAuthPatient();
+        Visit visit =patient.findVisit(id_visit);
+        Doctor doctor = visit.getDoctor();
+
+        if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+            patient.findNotActiveDirection(doctor.getSpecialization()).setStatus(true);
+
+        patientService.deleteVisit(id_visit);
+        patientService.add(patient);
+
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/patient/directions");
@@ -219,6 +238,23 @@ public class PatientController{
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("patient", patient);
         modelAndView.setViewName("patient/pages/profile");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/edit_patient", method = RequestMethod.POST)
+    public ModelAndView editPatient(@ModelAttribute("patient") Patient patient,
+                                    @ModelAttribute("sex") String sex,
+                                    @ModelAttribute("id_visit") String id_visit) {
+        patient.setSex(Integer.parseInt(sex));
+        //костиль
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
+        patient.setUser(user);
+        patientService.add(patient);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/patient/profile");
 
         return modelAndView;
     }

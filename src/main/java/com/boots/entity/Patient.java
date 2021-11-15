@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Comparator.nullsFirst;
+
 @Entity
 @Table(name = "electronic_card")
 
@@ -48,13 +50,36 @@ public class Patient extends Human {
         return visits;
     }
 
-    public List<Visit> getDoneVisits() {
+    public List<Visit> getDoneVisits(int i) {
         List<Visit> done = new ArrayList<>();
         for (Visit visit : this.visits)
             if(visit.getStatus())
                 done.add(visit);
 
-        done.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+            switch (i) {
+                case 1: {
+                    done.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+                    break;
+                }
+                case 2: {
+                    done.sort(Comparator.comparing(o -> o.getDisease().getName()));
+                    break;
+                }
+                case 3: {
+                    done.sort(Comparator.comparing(o -> o.getDoctor().getSpecialization().getName()));
+                    break;
+                }
+
+                case 4: {
+                    // done.sort(nullsFirst(Comparator.comparing(Visit::getMedicine)));
+                    done.sort( Comparator.comparing(Visit::getMedicine, Comparator.nullsLast(Comparator.reverseOrder()))
+                            .thenComparing(Visit::getMedicine));
+
+                    break;
+                }
+
+            }
+
         return done;
     }
 
@@ -127,10 +152,19 @@ public class Patient extends Human {
         }
     }
 
-    public Direction findDirection(Specialization specialization) {
+    public Direction findActiveDirection(Specialization specialization) {
 
         for (Direction direction :  this.directions)
             if (direction.getStatus() && direction.getSpecialization().getName().equals(specialization.getName()))
+                return direction;
+
+        return null;
+    }
+
+    public Direction findNotActiveDirection(Specialization specialization) {
+
+        for (Direction direction :  this.directions)
+            if (!direction.getStatus() && direction.getSpecialization().getName().equals(specialization.getName()))
                 return direction;
 
         return null;
@@ -144,6 +178,8 @@ public class Patient extends Human {
 
         return null;
     }
+
+
 
     public int getBlood_type() {
         return blood_type;

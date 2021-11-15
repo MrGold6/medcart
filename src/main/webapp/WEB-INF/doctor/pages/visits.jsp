@@ -70,9 +70,9 @@
                         <table class="table tableFixHead">
                             <thead>
                             <tr>
-                                <th>Дата</th>
-                                <th>Діагноз</th>
-                                <th>Лікар</th>
+                                <th>Дата<a href="/${id_visit}/visits/1" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                                <th>Діагноз<a href="/${id_visit}/visits/2" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                                <th>Лікар<a href="/${id_visit}/visits/3" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                                 <th>Виписані ліки</th>
                             </tr>
                             </thead>

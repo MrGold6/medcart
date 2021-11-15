@@ -5,7 +5,11 @@ import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 
@@ -64,7 +68,12 @@ public class Doctor extends Human {
         c.setTime(Date.valueOf(date));
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
-        List<Schedule> freeSchedule = this.getSchedulesByDay(dayOfWeek);
+        List<Schedule> freeSchedule =new ArrayList<>();
+        if(date.equals(LocalDate.now()))
+            freeSchedule = this.getSchedulesByDayAndNotAfterCurrentTime(dayOfWeek);
+        else
+            freeSchedule = this.getSchedulesByDay(dayOfWeek);
+
         for (Visit visit: this.getVisits())
         {
             for (Schedule schedule: this.getSchedules()) {
@@ -76,6 +85,17 @@ public class Doctor extends Human {
         }
 
         return freeSchedule;
+    }
+
+    public List<Schedule> getSchedulesByDayAndNotAfterCurrentTime(int dayOfWeek) {
+
+        List<Schedule> scheduleByDay = new ArrayList<>();
+
+        for (Schedule schedule: this.getSchedules())
+            if (schedule.getDay() == dayOfWeek && !LocalTime.now().isAfter(LocalTime.parse(schedule.getTime())))
+                scheduleByDay.add(schedule);
+
+        return scheduleByDay;
     }
 
     public List<Visit> getVisits() {
@@ -111,6 +131,32 @@ public class Doctor extends Human {
         return visits;
     }
 
+    public List<Visit> getDoneVisitsByDay(LocalDate date)
+    {
+        List<Visit> visits =  new ArrayList <>();
+        for (Visit visit : this.getVisits())
+            if (visit.getStatus() && visit.getDate().toLocalDate().equals(date))
+                visits.add(visit);
+
+        return visits;
+    }
+
+    public List<Visit> getDoneVisitsByMonth(LocalDate date)
+    {
+        Calendar c1 = Calendar.getInstance();
+        c1.setTime(Date.valueOf(date));
+        int month = c1.get(Calendar.MONTH);
+
+        List<Visit> visits =  new ArrayList <>();
+        for (Visit visit : this.getVisits()) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(visit.getDate());
+            if (visit.getStatus() && c.get(Calendar.MONTH) ==month)
+                visits.add(visit);
+        }
+
+        return visits;
+    }
 
 
     public User getUser() {
