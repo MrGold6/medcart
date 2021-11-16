@@ -6,8 +6,22 @@
         <ul class="nav flex-column">
 
             <li class="nav-item">
-                <a class="nav-link" href="/admin/patients">
+                <a class="nav-link"  href="/admin/user/1">
+                    <div class="responsive__offer">
+                        <div class="responsive__offer-icon">
+                            <div class="c">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-app" viewBox="0 0 16 16">
+                                    <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="responsive__offer-text">Користувач</p>
+                    </div>
+                </a>
+            </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="/admin/patients">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">
@@ -17,19 +31,13 @@
                                 </svg>
                             </div>
                         </div>
-
                         <p class="responsive__offer-text">Пацієнти</p>
-
                     </div>
-
-
-
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
-
+                <a class="nav-link" href="/admin/medicineCatalog/1">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">
@@ -39,19 +47,13 @@
                                 </svg>
                             </div>
                         </div>
-
-                        <p class="responsive__offer-text">   Comment</p>
-
+                        <p class="responsive__offer-text">Препарати</p>
                     </div>
-
-
-
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link"  href="#">
-
+                <a class="nav-link"  href="/admin/disease/1">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">
@@ -60,15 +62,28 @@
                                 </svg>
                             </div>
                         </div>
-
-                        <p class="responsive__offer-text"> Post</p>
-
+                        <p class="responsive__offer-text"> Захворювання</p>
                     </div>
-
-
-
                 </a>
             </li>
+
+
+
+            <li class="nav-item">
+                <a class="nav-link"  href="/admin/specialization/1">
+                    <div class="responsive__offer">
+                        <div class="responsive__offer-icon">
+                            <div class="c">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-app" viewBox="0 0 16 16">
+                                    <path d="M11 2a3 3 0 0 1 3 3v6a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3h6zM5 1a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4V5a4 4 0 0 0-4-4H5z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="responsive__offer-text">Спеціалізація</p>
+                    </div>
+                </a>
+            </li>
+
 
         </ul>
 

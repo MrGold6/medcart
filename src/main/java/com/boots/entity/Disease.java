@@ -27,7 +27,8 @@ public class Disease {
         return ICD_10;
     }
 
-
-
+    public void setICD_10(String ICD_10) {
+        this.ICD_10 = ICD_10;
+    }
 
 }

@@ -4,32 +4,36 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Entity
 @Table(name = "medicine_catalog")
 public class MedicineCatalog {
 
-        @Id
-        @Column(name = "ATX")
-        private String ATX;
+    @Id
+    @Column(name = "ATX")
+    private String ATX;
 
-        @Column(name = "name")
-        private String name;
+    @Column(name = "name")
+    private String name;
 
-        public String getATX() {
-            return ATX;
-        }
+    public String getATX() {
+        return ATX;
+    }
 
-        //???
-        public void setATX(String ATX) {
-            this.ATX = ATX;
-        }
+    public void setATX(String ATX) {
+        this.ATX = ATX;
+    }
 
-        public String getName() {
-            return name;
-        }
+    public String getName() {
+        return name;
+    }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }

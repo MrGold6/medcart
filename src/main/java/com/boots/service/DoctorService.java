@@ -31,10 +31,6 @@ public class DoctorService {
         doctorRepository.delete(doctor);
     }
 
-   /* public void update(Doctor doctor) {
-        return em.createQuery("update d FROM Doctor d WHERE d.id = :paramId", Doctor.class)
-                .setParameter("paramId", idMin).getResultList();
-    }*/
    public Doctor getById(Long id) {
 
        Optional<Doctor> doctorFromDb = doctorRepository.findById(id);
