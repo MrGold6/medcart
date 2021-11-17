@@ -26,6 +26,8 @@ public class UserService implements UserDetailsService {
     @Autowired
     RoleRepository roleRepository;
     @Autowired
+    private RoleService roleService;
+    @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
@@ -39,7 +41,7 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public User findUserById(Long userId) {
+    public User findUserById(String userId) {
         Optional<User> userFromDb = userRepository.findById(userId);
         return userFromDb.orElse(new User());
     }
@@ -48,20 +50,35 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public boolean saveUser(User user) {
+    public boolean saveUser(User user, int id) {
         User userFromDB = userRepository.findByUsername(user.getUsername());
 
         if (userFromDB != null) {
             return false;
         }
-
-        user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+        Role role = roleService.getById(id);
+        user.setRoles(Collections.singleton(new Role(role.getId(), role.getName())));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return true;
     }
 
-    public boolean deleteUser(Long userId) {
+    public boolean editUser(User user, int id) {
+        Role role = roleService.getById(id);
+        user.setRoles(Collections.singleton(new Role(role.getId(), role.getName())));
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean editUserPassword(User user, int id) {
+        Role role = roleService.getById(id);
+        user.setRoles(Collections.singleton(new Role(role.getId(), role.getName())));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
+    public boolean deleteUser(String userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
             return true;

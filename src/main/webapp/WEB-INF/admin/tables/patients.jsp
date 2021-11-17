@@ -21,9 +21,9 @@
                                 <th>РНОКПП</th>
                                 <th>Ім'я</th>
                                 <th>Прізвище</th>
-                                <th>Дата народження</th>
                                 <th>Стать</th>
                                 <th>Номер телефону</th>
+                                <th>Юзер</th>
                                 <th>Дії</th>
 
                             </tr>
@@ -36,9 +36,12 @@
                                     <td>${patient.RNTRC}</td>
                                     <td>${patient.name}</td>
                                     <td>${patient.surname}</td>
-                                    <td>${patient.date_of_birth}</td>
                                     <td>${patient.sex== 0 ? "Чоловік" : "Жінка" }</td>
                                     <td>${patient.telephone_number}</td>
+                                    <td>
+                                        <c:if test="${patient.user.username==null}"><a href="/admin/${patient.RNTRC}/set_user_for_patient/" class="btn btn_add"><i class="bi bi-plus-circle-dotted"></i></a> </c:if>
+                                        <c:if test="${patient.user.username!=null}">${patient.user.username}</c:if></td>
+
                                     <td><a href="/admin/${patient.RNTRC}/edit_patient/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                         <a href="/admin/${patient.RNTRC}/delete_patient" class="btn btn_delete"><i class="bi bi-trash "></i></a>
                                     </td>

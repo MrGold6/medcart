@@ -14,7 +14,7 @@ import javax.validation.Valid;
 
 @Controller
 public class RegistrationController {
-
+/*
     @Autowired
     private UserService userService;
 
@@ -41,5 +41,5 @@ public class RegistrationController {
         }
 
         return "redirect:/";
-    }
+    }*/
 }

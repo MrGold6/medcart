@@ -1,10 +1,7 @@
 package com.boots.entity;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Comparator.nullsFirst;
 
@@ -44,6 +41,16 @@ public class Patient extends Human {
     public Patient() {}
 
 
+    public List<User> getUsers(List<User> allUsers, int id) {
+        List<User> patientUsers = new ArrayList<>();
+
+        for(User user:allUsers) {
+            Optional<Role> c_role =  user.getRoles().stream().findFirst();
+            if (c_role.orElse(new Role()).getId()==id && !user.isSelected())
+                patientUsers.add(user);
+        }
+        return patientUsers;
+    }
 
     public List<Visit> getVisits() {
         visits.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));

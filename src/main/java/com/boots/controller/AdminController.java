@@ -3,20 +3,24 @@ package com.boots.controller;
 import com.boots.entity.*;
 import com.boots.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collections;
+import javax.validation.Valid;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
     @Autowired
     protected PatientService patientService;
 
@@ -82,21 +86,22 @@ public class AdminController {
         return specializations;
     }
 
-    public List<User> sortUser(List<User> users, int i) {
+
+    //sortRole
+    public List<Role> sortRole(List<Role> roles, int i) {
         switch (i) {
             case 1: {
-                users.sort(Comparator.comparing(User::getId));
+                roles.sort(Comparator.comparing(Role::getId));
                 break;
             }
             //sortSpecialization
             case 2: {
-                users.sort(Comparator.comparing(User::getUsername));
+                roles.sort(Comparator.comparing(Role::getName));
                 break;
             }
-
         }
 
-        return users;
+        return roles;
     }
     //patient
     @RequestMapping(value = "/patients", method = RequestMethod.GET)
@@ -108,6 +113,36 @@ public class AdminController {
         modelAndView.setViewName("admin/tables/patients");
         return modelAndView;
     }
+    @GetMapping("/{id_patient}/set_user_for_patient")
+    public ModelAndView addPageSetUserPatient(@PathVariable("id_patient") Long id_patient) {
+        Patient patient = patientService.getById(id_patient);
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("users", patient.getUsers(userService.allUsers(), 3));
+        modelAndView.setViewName("admin/forms/form_user_for_patient");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/setUserPatient")
+    public ModelAndView setUserPatient(@ModelAttribute("selected_user") String user_id,
+                                @ModelAttribute("id_patient") Long id_patient) {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        User user = userService.findUserById(user_id);
+        user.setSelected(true);
+
+        Patient patient = patientService.getById(id_patient);
+        patient.setUser(user);
+        patientService.add(patient);
+
+        modelAndView.setViewName("redirect:/admin/patients");
+
+        return modelAndView;
+    }
+
 
     @RequestMapping(value = "/add_patient", method = RequestMethod.GET)
     public ModelAndView addPagePatient(@ModelAttribute("message") String message) {
@@ -396,15 +431,202 @@ public class AdminController {
     }
 
     //user
-    @RequestMapping(value = "/user/{sort_num}", method = RequestMethod.GET)
+   @RequestMapping(value = "/user/{sort_num}", method = RequestMethod.GET)
     public ModelAndView allUserPage(@PathVariable("sort_num") int sort_num) {
-//User user;
-//user.getPassword()
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userList", sortUser(userService.allUsers(), sort_num));
-        modelAndView.setViewName("admin/tables/user");
+        List<User> userList = userService.allUsers();
+        userList.sort(Comparator.comparing(User::getUsername));
+        modelAndView.addObject("userList", userList);
+       modelAndView.setViewName("admin/tables/user");
         return modelAndView;
     }
+
+    @GetMapping("/add_user")
+    public ModelAndView addPageUser() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("user", new User());
+        modelAndView.addObject("roles", roleService.allRole());
+        modelAndView.setViewName("admin/forms/form_user");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/add_user")
+    public ModelAndView addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                                @ModelAttribute("selected_role") int role_id) {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        user.setId((userService.allUsers().size()+1)+"_"+user.getUsername());
+        user.setSelected(false);
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("admin/forms/form_user");
+        }
+        else if (!user.getPassword().equals(user.getPasswordConfirm())){
+            modelAndView.addObject("passwordError", "Пароли не совпадают");
+            modelAndView.setViewName("admin/forms/form_user");
+        }
+        else if (!userService.saveUser(user, role_id)){
+            modelAndView.addObject("usernameError", "Пользователь с таким именем уже существует");
+            modelAndView.setViewName("admin/forms/form_user");
+        }
+        else
+        {
+            modelAndView.setViewName("redirect:/admin/user/1");
+
+        }
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/change_password/{id}", method = RequestMethod.GET)
+    public ModelAndView editPageUserPassword(@PathVariable("id") String id) {
+        User user = userService.findUserById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_user_password");
+        modelAndView.addObject("user", user);
+        Optional<Role> role =  user.getRoles().stream().findFirst();
+        modelAndView.addObject("my_role_id", role.orElse(new Role()).getId());
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/change_password", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editUserPassword(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                                         @ModelAttribute("my_role_id") int my_role_id) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("admin/forms/form_user_password");
+        }
+        else if (!user.getPassword().equals(user.getPasswordConfirm())){
+            modelAndView.addObject("passwordError", "Пароли не совпадают");
+            modelAndView.setViewName("admin/forms/form_user_password");
+        }
+        userService.editUserPassword(user, my_role_id);
+        modelAndView.setViewName("redirect:/admin/"+user.getUsername()+"/edit_user");
+
+
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{username}/edit_user", method = RequestMethod.GET)
+    public ModelAndView editPageUser(@PathVariable("username") String  username) {
+        User user = (User) userService.loadUserByUsername(username);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_user");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("roles", roleService.allRole());
+
+        Optional<Role> role =   user.getRoles().stream().findFirst();
+        modelAndView.addObject("my_role", role.orElse(new Role()));
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_user", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                                 @ModelAttribute("selected_role") int role_id) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("admin/forms/form_user");
+        }
+        else if (!user.getPassword().equals(user.getPasswordConfirm())){
+            modelAndView.addObject("passwordError", "Пароли не совпадают");
+            modelAndView.setViewName("admin/forms/form_user");
+        }
+        userService.editUser(user, role_id);
+        modelAndView.setViewName("redirect:/admin/user/1");
+
+
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id}/delete_user", method = RequestMethod.GET)
+    public ModelAndView deleteUser(@PathVariable("id") String id) {
+        userService.deleteUser(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/user/1");
+
+        return modelAndView;
+    }
+
+    //role
+   @RequestMapping(value = "/role/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView allRolePage(@PathVariable("sort_num") int sort_num) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("roleList", sortRole(roleService.allRole(), sort_num));
+        modelAndView.setViewName("admin/tables/role");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_role", method = RequestMethod.GET)
+    public ModelAndView addPageRole() {
+        Role role = new Role();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("role", role);
+        modelAndView.setViewName("admin/forms/form_role");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_role", method = RequestMethod.POST)
+    public ModelAndView addRole(@ModelAttribute("role") Role role) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (roleService.checkId(role.getId())) {
+            roleService.add(role);
+            modelAndView.setViewName("redirect:/admin/role/1");
+        }
+        else {
+            modelAndView.addObject("message", "y");
+            modelAndView.setViewName("redirect:/admin/add_role");
+        }
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id}/edit_role", method = RequestMethod.GET)
+    public ModelAndView editPageRole(@PathVariable("id") int id) {
+        Role role = roleService.getById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_role");
+        modelAndView.addObject("role", role);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_role", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editRole(@ModelAttribute("role") Role role) {
+        roleService.add(role);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/role/1");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id}/delete_role", method = RequestMethod.GET)
+    public ModelAndView deleteRole(@PathVariable("id") int id) {
+        Role role = roleService.getById(id);
+        roleService.delete(role);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/role/1");
+
+        return modelAndView;
+    }
+
+    //visits
+
 
 
     /*
