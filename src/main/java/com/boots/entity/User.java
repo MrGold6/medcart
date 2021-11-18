@@ -12,11 +12,14 @@ import java.util.Set;
 @Table(name = "user")
 public class User implements UserDetails {
     @Id
-    private Long id;
+    private String id;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String username;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
+    @Column(name = "selected")
+    private boolean selected;
+
     @Transient
     private String passwordConfirm;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -25,11 +28,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -92,4 +95,11 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }

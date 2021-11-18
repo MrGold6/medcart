@@ -32,7 +32,22 @@ public class Doctor extends Human {
     public List<Visit> visits = new ArrayList<>();
 
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Schedule> schedules;
+    private List<Schedule> schedules = new ArrayList<>();
+
+    public List<User> getUsers(List<User> allUsers) {
+        List<User> doctorUsers = new ArrayList<>();
+        int id=0;
+
+        if(this.getSpecialization().getId()==1) id =1;
+        else id=4;
+
+        for(User user:allUsers) {
+            Optional<Role> c_role =  user.getRoles().stream().findFirst();
+            if (c_role.orElse(new Role()).getId() == id && !user.isSelected())
+                doctorUsers.add(user);
+        }
+        return doctorUsers;
+    }
 
     public List<Schedule> getSchedules() {
         return schedules;
@@ -42,7 +57,10 @@ public class Doctor extends Human {
         this.schedules = schedules;
     }
 
-    public List<Schedule> getSchedulesByDay(int dayOfWeek) {
+    public List<Schedule> getSchedulesByDay(LocalDate date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(Date.valueOf(date));
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
         List<Schedule> scheduleByDay = new ArrayList<>();
 
@@ -63,16 +81,13 @@ public class Doctor extends Human {
 
     public List<Schedule> freeSchedule(LocalDate date)
     {
-        Calendar c = Calendar.getInstance();
-        //monday - 2
-        c.setTime(Date.valueOf(date));
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
 
         List<Schedule> freeSchedule =new ArrayList<>();
         if(date.equals(LocalDate.now()))
-            freeSchedule = this.getSchedulesByDayAndNotAfterCurrentTime(dayOfWeek);
+            freeSchedule = this.getSchedulesByDayAndNotAfterCurrentTime(date);
         else
-            freeSchedule = this.getSchedulesByDay(dayOfWeek);
+            freeSchedule = this.getSchedulesByDay(date);
 
         for (Visit visit: this.getVisits())
         {
@@ -87,7 +102,10 @@ public class Doctor extends Human {
         return freeSchedule;
     }
 
-    public List<Schedule> getSchedulesByDayAndNotAfterCurrentTime(int dayOfWeek) {
+    public List<Schedule> getSchedulesByDayAndNotAfterCurrentTime(LocalDate date) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(Date.valueOf(date));
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
 
         List<Schedule> scheduleByDay = new ArrayList<>();
 
@@ -109,6 +127,11 @@ public class Doctor extends Human {
     public void addVisit(Visit visit) {
         visit.setDoctor(this);
         this.visits.add(visit);
+    }
+
+    public void addSchedule(Schedule schedule) {
+        schedule.setDoctor(this);
+        this.schedules.add(schedule);
     }
 
     public List<Visit> getActiveVisitsByDay(LocalDate date)

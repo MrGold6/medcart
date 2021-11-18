@@ -24,8 +24,7 @@
 
 
                                 <form:form action="/admin/add_patient" method="POST" name="patient"  class="was-validated">
-
-
+                                    <input type="hidden" name="user_id" value="${patient.user.id}">
                                     <div class="row mb-3">
                                         <label class="col-sm-6 col-form-label ln">РНОКПП:</label>
                                         <div class="col-sm-6">
@@ -65,12 +64,12 @@
                                         <label class="col-sm-6 col-form-label ln">Стать:</label>
                                         <div class="col-sm-6">
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="sex1" class="form-check-input" name="sex" value="0" required  <c:if test="${ (empty patient.RNTRC) && (patient.sex== 0)}">checked</c:if>>
+                                                <input type="radio" id="sex1" class="form-check-input" name="sex" value="0" required  <c:if test="${ (!empty patient.RNTRC) && (patient.sex== 0)}">checked</c:if>>
                                                 <label for="sex1" class="form-check-label" >Чоловік</label>
 
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="sex2" class="form-check-input" name="sex" value="1" required  <c:if test="${ (empty patient.RNTRC) && (patient.sex== 1)}">checked</c:if>>
+                                                <input type="radio" id="sex2" class="form-check-input" name="sex" value="1" required  <c:if test="${ (!empty patient.RNTRC) && (patient.sex== 1)}">checked</c:if>>
                                                 <label for="sex2" class="form-check-label">Жінка</label>
                                             </div>
                                         </div>
@@ -79,7 +78,7 @@
                                     <div class="row mb-3">
                                         <label class="col-sm-6 col-form-label ln">Номер телефону:</label>
                                         <div class="col-sm-6">
-                                            <input class="form-control" type="tel" pattern="0[0-9]{9}" name="telephone_number" value="${patient.telephone_number}" required>
+                                            <input class="form-control" type="tel" pattern="0[0-9]{9}" name="telephone_number" value="<c:if test="${!empty patient.RNTRC}">0${patient.telephone_number}</c:if>" required>
                                         </div>
                                     </div>
 
@@ -103,10 +102,10 @@
                                         <label class="col-sm-6 col-form-label ln">Група крові:</label>
                                         <div class="col-sm-6">
                                             <select  name="Blood_type" class="form-select">
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
+                                                <option value="1" <c:if test="${ (!empty patient.RNTRC) && (patient.blood_type==1)}"></c:if>>1</option>
+                                                <option value="2" <c:if test="${ (!empty patient.RNTRC) && (patient.blood_type==2)}"></c:if>>2</option>
+                                                <option value="3" <c:if test="${ (!empty patient.RNTRC) && (patient.blood_type==3)}"></c:if>>3</option>
+                                                <option value="4" <c:if test="${ (!empty patient.RNTRC) && (patient.blood_type==4)}"></c:if>>4</option>
                                             </select>
                                         </div>
                                     </div>
@@ -115,12 +114,12 @@
                                         <label class="col-sm-6 col-form-label ln">Резус-фактор:</label>
                                         <div class="col-sm-6">
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="rh1" class="form-check-input" name="rh" value="+" required>
+                                                <input type="radio" id="rh1" class="form-check-input" name="rh" value="+" required <c:if test="${ (!empty patient.RNTRC) && (patient.rh.equals('+'))}">checked</c:if>>
                                                 <label for="sex1" class="form-check-label" >+</label>
 
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input type="radio" id="rh2" class="form-check-input" name="rh" value="-" required>
+                                                <input type="radio" id="rh2" class="form-check-input" name="rh" value="-" required <c:if test="${ (!empty patient.RNTRC) && (patient.rh.equals('-'))}">checked</c:if>>
                                                 <label for="sex1" class="form-check-label" >-</label>
 
                                             </div>
@@ -142,6 +141,9 @@
                                     </div>
 
                                     <center>
+                                        <c:if test="${!empty patient.RNTRC}">
+                                            <a href="/admin/${patient.RNTRC}/set_user_for_patient/" class="btn btn_find_all">Змінити юзера</a>
+                                        </c:if>
                                         <c:if test="${empty patient.RNTRC}">
                                             <input type="submit" id="in"  class="btn btn_add" name="add_patient" value="Створити">
                                         </c:if>
