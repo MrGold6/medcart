@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "schedule")
 public class Schedule {
-   @Id
+    @Id
     @Column(name = "id")
     private int id;
 

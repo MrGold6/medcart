@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -23,6 +26,12 @@ public class AdminController {
 
     @Autowired
     protected PatientService patientService;
+
+    @Autowired
+    protected DoctorService doctorService;
+
+    @Autowired
+    protected DirectionService directionService;
 
     @Autowired
     protected MedicineCatalogService medicineCatalogService;
@@ -118,6 +127,7 @@ public class AdminController {
         Patient patient = patientService.getById(id_patient);
         ModelAndView modelAndView = new ModelAndView();
 
+        modelAndView.addObject("isDoc", false);
         modelAndView.addObject("patient", patient);
         modelAndView.addObject("users", patient.getUsers(userService.allUsers(), 3));
         modelAndView.setViewName("admin/forms/form_user_for_patient");
@@ -172,6 +182,7 @@ public class AdminController {
             patient.setSex(Integer.parseInt(sex));
             patient.setBlood_type(Integer.parseInt(Blood_type));
             patient.setRh(rh);
+
             patientService.add(patient);
             modelAndView.setViewName("redirect:/admin/patients");
 
@@ -197,10 +208,14 @@ public class AdminController {
     public ModelAndView editPatient(@ModelAttribute("patient") Patient patient,
                                     @ModelAttribute("sex") String sex,
                                     @ModelAttribute("Blood_type") String Blood_type,
-                                    @ModelAttribute("rh") String rh) {
+                                    @ModelAttribute("rh") String rh,
+                                    @ModelAttribute("user_id") String user_id) {
         patient.setSex(Integer.parseInt(sex));
         patient.setBlood_type(Integer.parseInt(Blood_type));
         patient.setRh(rh);
+        if(!user_id.isEmpty())
+            patient.setUser(userService.findUserById(user_id));
+
         patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
@@ -216,6 +231,206 @@ public class AdminController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin/patients");
+
+        return modelAndView;
+    }
+
+    //doctor
+    @RequestMapping(value = "/doctor", method = RequestMethod.GET)
+    public ModelAndView allDoctorsPage() {
+        List<Doctor> doctors = doctorService.allDoctors();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("doctorList", doctors);
+        modelAndView.setViewName("admin/tables/doctor");
+        return modelAndView;
+    }
+
+
+    @GetMapping("/{id_doctor}/set_user_for_doctor")
+    public ModelAndView addPageSetUserDoctor(@PathVariable("id_doctor") Long id_doctor) {
+        Doctor doctor = doctorService.getById(id_doctor);
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("isDoc", true);
+        modelAndView.addObject("patient", doctor);
+        modelAndView.addObject("users", doctor.getUsers(userService.allUsers()));
+        modelAndView.setViewName("admin/forms/form_user_for_patient");
+
+        return modelAndView;
+    }
+    @RequestMapping(value = "/setUserPatient", method = RequestMethod.POST, params = "editD")
+    public ModelAndView setUserDoctor(@ModelAttribute("selected_user") String user_id,
+                                       @ModelAttribute("id_patient") Long id_doctor) {
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        User user = userService.findUserById(user_id);
+        user.setSelected(true);
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        doctor.setUser(user);
+        doctorService.add(doctor);
+
+        modelAndView.setViewName("redirect:/admin/doctor");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/add_doctor", method = RequestMethod.GET)
+    public ModelAndView addPageDoctor(@ModelAttribute("message") String message) {
+        Doctor doctor = new Doctor();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.addObject("specializations", specializationService.allSpecialization());
+        //specialization
+
+        if(message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
+
+        modelAndView.setViewName("admin/forms/form_doctor");
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/add_doctor", method = RequestMethod.POST)
+    public ModelAndView addDoctor(@ModelAttribute("doctor") Doctor doctor,
+                                   @ModelAttribute("sex") String sex,
+                                  @ModelAttribute("selected_spec") int spec_id) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (doctorService.checkRNTRC(doctor.getRNTRC())) {
+            doctor.setSex(Integer.parseInt(sex));
+            doctor.setSpecialization(specializationService.getById(spec_id));
+
+            doctorService.add(doctor);
+            modelAndView.setViewName("redirect:/admin/doctor");
+
+        } else {
+            modelAndView.addObject("message","y");
+            modelAndView.setViewName("redirect:/admin/add_doctor");
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_doctor}/edit_doctor", method = RequestMethod.GET)
+    public ModelAndView editPageDoctor(@PathVariable("id_doctor") Long id_doctor) {
+        Doctor doctor = doctorService.getById(id_doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_doctor");
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.addObject("id_doctor", id_doctor);
+        modelAndView.addObject("specializations", specializationService.allSpecialization());
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_doctor", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editDoctor(@ModelAttribute("doctor") Doctor doctor,
+                                    @ModelAttribute("sex") String sex,
+                                    @ModelAttribute("selected_spec") int spec_id) {
+        doctor.setSex(Integer.parseInt(sex));
+        doctor.setSpecialization(specializationService.getById(spec_id));
+
+        doctorService.add(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/doctor");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/{id_doctor}/delete_doctor", method = RequestMethod.GET)
+    public ModelAndView deleteDoctor(@PathVariable("id_doctor") Long id_doctor) {
+        Doctor doctor = doctorService.getById(id_doctor);
+        doctorService.delete(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/doctor");
+
+        return modelAndView;
+    }
+//schedule
+    @RequestMapping(value = "/{id_doctor}/schedule", method = RequestMethod.GET)
+    public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id_doctor){
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        Doctor doctor = doctorService.getById(id_doctor);
+
+
+        modelAndView.addObject("doctor",doctor);
+        modelAndView.addObject("schedules", doctor.getSchedules());
+
+        modelAndView.setViewName("admin/tables/schedule");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_doctor}/add_schedule", method = RequestMethod.GET)
+    public ModelAndView addPageSchedule(@PathVariable("id_doctor") Long id_doctor) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_doctor", id_doctor);
+        modelAndView.addObject("schedule", new Schedule());
+        modelAndView.setViewName("admin/forms/form_schedule");
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/add_schedule", method = RequestMethod.POST)
+    public ModelAndView addSchedule(@ModelAttribute("schedule") Schedule schedule,
+                                    @ModelAttribute("id_doctor") Long id_doctor) {
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        schedule.setId(doctorService.allSchedule().size()+1);
+        doctor.addSchedule(schedule);
+        doctorService.add(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_doctor}/{id_schedule}/edit_schedule", method = RequestMethod.GET)
+    public ModelAndView editPageSchedule(@PathVariable("id_doctor") Long id_doctor,
+                                         @PathVariable("id_schedule") int id_schedule) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_schedule");
+        modelAndView.addObject("id_doctor", id_doctor);
+        modelAndView.addObject("schedule", doctorService.getScheduleById(id_schedule));
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_schedule", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editMedicine(@ModelAttribute("schedule") Schedule schedule,
+                                     @ModelAttribute("id_doctor") Long id_doctor) {
+        Doctor doctor = doctorService.getById(id_doctor);
+        doctor.addSchedule(schedule);
+        doctorService.add(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/{id_doctor}/{id_schedule}/delete_schedule", method = RequestMethod.GET)
+    public ModelAndView deleteSchedule(@PathVariable("id_schedule") int id_schedule,
+                                       @PathVariable("id_doctor") Long id_doctor) {
+
+        doctorService.deleteSchedule(id_schedule);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
 
         return modelAndView;
     }
@@ -579,8 +794,10 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/add_role", method = RequestMethod.POST)
-    public ModelAndView addRole(@ModelAttribute("role") Role role) {
+    public ModelAndView addRole(@ModelAttribute("role") Role role,
+                                @ModelAttribute("name") String s_name) {
         ModelAndView modelAndView = new ModelAndView();
+        role.setName("ROLE_"+s_name);
 
         if (roleService.checkId(role.getId())) {
             roleService.add(role);
@@ -625,30 +842,253 @@ public class AdminController {
         return modelAndView;
     }
 
-    //visits
+    //directions
+    @RequestMapping(value = "/{id_patient}/direction", method = RequestMethod.GET)
+    public ModelAndView allDirection(@PathVariable("id_patient") Long id_patient) {
+        ModelAndView modelAndView = new ModelAndView();
+        Patient patient = patientService.getById(id_patient);
 
-
-
-    /*
-    @GetMapping("/admin")
-    public String userList(Model model) {
-        model.addAttribute("allUsers", userService.allUsers());
-        return "admin";
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("directionList", patient.getDirections());
+        modelAndView.setViewName("admin/tables/direction");
+        return modelAndView;
     }
 
-    @PostMapping("/admin")
-    public String  deleteUser(@RequestParam(required = true, defaultValue = "" ) Long userId,
-                              @RequestParam(required = true, defaultValue = "" ) String action,
-                              Model model) {
-        if (action.equals("delete")){
-            userService.deleteUser(userId);
-        }
-        return "redirect:/admin";
+    @RequestMapping(value = "/{id_patient}/add_direction", method = RequestMethod.GET)
+    public ModelAndView addPageDirection(@PathVariable("id_patient") Long id_patient) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_patient", id_patient);
+        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("direction", new Direction());
+        modelAndView.setViewName("admin/forms/form_direction");
+        return modelAndView;
     }
 
-    @GetMapping("/admin/gt/{userId}")
-    public String  gtUser(@PathVariable("userId") Long userId, Model model) {
-        model.addAttribute("allUsers", userService.usergtList(userId));
-        return "admin";
-    }*/
+    @RequestMapping(value = "/add_direction", method = RequestMethod.POST)
+    public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
+                                @ModelAttribute("direction") Direction direction,
+                                @ModelAttribute("id_patient") Long id_patient) {
+        ModelAndView modelAndView = new ModelAndView();
+        Patient patient=patientService.getById(id_patient);
+        String id_direction=(patient.getDirections().size()+1) +"_"+patient.getRNTRC();
+
+        direction.setNumber(id_direction);
+        direction.setSpecialization(specializationService.getById(selected_spec));
+        direction.setStatus(true);
+        direction.setPatient(patient);
+        directionService.add(direction);
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/{id_patient}/{id_direction}/edit_direction", method = RequestMethod.GET)
+    public ModelAndView editPageDirection(@PathVariable("id_patient") Long id_patient,
+                                     @PathVariable("id_direction") String id_direction) {
+        Direction direction = directionService.getById(id_direction);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_direction");
+        modelAndView.addObject("id_patient", id_patient);
+        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("direction", direction);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/add_direction", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editRole(@ModelAttribute("selected_spec") int selected_spec,
+                                 @ModelAttribute("direction") Direction direction,
+                                 @ModelAttribute("id_patient") Long id_patient) {
+        Patient patient=patientService.getById(id_patient);
+
+        direction.setSpecialization(specializationService.getById(selected_spec));
+        direction.setPatient(patient);
+
+        directionService.add(direction);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_patient}/{id}/delete_direction", method = RequestMethod.GET)
+    public ModelAndView deleteDirection(@PathVariable("id_patient") Long id_patient,
+                                        @PathVariable("id") String id) {
+        Direction direction = directionService.getById(id);
+        directionService.delete(direction);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_patient+"/direction/");
+
+        return modelAndView;
+    }
+
+    //visit
+
+    @RequestMapping(value = "/{id_patient}/visit", method = RequestMethod.GET)
+    public ModelAndView allVisits(@PathVariable("id_patient") Long id_patient) {
+
+        Patient patient = patientService.getById(id_patient);
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("visitsList", patient.getVisits());
+
+        modelAndView.setViewName("admin/tables/visit");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_patient}/add_visit", method = RequestMethod.GET)
+    public ModelAndView addPageVisits(@PathVariable("id_patient") Long id_patient){
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("visit", new Visit());
+        modelAndView.addObject("id_patient", id_patient);
+        modelAndView.addObject("doctorList", doctorService.allDoctors());
+        modelAndView.addObject("diseasesList", diseaseService.allDisease());
+
+        modelAndView.setViewName("admin/forms/form_visit");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/add_visits", method = RequestMethod.POST)
+    public ModelAndView addVisit(@ModelAttribute("visit") Visit visit,
+                                 @ModelAttribute("selected_disease") String selected_disease,
+                                 @ModelAttribute("selected_doctor") Long id_doctor,
+                                 @ModelAttribute("id_patient") Long id_patient,
+                                 @ModelAttribute("notes") String notes) {
+        Patient patient = patientService.getById(id_patient);
+        Doctor doctor = doctorService.getById(id_doctor);
+        Disease disease = patientService.getByIdDisease(selected_disease);
+
+        String id_visit = (patient.getVisits().size() + 1) + "_" + patient.getRNTRC();
+
+        visit.setNumber(id_visit);
+
+        if(notes==null)
+            visit.setNotes("");
+
+        visit.setDoctor(doctor);
+        visit.setPatient(patient);
+        visit.setDisease(disease);
+        visit.setStatus(true);
+        patient.addVisit(visit);
+
+        patientService.add(patient);
+        doctorService.add(doctor);//?
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_visit+"/"+patient.getRNTRC()+"/setSchedule");
+
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_patient}/{id_visit}/edit_visit", method = RequestMethod.GET)
+    public ModelAndView editPageVisits(@PathVariable("id_patient") Long id_patient,
+                                       @PathVariable("id_visit") String id_visit){
+
+        ModelAndView modelAndView = new ModelAndView();
+        Patient patient = patientService.getById(id_patient);
+
+
+        modelAndView.addObject("visit", patient.findVisit(id_visit));
+        modelAndView.addObject("id_patient", id_patient);
+        modelAndView.addObject("doctorList", doctorService.allDoctors());
+        modelAndView.addObject("diseasesList", diseaseService.allDisease());
+
+        modelAndView.setViewName("admin/forms/form_visit");
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/add_visits", method = RequestMethod.POST, params = "edit")
+    public ModelAndView editVisit(@ModelAttribute("visit") Visit visit,
+                                 @ModelAttribute("selected_disease") String selected_disease,
+                                 @ModelAttribute("selected_doctor") Long id_doctor,
+                                 @ModelAttribute("id_patient") Long id_patient,
+                                 @ModelAttribute("notes") String notes,
+                                  @ModelAttribute("id_schedule") int id_schedule ) {
+        Patient patient = patientService.getById(id_patient);
+        Doctor doctor = doctorService.getById(id_doctor);
+        Disease disease = patientService.getByIdDisease(selected_disease);
+
+        if(notes==null)
+            visit.setNotes("");
+
+        visit.setDoctor(doctor);
+        visit.setPatient(patient);
+        visit.setDisease(disease);
+        visit.setSchedule(doctor.findSchedule(id_schedule));
+        patient.addVisit(visit);
+
+        patientService.add(patient);
+        doctorService.add(doctor);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit");
+
+
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/{id_visit}/{id_patient}/setSchedule", method = RequestMethod.GET)
+    public ModelAndView PageSetSchedule(@PathVariable("id_visit") String id_visit,
+                                     @PathVariable("id_patient") Long id_patient){
+
+        ModelAndView modelAndView = new ModelAndView();
+        Patient patient = patientService.getById(id_patient);
+        Visit visit = patient.findVisit(id_visit);
+        Doctor doctor = visit.getDoctor();
+        LocalDate date;
+        date =  (visit.getDate().toLocalDate());
+
+        modelAndView.addObject("visit",visit);
+        modelAndView.addObject("date",date);
+        modelAndView.addObject("schedules", doctor.getSchedulesByDay(date));
+
+        modelAndView.setViewName("admin/forms/form_set_schedule_to_visit");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/setSchedule", method = RequestMethod.POST)
+    public ModelAndView setSchedule(@ModelAttribute("id_visit") String id_visit,
+                                    @ModelAttribute("id_patient") Long id_patient,
+                                    @ModelAttribute("selected_schedule") int selected_schedule){
+
+        ModelAndView modelAndView = new ModelAndView();
+        Patient patient = patientService.getById(id_patient);
+        Visit visit = patient.findVisit(id_visit);
+        visit.setSchedule(visit.getDoctor().findSchedule(selected_schedule));
+        patient.addVisit(visit);
+        patientService.add(patient);
+
+
+
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_patient}/{id}/delete_visit", method = RequestMethod.GET)
+    public ModelAndView deleteVisit(@PathVariable("id_patient") Long id_patient,
+                                        @PathVariable("id") String id) {
+        patientService.deleteVisit(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+id_patient+"/visit/");
+
+        return modelAndView;
+    }
+
 }

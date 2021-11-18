@@ -44,6 +44,7 @@
                         <c:url value="/patient/edit_patient" var="editUrl"/>
                         <form action="${editUrl}" name="patient" method="POST">
 
+                            <input type="hidden" name="user_id" value="${patient.user.id}">
 
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Номер карти:</label>

@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.print.Doc;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,13 +64,30 @@ public class DoctorService {
         return (Doctor) em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
                 .setParameter("user", user).getSingleResult();
     }
-/*
-    public boolean checkRNTRC(String id) {
-        if (em.createQuery("SELECT d FROM Doctor d WHERE d.RNTRC = :id", Doctor.class)
-                .setParameter("id", id).getSingleResult()) {
-            return false;
-        } else {
-            return true;
-        }
-    }*/
+
+    public boolean checkRNTRC(Long id) {
+        Optional<Doctor> doctorFromDb = doctorRepository.findById(id);
+        return !doctorFromDb.isPresent();
+
+    }
+
+    public List<Schedule> allSchedule() {
+        return  (List<Schedule>) em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
+    }
+
+    //id_schedule
+
+    public Schedule getScheduleById(int id_schedule) {
+        return (Schedule) em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
+                .setParameter("paramId", id_schedule).getSingleResult();
+
+    }
+
+    @Transactional
+    public void deleteSchedule(int id_schedule) {
+        Query query = em.createQuery("DELETE FROM Schedule d WHERE d.id= :id_schedule");
+        query.setParameter("id_schedule", id_schedule);
+        int result = query.executeUpdate();
+
+    }
 }

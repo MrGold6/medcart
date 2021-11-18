@@ -89,6 +89,15 @@ public class Patient extends Human {
 
         return done;
     }
+/*
+    public List<Visit> getActiveDirection() {
+        List<Visit> active = new ArrayList<>();
+        for (Visit visit : this.visits)
+            if(!visit.getStatus())
+                active.add(visit);
+        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        return active;
+    }*/
 
     public List<Visit> getActiveVisits() {
         List<Visit> active = new ArrayList<>();

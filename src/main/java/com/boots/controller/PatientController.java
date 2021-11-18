@@ -3,6 +3,7 @@ package com.boots.controller;
 import com.boots.entity.*;
 import com.boots.service.DoctorService;
 import com.boots.service.PatientService;
+import com.boots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,10 @@ public class PatientController{
     protected PatientService patientService;
 
     protected DoctorService doctorService;
+
+    @Autowired
+    private UserService userService;
+
 
     @Autowired
     public void setPatientService(PatientService patientService) {
@@ -245,12 +250,12 @@ public class PatientController{
     @RequestMapping(value = "/edit_patient", method = RequestMethod.POST)
     public ModelAndView editPatient(@ModelAttribute("patient") Patient patient,
                                     @ModelAttribute("sex") String sex,
-                                    @ModelAttribute("id_visit") String id_visit) {
+                                    @ModelAttribute("id_visit") String id_visit,
+                                    @ModelAttribute("user_id") String user_id) {
         patient.setSex(Integer.parseInt(sex));
-        //костиль
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
-        patient.setUser(user);
+
+        if(!user_id.isEmpty())
+            patient.setUser(userService.findUserById(user_id));
         patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();

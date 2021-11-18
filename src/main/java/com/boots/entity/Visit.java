@@ -87,8 +87,12 @@ public class Visit {
             return medicine;
     }
 
+    public void setMedicine(String medicine) {
+        this.medicine = medicine;
+    }
+
     //проверка на пустоту
-    public void setMedicine(List<Medicine> medicines) {
+    public void setMedicineByList(List<Medicine> medicines) {
         StringBuilder med = new StringBuilder();
 
         for(Medicine medicine: medicines)

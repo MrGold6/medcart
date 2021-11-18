@@ -44,6 +44,7 @@
                         <c:url value="/edit_patient" var="editUrl"/>
                         <form action="${editUrl}" name="patient" method="POST">
                             <input type="hidden" name="id_visit" value="${id_visit}">
+                            <input type="hidden" name="user_id" value="${patient.user.id}">
 
 
                                 <div class="row mb-3">

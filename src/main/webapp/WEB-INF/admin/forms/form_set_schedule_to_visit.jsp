@@ -14,55 +14,48 @@
             <div class="col-xl-7 col-lg-10 col-md-10 col-sm-10 mx-auto p-3 pt-3">
                 <div class="card card_form shadow">
                     <div class="card-body ">
-                        <c:if test="${empty patient.user.id}">
+                        <c:if test="${empty visit.schedule.id}">
                             <title>Add</title>
                         </c:if>
-                        <c:if test="${!empty patient.user.id}">
+                        <c:if test="${!empty visit.schedule.id}">
                             <title>Edit</title>
                         </c:if>
-                        <legend class="card-title text-center">Пацієнт: ${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.</legend>
+                        <legend class="card-title text-center">Обрати час для візиту</legend>
 
+                        <form:form action="/admin/setSchedule" method="POST" name="visit"  class="was-validated">
 
-                        <form:form action="/admin/setUserPatient" method="POST" name="user"  class="was-validated">
-
-                            <input type="hidden" name="id_patient" class="form-control" value="${patient.RNTRC}">
-
+                            <input type="hidden" name="id_patient" value="${visit.patient.RNTRC}" class="form-control" required>
+                            <input type="hidden" name="id_visit" value="${visit.number}" class="form-control" required>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Юзер:</label>
+                                <label class="col-sm-6 col-form-label ln">Дата:</label>
                                 <div class="col-sm-6">
-                                    <select name="selected_user" class="form-select">
-                                        <c:if test="${!empty patient.user.id}">
-                                            <option value="${patient.user.id}" >${patient.user.username}</option>
-                                        </c:if>
-                                        <c:forEach var="user" items="${users}" varStatus="i">
-                                            <option value="${user.id}">${user.username}</option>
+                                    <input type="date" name="date" value="${date}" class="form-control" maxlength="20" data-inputmask="'alias': 'date','placeholder': '*'" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln"> Час:</label>
+                                <div class="col-sm-6">
+                                    <select  name="selected_schedule"  class="form-select">
+                                        <c:forEach var="schedule" items="${schedules}" varStatus="i">
+                                            <option value="${schedule.id}" <c:if test="${!empty visit.schedule.id && visit.schedule.id==schedule.id}">
+                                                selected
+                                            </c:if>>${schedule.time}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
                             </div>
 
-
                             <center>
-                                <c:if test="${isDoc==false}">
-                                    <c:if test="${empty patient.user.id}">
-                                        <input type="submit" id="in"  class="btn btn_add" name="add_role" value="Створити">
-                                    </c:if>
-                                    <c:if test="${!empty patient.user.id}">
-                                        <input type="submit" id="edit"  class="btn btn_edit_form" name="edit" value="Зберегти зміни">
-                                    </c:if>
+
+                                <c:if test="${empty visit.schedule.id}">
+                                    <input type="submit" id="in"  class="btn btn_add" name="add_visit" value="Створити">
+                                </c:if>
+                                <c:if test="${!empty visit.schedule.id}">
+                                    <input type="submit" id="edit"  class="btn btn_edit_form" name="edit" value="Змінити">
                                 </c:if>
 
-
-                                <c:if test="${isDoc==true}">
-
-                                    <c:if test="${empty patient.user.id}">
-                                        <input type="submit" id="in"  class="btn btn_add" name="editD" value="Створити">
-                                    </c:if>
-                                    <c:if test="${!empty patient.user.id}">
-                                        <input type="submit" id="edit"  class="btn btn_edit_form" name="editD" value="Зберегти зміни">
-                                    </c:if>
-                                </c:if>
 
                             </center>
 

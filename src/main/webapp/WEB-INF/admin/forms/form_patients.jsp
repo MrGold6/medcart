@@ -24,8 +24,7 @@
 
 
                                 <form:form action="/admin/add_patient" method="POST" name="patient"  class="was-validated">
-
-
+                                    <input type="hidden" name="user_id" value="${patient.user.id}">
                                     <div class="row mb-3">
                                         <label class="col-sm-6 col-form-label ln">РНОКПП:</label>
                                         <div class="col-sm-6">
