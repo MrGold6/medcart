@@ -50,6 +50,7 @@
                     <label  class="form-label">Логін:</label>
                     <input type="text" class="form-control" name="username"  required>
                   </div>
+
                   <div class="mb-3">
                     <label  class="form-label">Пароль:</label>
                     <input type="password" class="form-control" name="password"  required>
@@ -58,7 +59,6 @@
                   <center>
                     <input type="submit" id="in" class="btn btn-outline-primary" value="Увійти">
                   </center>
-                  <h4><a href="/registration">Зарегистрироваться</a></h4>
                 </fieldset>
               </form>
 

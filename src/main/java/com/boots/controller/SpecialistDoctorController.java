@@ -1,32 +1,132 @@
 package com.boots.controller;
 
-import com.boots.entity.Patient;
+import com.boots.entity.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/doctor2")
 
+@SessionAttributes(value = {"analysis_JSP", "directionToHospital_JSP"})
 public class SpecialistDoctorController extends DoctorController{
 
-    @RequestMapping(value = "/hi", method = RequestMethod.GET)
-    public ModelAndView addjmn(@ModelAttribute("message") String message) {
-        Patient patient = new Patient();
+    //analysis
+    @RequestMapping(value = "/{id_visit}/choose_action_analysis", method = RequestMethod.GET)
+    public ModelAndView choose_actionPageAnalysis(@ModelAttribute("message") String message,
+                                                   @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.setViewName("doctor/specialistDoctor/form/choose_form/choose_action_analysis");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/add_analysis", method = RequestMethod.GET)
+    public ModelAndView addPageAnalysis(@ModelAttribute("message") String message,
+                                         @PathVariable("id_visit") String id_visit){
+
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        Visit visit = patient.findVisit(id_visit);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("visit", visit);
+        modelAndView.addObject("analysis_JSP", new Analysis());
+        modelAndView.setViewName("doctor/specialistDoctor/form/create_form/new_analysis");
 
-        if(message.equals("y"))
-            modelAndView.addObject("message", message);
-        else
-            modelAndView.addObject("message", null);
+        return modelAndView;
+    }
 
-        modelAndView.setViewName("doctor/form/create_form/new_patient");
+    @ModelAttribute("analysis_JSP")
+    public Analysis createAnalysis() {
+        return new Analysis();
+    }
+
+    @RequestMapping(value = "/add_analysis", method = RequestMethod.POST)
+    public ModelAndView addAnalysis(@ModelAttribute("analysis_JSP") Analysis analysis,
+                                     @ModelAttribute("id_visit") String id_visit) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        Visit visit = patient.findVisit(id_visit);
+        analysis.setVisit(visit);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/doctor2/"+id_visit+"/analysis");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/analysis", method = RequestMethod.GET)
+    public ModelAndView AnalysisPage(@ModelAttribute("message") String message,
+                                   @ModelAttribute("analysis_JSP") Analysis analysis,
+                                   @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("analysis_JSP", analysis);
+        modelAndView.setViewName("doctor/specialistDoctor/document/analysis");
+        return modelAndView;
+    }
+
+    //direction to hospital
+    @RequestMapping(value = "/{id_visit}/choose_action_directionToHospital", method = RequestMethod.GET)
+    public ModelAndView choose_actionPageDirectionToHospital(@ModelAttribute("message") String message,
+                                                  @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.setViewName("doctor/specialistDoctor/form/choose_form/choose_action_directionToHospital");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/add_directionToHospital", method = RequestMethod.GET)
+    public ModelAndView addPageDirectionToHospital(@ModelAttribute("message") String message,
+                                        @PathVariable("id_visit") String id_visit){
+
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        Visit visit = patient.findVisit(id_visit);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("visit", visit);
+        modelAndView.addObject("directionToHospital_JSP", new DirectionToHospital());
+        modelAndView.setViewName("doctor/specialistDoctor/form/create_form/new_directionToHospital");
+
+        return modelAndView;
+    }
+
+    @ModelAttribute("directionToHospital_JSP")
+    public DirectionToHospital createDirectionToHospital() {
+        return new DirectionToHospital();
+    }
+
+    @RequestMapping(value = "/add_directionToHospital", method = RequestMethod.POST)
+    public ModelAndView addDirectionToHospital(@ModelAttribute("directionToHospital_JSP") DirectionToHospital directionToHospital,
+                                    @ModelAttribute("id_visit") String id_visit,
+                                               @ModelAttribute("typeHospital") boolean typeHospital,
+                                               @ModelAttribute("is_hepatitis") boolean is_hepatitis,
+                                               @ModelAttribute("is_independently") boolean is_independently) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        Visit visit = patient.findVisit(id_visit);
+        directionToHospital.setVisit(visit);
+        directionToHospital.setTypeHospital(typeHospital);
+        directionToHospital.setIs_hepatitis(is_hepatitis);
+        directionToHospital.setIs_independently(is_independently);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/doctor2/"+id_visit+"/directionToHospital");
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/directionToHospital", method = RequestMethod.GET)
+    public ModelAndView DirectionToHospitalPage(@ModelAttribute("message") String message,
+                                     @ModelAttribute("directionToHospital_JSP") DirectionToHospital directionToHospital,
+                                     @PathVariable("id_visit") String id_visit){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("directionToHospital", directionToHospital);
+        modelAndView.setViewName("doctor/specialistDoctor/document/directionToHospital");
         return modelAndView;
     }
 

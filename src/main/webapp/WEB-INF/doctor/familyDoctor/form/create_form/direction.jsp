@@ -43,7 +43,7 @@
 
                     <div class="card-body">
                         <legend class="card-title text-center">Направлення</legend>
-                        <form:form  method="POST" modelAttribute="direction" action="/add_direction">
+                        <form:form  method="POST" modelAttribute="direction" action="/doctor1/add_direction">
                             <input name="id_visit" type="hidden" value="${id_visit}" maxlength="100" readonly>
 
                             <div class="row mb-3">

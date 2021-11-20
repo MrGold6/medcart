@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="<c:url value="/res/style.css"/>">
     <link rel="icon" type="image/png" href="<c:url value="/res/medicine.png"/>"/>
-    <title>Choose sick leave</title>
+    <title>Choose medicine</title>
 
 </head>
 <body>
@@ -32,18 +32,19 @@
                 <div class="card card_form">
                     <div class="card-body">
 
-                        <legend class="card-title text-center">Потрібна довідка?</legend>
+                        <legend class="card-title text-center">Потрібне направлення до іншого лікаря?</legend>
+
                         <div class="form">
                             <ul class="border">
                                 <li>
-                                    <a href="/${id_visit}/add_sick_leave">Так</a>
+                                    <a href="/doctor1/${id_visit}/add_new_direction">Так</a>
                                 </li>
                                 <li>
-                                    <a <c:if test="${is_family_role}">href="/${id_visit}/visits/1"</c:if>
-                                       <c:if test="${!is_family_role}">href="/doctor2/${id_visit}/choose_action_analysis"</c:if>>Ні</a>
+                                    <a href="/${id_visit}/choose_action_med">Ні</a>
                                 </li>
                             </ul>
                         </div>
+
                     </div>
                 </div>
             </div>
