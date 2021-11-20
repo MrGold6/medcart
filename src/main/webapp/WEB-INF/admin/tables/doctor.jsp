@@ -41,10 +41,10 @@
                             <td>${doctor.specialization.name}</td>
 
                             <td>
-                                <c:if test="${doctor.user.username==null}"><a href="/admin/${doctor.RNTRC}/set_user_for_doctor/" class="btn btn_add"><i class="bi bi-plus-circle-dotted"></i></a> </c:if>
+                                <c:if test="${doctor.user.username==null}"><a href="/admin/${doctor.RNTRC}/set_user_for_doctor/" class="btn btn_add"><i class="bi bi-person"></i></a> </c:if>
                                 <c:if test="${doctor.user.username!=null}">${doctor.user.username}</c:if></td>
 
-                            <td><a href="/admin/${doctor.RNTRC}/schedule" class="btn btn_find_all"><i class="bi bi-plus-circle-dotted"></i></a></td>
+                            <td><a href="/admin/${doctor.RNTRC}/schedule" class="btn btn_find_all"><i class="bi bi-calendar4-event"></i></a></td>
 
 
                             <td><a href="/admin/${doctor.RNTRC}/edit_doctor/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>

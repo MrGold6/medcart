@@ -45,7 +45,9 @@
                             <p>з <u>${start_date}</u> по <u>${date}</u>
                         </div>
                         <center>
-                            <a href="/${id_visit}/visits/1" class="btn btn_form_add">Далі</a>
+                            <a  <c:if test="${sick_leave.visit.doctor.specialization.id==1}">href="/${id_visit}/visits/1"</c:if>
+                                <c:if test="${sick_leave.visit.doctor.specialization.id!=1}">href="/doctor2/${id_visit}/choose_action_analysis"</c:if>
+                                class="btn btn_form_add">Далі</a>
                         </center>
                     </div>
                 </div>

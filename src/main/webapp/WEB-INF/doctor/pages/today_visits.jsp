@@ -38,6 +38,11 @@
                             <li class="nav-item ">
                                 <a class="nav-link link active" aria-current="page" href= '/logout'>Вийти</a>
                             </li>
+                            <c:if test="${doctor.specialization.id==1}">
+                            <li class="nav-item">
+                                <a class="nav-link link active" href= '/doctor1/patients'>Створення пацієнта</a>
+                            </li>
+                            </c:if>
 
                             <li class="nav-item">
                                 <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>

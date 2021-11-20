@@ -70,42 +70,13 @@ public class DoctorController {
         modelAndView.addObject("doctor", doctor);
         modelAndView.addObject("visitsList", doctor.getDoneVisitsByMonth(LocalDate.now()));
         modelAndView.addObject("todayVisitsList", doctor.getDoneVisitsByDay(LocalDate.now()));
-
-
-        // modelAndView.addObject("schedules", doctor.getSchedules());
-
         modelAndView.setViewName("doctor/pages/doctor");
 
         return modelAndView;
     }
 
-    /*
-    @RequestMapping(value = "/patients", method = RequestMethod.GET)
-    public ModelAndView allPatientsPage() {
-        List<Patient> patients = patientService.allPatients();
-        Doctor doctor=getAuthDoc();
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("patientsList", patients);
-        modelAndView.addObject("doctor", doctor);
-        modelAndView.setViewName("doctor/pages/patients");
-        return modelAndView;
-    }
 
 
-    @RequestMapping(value = "/patients/searchTelephone_number", method = RequestMethod.GET)
-    public ModelAndView allPatientsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
-        Doctor doctor=getAuthDoc();
-        List<Patient> patients = patientService.findTelephone_number(telephone_number);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("patientsList", patients);
-        modelAndView.addObject("doctor", doctor);
-        modelAndView.setViewName("doctor/pages/patients");
-        return modelAndView;
-    }
-
-*/
 
     @RequestMapping(value = "/{id_visit}/visits/edit_patient", method = RequestMethod.GET)
     public ModelAndView editPagePatient(@PathVariable("id_visit") String id_visit,
@@ -228,7 +199,7 @@ public class DoctorController {
 
         ModelAndView modelAndView = new ModelAndView();
         if(doctor.getSpecialization() == doctorService.getByIdSpecialization(1))
-            modelAndView.setViewName("redirect:/"+visit.getNumber()+"/choose_action_direction");
+            modelAndView.setViewName("redirect:/doctor1/"+visit.getNumber()+"/choose_action_direction");
         else
             modelAndView.setViewName("redirect:/"+visit.getNumber()+"/choose_action_med");
 
@@ -251,45 +222,7 @@ public class DoctorController {
 
         return modelAndView;
     }
-//direction
-    @RequestMapping(value = "/{id_visit}/choose_action_direction", method = RequestMethod.GET)
-    public ModelAndView choose_actionPageDirection(@ModelAttribute("message") String message,
-                                                   @PathVariable("id_visit") String id_visit){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("doctor/form/choose_form/choose_action_direction");
-        return modelAndView;
-    }
 
-    @RequestMapping(value = "/{id_visit}/add_new_direction", method = RequestMethod.GET)
-    public ModelAndView addPageDirection(@ModelAttribute("message") String message,
-                                         @PathVariable("id_visit") String id_visit){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("id_visit", id_visit);
-        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
-        modelAndView.addObject("direction", new Direction());
-        modelAndView.setViewName("doctor/form/create_form/direction");
-
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/add_direction", method = RequestMethod.POST)
-    public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
-                                     @ModelAttribute("direction") Direction direction,
-                                     @ModelAttribute("id_visit") String id_visit) {
-        Patient patient =  patientService.getById(getIdPatientSplit(id_visit));
-        String id_direction=(patient.getDirections().size()+1) +"_"+patient.getRNTRC();
-
-        direction.setNumber(id_direction);
-        direction.setSpecialization(doctorService.getByIdSpecialization(selected_spec));
-        direction.setStatus(true);
-        patient.addDirection(direction);
-        patientService.add(patient);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_med");
-
-        return modelAndView;
-    }
 
 //recipe
     @RequestMapping(value = "/{id_visit}/choose_action_med", method = RequestMethod.GET)
@@ -373,7 +306,12 @@ public class DoctorController {
     @RequestMapping(value = "/{id_visit}/choose_action_sickLeave", method = RequestMethod.GET)
     public ModelAndView choose_actionPageSickLeave(@ModelAttribute("message") String message,
                                                    @PathVariable("id_visit") String id_visit){
+        boolean is_family_role= getAuthDoc().getSpecialization().getId() == 1;
+
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("is_family_role", is_family_role);
+
         modelAndView.setViewName("doctor/form/choose_form/choose_action_sickLeave");
         return modelAndView;
     }
@@ -423,7 +361,7 @@ public class DoctorController {
 
     @RequestMapping(value = "/{id_visit}/sick_leave", method = RequestMethod.GET)
     public ModelAndView SickLeave(@ModelAttribute("message") String message,
-                                  @ModelAttribute("recipeJSP") Recipe recipe,
+                                 // @ModelAttribute("recipeJSP") Recipe recipe,
                                   @ModelAttribute("sick_leaveJSP") Sick_leave sick_leave,
                                   @PathVariable("id_visit") String id_visit){
         ModelAndView modelAndView = new ModelAndView();

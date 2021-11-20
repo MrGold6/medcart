@@ -38,13 +38,13 @@
                                     <td>${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.</td>
                                     <td>${patient.sex == 0 ? "Чоловік" : "Жінка" }</td>
                                     <td>0${patient.telephone_number}</td>
-                                    <td><a href="/admin/${patient.RNTRC}/visit" class="btn btn_find"><i class="bi bi-plus-circle-dotted"></i></a></td>
+                                    <td><a href="/admin/${patient.RNTRC}/visit" class="btn btn_find"><i class="bi bi-journal-medical"></i></a></td>
                                     <td>
-                                        <c:if test="${patient.user.username==null}"><a href="/admin/${patient.RNTRC}/set_user_for_patient/" class="btn btn_add"><i class="bi bi-plus-circle-dotted"></i></a> </c:if>
+                                        <c:if test="${patient.user.username==null}"><a href="/admin/${patient.RNTRC}/set_user_for_patient/" class="btn btn_add"><i class="bi bi-person"></i></a> </c:if>
                                         <c:if test="${patient.user.username!=null}">${patient.user.username}</c:if></td>
 
                                     <td>
-                                        <a href="/admin/${patient.RNTRC}/direction/" class="btn btn_find_all"><i class="bi bi-vector-pen "></i></a>
+                                        <a href="/admin/${patient.RNTRC}/direction/" class="btn btn_find_all"><i class="bi bi-signpost"></i></a>
                                     </td>
                                     <td><a href="/admin/${patient.RNTRC}/edit_patient/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                         <a href="/admin/${patient.RNTRC}/delete_patient" class="btn btn_delete"><i class="bi bi-trash "></i></a>

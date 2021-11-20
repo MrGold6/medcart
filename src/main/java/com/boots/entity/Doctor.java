@@ -81,9 +81,7 @@ public class Doctor extends Human {
 
     public List<Schedule> freeSchedule(LocalDate date)
     {
-
-
-        List<Schedule> freeSchedule =new ArrayList<>();
+        List<Schedule> freeSchedule;
         if(date.equals(LocalDate.now()))
             freeSchedule = this.getSchedulesByDayAndNotAfterCurrentTime(date);
         else

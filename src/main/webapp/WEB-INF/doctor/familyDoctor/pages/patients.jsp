@@ -45,6 +45,10 @@
                             </li>
 
                             <li class="nav-item">
+                                <a class="nav-link link active" href= '/doctor1/patients'>Створення пацієнта</a>
+                            </li>
+
+                            <li class="nav-item">
                                 <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
                             </li>
 
@@ -67,10 +71,10 @@
 
 
                 <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">
-                        <form class="d-flex" id="search" method="GET" action="/patients/searchTelephone_number">
+                        <form class="d-flex" id="search" method="GET" action="/doctor1/patients/searchTelephone_number">
                             <input class="form-control me-2 shadow bg-body rounded rounded-pill border-0" id="search_input" type="number" name="telephone_number" placeholder="номер телефону"  required>
                             <button class="btn btn_find mx-2" id="search_button" type="submit">Знайти</button>
-                            <a href="/patients" class="btn btn_find_all">Всі</a>
+                            <a href="/doctor1/patients" class="btn btn_find_all">Всі</a>
                         </form>
                 </div>
 
@@ -83,9 +87,10 @@
                             <th>РНОКПП</th>
                             <th>Ім'я</th>
                             <th>Прізвище</th>
-                            <th>Дата народження</th>
                             <th>Стать</th>
                             <th>Номер телефону</th>
+                            <th>Юзер</th>
+
                         </tr>
                         </thead>
 
@@ -93,13 +98,14 @@
                             <c:if test="${!patientsList.isEmpty()}">
                             <tbody>
                                     <c:forEach var="patient" items="${patientsList}" varStatus="i">
-                                        <tr onclick='document.location="<c:url value='/${patient.RNTRC}/visits'/>"'>
+                                        <tr>
                                             <td>${patient.RNTRC}</td>
                                             <td>${patient.name}</td>
                                             <td>${patient.surname}</td>
-                                            <td>${patient.date_of_birth}</td>
                                             <td>${patient.sex== 0 ? "Чоловік" : "Жінка" }</td>
-                                            <td>${patient.telephone_number}</td>
+                                            <td>0${patient.telephone_number}</td>
+                                            <td>${patient.user.username}</td>
+
                                         </tr>
                                     </c:forEach>
                             </tbody>
