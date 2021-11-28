@@ -65,22 +65,6 @@
                 </div>
             </div>
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <div class="text-center text-justify">
-                                <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Такий пацієнт вже існує</span>
-                            </div>
-                            <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
 
 
 
@@ -95,12 +79,3 @@
 </body>
 
 </html>
-
-<c:if test="${message!=null}">
-    <script type="text/javascript">
-        var myModal = new bootstrap.Modal(document.getElementById("staticBackdrop"), {});
-        document.onreadystatechange = function () {
-            myModal.show();
-        };
-    </script>
-</c:if>

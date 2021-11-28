@@ -1,27 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Lera Kos
-  Date: 27.04.2021
-  Time: 22:41
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <!-- Обязательные метатеги -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<jsp:include page="../template/head.jsp" />
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/res/style.css"/>">
-    <link rel="icon" type="image/png" href="<c:url value="/res/medicine.png"/>"/>
-
-    <title>Patient</title>
-</head>
 <body>
 <div class="container">
 
@@ -99,7 +80,7 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Номер телефону:</label>
                                     <div class="col-sm-6">
-                                        <input type="number" name="telephone_number" class="form-control" value="${patient.telephone_number}" required>
+                                        <input type="number" name="telephone_number" class="form-control" value="0${patient.telephone_number}" required>
                                     </div>
                                 </div>
 
@@ -144,6 +125,20 @@
                                         <input type="text" name="allergic_history" class="form-control"  placeholder="немає" value="${patient.allergic_history}" maxlength="100" readonly>
                                     </div>
                                 </div>
+
+                            <input type="hidden" name="count_of_recipe" class="form-control no-validate"  value="${patient.count_of_recipe}" readonly>
+
+
+
+                            <input type="hidden" name="count_of_sick_leave" class="form-control no-validate"  value="${patient.count_of_sick_leave}" readonly>
+
+
+                            <input type="hidden" name="count_of_directionToHospital" class="form-control no-validate"  value="${patient.count_of_directionToHospital}" readonly>
+
+
+                            <input type="hidden" name="count_of_directionAnalysis" class="form-control no-validate"  value="${patient.count_of_directionAnalysis}" readonly>
+
+
 
                             <c:set value="/patient/edit_patient" var="edit_patient"/>
                             <center>

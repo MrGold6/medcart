@@ -1,12 +1,13 @@
-package com.boots.entity;
+package com.boots.transientClasses;
 
+import com.boots.transientClasses.Document;
+import com.boots.transientClasses.Medicine;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class Recipe extends Document{
+public class Recipe extends Document {
 
     private List<Medicine> medicineList = new ArrayList<>();
 

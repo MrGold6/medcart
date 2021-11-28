@@ -63,6 +63,8 @@ input[readonly]{
     background: rgb(255, 234, 171);
 }
 
+
+
 .btn_find_all
 {
     background: rgba(181, 185, 206, 0.75);
@@ -98,6 +100,28 @@ input[readonly]{
 
 .btn_form_safe:hover{
     background: rgb(255, 175, 67);
+}
+
+.btn_add_outline {
+    border-width: 1.5px;
+    border-color: #44B42BD4;
+    color: #1dad0a;
+}
+
+.btn_add_outline:hover {
+    background-color: #91E47FD3;
+    color: #0a5e02;
+}
+
+.btn_delete_outline {
+    border-width: 1.5px;
+    border-color: rgba(180, 43, 43, 0.83);
+    color: #ad0a0a;
+}
+
+.btn_delete_outline:hover {
+    background-color: rgba(228, 127, 127, 0.52);
+    color: #ad0a0a;
 }
 
 /*circle return btn*/
@@ -184,6 +208,16 @@ header{
     width: 100%;
 }
 
+.link-userLink
+{
+    color: #9b3963;
+}
+
+.link-userLink:hover
+{
+    color: #6b2644;
+}
+
 /* for custom scrollbar for webkit browser. not working with firefox*/
 
 ::-webkit-scrollbar {
@@ -239,8 +273,14 @@ td
     border-bottom: 1px solid rgb(250, 180, 180);
 }
 
-tr{
+tr
+{
     background: #ffffff;
+}
+
+.without_link tr:hover{
+    background: #ffffff;
+    cursor: auto;
 }
 
 tr:hover{
@@ -250,6 +290,59 @@ tr:hover{
 
 #medicine_table:hover{
     background: #ffffff;
+}
+
+/*card*/
+
+.my_card
+{
+    border: 1px solid rgb(250, 180, 180);
+}
+
+.my_card_without_link
+{
+    border: 1px solid rgb(250, 180, 180);
+
+}
+
+
+.my_card:hover{
+    background: #fff6e7;
+    cursor: pointer;
+}
+
+.my_card h4, .my_card_without_link h4
+{
+    font-size: 18pt;
+    color: #000000;
+    font-weight: 500;
+    text-align: center;
+    font-family:serif;
+}
+
+.time h4
+{
+    font-size: 14pt;
+    color: #000000;
+    font-weight: 500;
+    text-align: center;
+    font-family:serif;
+}
+
+.my_card h5, .my_card_without_link h5
+{
+    font-size: 14pt;
+    color: rgba(0, 0, 0, 0.7);
+    font-weight: 400;
+    text-align: center;
+}
+
+#dateTime
+{
+    font-size: 14pt;
+    color: rgb(73, 78, 145);
+    font-weight: 400;
+    text-align: center;
 }
 
 /*choose_form_style*/

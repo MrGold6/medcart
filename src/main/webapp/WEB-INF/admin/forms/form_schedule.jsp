@@ -30,14 +30,36 @@
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">День:</label>
                                 <div class="col-sm-6">
-                                    <input type="number" name="day" value="${schedule.day}" class="form-control" min="1" max="7" required>
+                                    <select  name="day"  class="form-select">
+                                        <option value="2" <c:if test="${!empty schedule.day && schedule.day==2}">
+                                            selected
+                                        </c:if>>Понеділок</option>
+                                        <option value="3" <c:if test="${!empty schedule.day && schedule.day==3}">
+                                            selected
+                                        </c:if>>Вівторок</option>
+                                        <option value="4" <c:if test="${!empty schedule.day && schedule.day==4}">
+                                            selected
+                                        </c:if>>Середа</option>
+                                        <option value="5" <c:if test="${!empty schedule.day && schedule.day==5}">
+                                            selected
+                                        </c:if>>Четвер</option>
+                                        <option value="6" <c:if test="${!empty schedule.day && schedule.day==6}">
+                                            selected
+                                        </c:if>>П'ятниця</option>
+                                        <option value="7" <c:if test="${!empty schedule.day && schedule.day==7}">
+                                            selected
+                                        </c:if>>Субота</option>
+                                        <option value="1" <c:if test="${!empty schedule.day && schedule.day==1}">
+                                            selected
+                                        </c:if>>Неділя</option>
+                                    </select>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Час:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="time" value="${schedule.time}" class="form-control" maxlength="5" required>
+                                    <input type="time" name="time" value="${schedule.time}" class="form-control" maxlength="5" required>
                                 </div>
                             </div>
 
@@ -66,7 +88,7 @@
                         <div class="modal-body">
                             <div class="text-center text-justify">
                                 <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Такий пацієнт вже існує</span>
+                                <span class="ml-2" style="font-size:16pt;">Такий розклад вже існує</span>
                             </div>
                             <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
                         </div>

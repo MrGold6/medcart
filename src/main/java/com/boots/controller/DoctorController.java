@@ -1,11 +1,12 @@
 package com.boots.controller;
 
 import com.boots.entity.*;
-import com.boots.service.DoctorService;
-import com.boots.service.PatientService;
-import com.boots.service.UserService;
+import com.boots.service.*;
+import com.boots.transientClasses.Medicine;
+import com.boots.transientClasses.Recipe;
+import com.boots.transientClasses.Sick_leave;
+import com.boots.transientClasses.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @SessionAttributes(value = {"recipeJSP", "sick_leaveJSP"})
@@ -26,6 +28,13 @@ public class DoctorController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    protected SpecializationService specializationService;
+
+    @Autowired
+    protected MedicineCatalogService medicineCatalogService;
+
+    protected Sort sort = new Sort();
 
     @Autowired
     public void setPatientService(PatientService patientService) {
@@ -54,6 +63,16 @@ public class DoctorController {
         return Long.parseLong(words[1]);
     }
 
+    public void deleteExpiredVisits(Doctor doctor)
+    {
+        for (Visit visit : doctor.expiredVisits()) {
+            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+                visit.getPatient().findNotActiveDirection(visit.getDoctor().getSpecialization()).setStatus(true);
+            patientService.deleteVisit(visit.getNumber());
+        }
+        doctor.removeExpiredVisits();
+    }
+
     //doctor
     public Doctor getAuthDoc()
     {
@@ -77,7 +96,7 @@ public class DoctorController {
 
 
 
-
+//patient
     @RequestMapping(value = "/{id_visit}/visits/edit_patient", method = RequestMethod.GET)
     public ModelAndView editPagePatient(@PathVariable("id_visit") String id_visit,
                                         @ModelAttribute("message") String message) {
@@ -110,7 +129,7 @@ public class DoctorController {
     @RequestMapping(value = "/today_visits", method = RequestMethod.GET)
     public ModelAndView today_Visits() {
         Doctor doctor=getAuthDoc();
-
+        deleteExpiredVisits(doctor);
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("visitsList", doctor.getActiveVisitsByDay(LocalDate.now()));
@@ -164,7 +183,7 @@ public class DoctorController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("visit",  patient.findVisit(id_visit));
         modelAndView.addObject("id_visit", id_visit);
-        modelAndView.addObject("diseasesList", diseases);
+        modelAndView.addObject("diseasesList", sort.sortDisease(diseases,2));
         modelAndView.addObject("notes", "");
 
         modelAndView.setViewName("doctor/form/create_form/new_visit");
@@ -251,7 +270,7 @@ public class DoctorController {
         List<MedicineCatalog> medicineCatalogList = patientService.allMedicines();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("medicineCatalogList", medicineCatalogList);
+        modelAndView.addObject("medicineCatalogList", sort.sortMedicineCatalog(medicineCatalogList, 2 ));
         modelAndView.addObject("recipeJSP", recipe);
         modelAndView.addObject("id_visit",id_visit);
         modelAndView.setViewName("doctor/form/create_form/new_medicine");
@@ -286,9 +305,13 @@ public class DoctorController {
         recipe.setVisit(visit);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+id_visit+"/recipe");
+        if(recipe.getMedicineList().isEmpty())
+            modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_sickLeave");
+        else
+            modelAndView.setViewName("redirect:/"+id_visit+"/recipe");
         return modelAndView;
     }
+
 
     @RequestMapping(value = "/{id_visit}/recipe", method = RequestMethod.GET)
     public ModelAndView RecipePage(@ModelAttribute("message") String message,

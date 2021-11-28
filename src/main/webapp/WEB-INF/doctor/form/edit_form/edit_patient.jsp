@@ -1,27 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Lera Kos
-  Date: 27.04.2021
-  Time: 22:41
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <!-- Обязательные метатеги -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/res/style.css"/>">
-    <link rel="icon" type="image/png" href="<c:url value="/res/medicine.png"/>"/>
-
-    <title>Patient</title>
-</head>
+<jsp:include page="../../template/head.jsp" />
 <body>
 <div class="container">
 
@@ -146,7 +126,36 @@
                                     </div>
                                 </div>
 
-                                <c:set value="edit_patient" var="edit_patient"/>
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість рецептів:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="count_of_recipe" class="form-control no-validate"  value="${patient.count_of_recipe}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість лікарняних:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="count_of_sick_leave" class="form-control no-validate"  value="${patient.count_of_sick_leave}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість направлень у лікарню:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="count_of_directionToHospital" class="form-control no-validate"  value="${patient.count_of_directionToHospital}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Кількість направлень на аналізи:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="count_of_directionAnalysis" class="form-control no-validate"  value="${patient.count_of_directionAnalysis}" readonly>
+                                </div>
+                            </div>
+
+
+                            <c:set value="edit_patient" var="edit_patient"/>
                                 <center>
                                     <input type="submit" id="in"  class="btn btn_form_add" name="${edit_patient}" value="Змінити">
                                 </center>

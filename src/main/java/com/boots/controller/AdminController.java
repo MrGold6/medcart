@@ -2,18 +2,21 @@ package com.boots.controller;
 
 import com.boots.entity.*;
 import com.boots.service.*;
+import com.boots.transientClasses.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.rmi.server.UID;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.UUID;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/admin")
@@ -42,95 +45,41 @@ public class AdminController {
     @Autowired
     protected SpecializationService specializationService;
 
+    protected Sort sort = new Sort();
 
 
-    //functions
-    public List<MedicineCatalog> sortMedicineCatalog(List<MedicineCatalog> medicineCatalog, int i) {
-        switch (i) {
-            case 1: {
-                medicineCatalog.sort(Comparator.comparing(MedicineCatalog::getATX));
-                break;
-            }
-            case 2: {
-                medicineCatalog.sort(Comparator.comparing(MedicineCatalog::getName));
-                break;
-            }
-
-        }
-
-        return medicineCatalog;
-    }
-
-    public List<Disease> sortDisease(List<Disease> diseases, int i) {
-        switch (i) {
-            case 1: {
-                diseases.sort(Comparator.comparing(Disease::getICD_10));
-                break;
-            }
-            //sortSpecialization
-            case 2: {
-                diseases.sort(Comparator.comparing(Disease::getName));
-                break;
-            }
-
-        }
-
-        return diseases;
-    }
-
-    public List<Specialization> sortSpecialization(List<Specialization> specializations, int i) {
-        switch (i) {
-            case 1: {
-                specializations.sort(Comparator.comparing(Specialization::getId));
-                break;
-            }
-            //sortSpecialization
-            case 2: {
-                specializations.sort(Comparator.comparing(Specialization::getName));
-                break;
-            }
-
-        }
-
-        return specializations;
-    }
-
-
-    //sortRole
-    public List<Role> sortRole(List<Role> roles, int i) {
-        switch (i) {
-            case 1: {
-                roles.sort(Comparator.comparing(Role::getId));
-                break;
-            }
-            //sortSpecialization
-            case 2: {
-                roles.sort(Comparator.comparing(Role::getName));
-                break;
-            }
-        }
-
-        return roles;
-    }
     //patient
-    @RequestMapping(value = "/patients", method = RequestMethod.GET)
-    public ModelAndView allPatientsPage() {
+    @RequestMapping(value = "/patients/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView allPatientsPage(@PathVariable("sort_num") int sort_num) {
         List<Patient> patients = patientService.allPatients();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("patientsList", patients);
+        modelAndView.addObject("patientsList", sort.sortPatient(patients, sort_num));
         modelAndView.setViewName("admin/tables/patients");
         return modelAndView;
     }
+
+    @RequestMapping(value = "/patients/1", method = RequestMethod.GET, params = "search")
+    public ModelAndView allPatientsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
+
+        List<Patient> patients = patientService.findTelephone_number(telephone_number);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("patientsList", sort.sortPatient(patients, 1));
+        modelAndView.setViewName("admin/tables/patients");
+
+        return modelAndView;
+    }
+
     @GetMapping("/{id_patient}/set_user_for_patient")
     public ModelAndView addPageSetUserPatient(@PathVariable("id_patient") Long id_patient) {
         Patient patient = patientService.getById(id_patient);
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("isDoc", false);
-        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("entity", patient);
         modelAndView.addObject("users", patient.getUsers(userService.allUsers(), 3));
-        modelAndView.setViewName("admin/forms/form_user_for_patient");
+        modelAndView.setViewName("admin/forms/form_user_for_entity");
 
         return modelAndView;
     }
@@ -148,7 +97,7 @@ public class AdminController {
         patient.setUser(user);
         patientService.add(patient);
 
-        modelAndView.setViewName("redirect:/admin/patients");
+        modelAndView.setViewName("redirect:/admin/patients/1");
 
         return modelAndView;
     }
@@ -178,13 +127,13 @@ public class AdminController {
                                    @ModelAttribute("rh") String rh) {
         ModelAndView modelAndView = new ModelAndView();
 
-        if (patientService.checkRNTRC(patient.getRNTRC())) {
+        if (patientService.checkRNTRC(patient.getRNTRC()) && doctorService.checkRNTRC(patient.getRNTRC())) {
             patient.setSex(Integer.parseInt(sex));
             patient.setBlood_type(Integer.parseInt(Blood_type));
             patient.setRh(rh);
 
             patientService.add(patient);
-            modelAndView.setViewName("redirect:/admin/patients");
+            modelAndView.setViewName("redirect:/admin/patients/1");
 
         } else {
             modelAndView.addObject("message","y");
@@ -219,7 +168,7 @@ public class AdminController {
         patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/patients");
+        modelAndView.setViewName("redirect:/admin/patients/1");
 
         return modelAndView;
     }
@@ -230,19 +179,30 @@ public class AdminController {
         patientService.deletePatient(id_patient);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/patients");
+        modelAndView.setViewName("redirect:/admin/patients/1");
 
         return modelAndView;
     }
 
     //doctor
-    @RequestMapping(value = "/doctor", method = RequestMethod.GET)
-    public ModelAndView allDoctorsPage() {
+    @RequestMapping(value = "/doctor/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView allDoctorsPage(@PathVariable("sort_num") int sort_num) {
         List<Doctor> doctors = doctorService.allDoctors();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("doctorList", doctors);
+        modelAndView.addObject("doctorList",  sort.sortDoctor(doctors, sort_num));
         modelAndView.setViewName("admin/tables/doctor");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/doctor/1", method = RequestMethod.GET, params = "search")
+    public ModelAndView allDoctorsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
+        List<Doctor> doctors = doctorService.findTelephone_number(telephone_number);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("doctorList",  sort.sortDoctor(doctors, 1));
+        modelAndView.setViewName("admin/tables/doctor");
+
         return modelAndView;
     }
 
@@ -253,9 +213,9 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("isDoc", true);
-        modelAndView.addObject("patient", doctor);
+        modelAndView.addObject("entity", doctor);
         modelAndView.addObject("users", doctor.getUsers(userService.allUsers()));
-        modelAndView.setViewName("admin/forms/form_user_for_patient");
+        modelAndView.setViewName("admin/forms/form_user_for_entity");
 
         return modelAndView;
     }
@@ -272,7 +232,7 @@ public class AdminController {
         doctor.setUser(user);
         doctorService.add(doctor);
 
-        modelAndView.setViewName("redirect:/admin/doctor");
+        modelAndView.setViewName("redirect:/admin/doctor/1");
 
         return modelAndView;
     }
@@ -303,12 +263,12 @@ public class AdminController {
                                   @ModelAttribute("selected_spec") int spec_id) {
         ModelAndView modelAndView = new ModelAndView();
 
-        if (doctorService.checkRNTRC(doctor.getRNTRC())) {
+        if ((patientService.checkRNTRC(doctor.getRNTRC()) && doctorService.checkRNTRC(doctor.getRNTRC()))) {
             doctor.setSex(Integer.parseInt(sex));
             doctor.setSpecialization(specializationService.getById(spec_id));
 
             doctorService.add(doctor);
-            modelAndView.setViewName("redirect:/admin/doctor");
+            modelAndView.setViewName("redirect:/admin/doctor/1");
 
         } else {
             modelAndView.addObject("message","y");
@@ -340,7 +300,7 @@ public class AdminController {
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/doctor");
+        modelAndView.setViewName("redirect:/admin/doctor/1");
 
         return modelAndView;
     }
@@ -352,13 +312,14 @@ public class AdminController {
         doctorService.delete(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/doctor");
+        modelAndView.setViewName("redirect:/admin/doctor/1");
 
         return modelAndView;
     }
 //schedule
-    @RequestMapping(value = "/{id_doctor}/schedule", method = RequestMethod.GET)
-    public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id_doctor){
+    @RequestMapping(value = "/{id_doctor}/schedule/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id_doctor,
+                                     @PathVariable("sort_num") int sort_num){
 
         ModelAndView modelAndView = new ModelAndView();
 
@@ -366,7 +327,7 @@ public class AdminController {
 
 
         modelAndView.addObject("doctor",doctor);
-        modelAndView.addObject("schedules", doctor.getSchedules());
+        modelAndView.addObject("schedules", sort.sortSchedule(doctor.getSchedules(), sort_num));
 
         modelAndView.setViewName("admin/tables/schedule");
         return modelAndView;
@@ -382,18 +343,18 @@ public class AdminController {
         return modelAndView;
     }
 
-
     @RequestMapping(value = "/add_schedule", method = RequestMethod.POST)
     public ModelAndView addSchedule(@ModelAttribute("schedule") Schedule schedule,
-                                    @ModelAttribute("id_doctor") Long id_doctor) {
+                                    @ModelAttribute("id_doctor") Long id_doctor) throws NoSuchAlgorithmException {
 
         Doctor doctor = doctorService.getById(id_doctor);
-        schedule.setId(doctorService.allSchedule().size()+1);
+
+        schedule.setId(SecureRandom.getInstance("SHA1PRNG").nextInt());
         doctor.addSchedule(schedule);
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
 
         return modelAndView;
     }
@@ -417,7 +378,7 @@ public class AdminController {
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
 
         return modelAndView;
     }
@@ -430,7 +391,7 @@ public class AdminController {
         doctorService.deleteSchedule(id_schedule);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule");
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
 
         return modelAndView;
     }
@@ -441,16 +402,21 @@ public class AdminController {
         List<MedicineCatalog> medicineCatalogList = patientService.allMedicines();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("medicineCatalogList", sortMedicineCatalog(medicineCatalogList, sort_num));
+        modelAndView.addObject("medicineCatalogList", sort.sortMedicineCatalog(medicineCatalogList, sort_num));
         modelAndView.setViewName("admin/tables/medicineCatalog");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_medicineCatalog", method = RequestMethod.GET)
-    public ModelAndView addPageMedicine() {
+    public ModelAndView addPageMedicine(@ModelAttribute("message") String message) {
         MedicineCatalog medicine = new MedicineCatalog();
 
         ModelAndView modelAndView = new ModelAndView();
+        if (message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
+
         modelAndView.addObject("medicine", medicine);
         modelAndView.setViewName("admin/forms/form_medicine");
         return modelAndView;
@@ -511,16 +477,20 @@ public class AdminController {
         List<Disease> diseaseList = diseaseService.allDisease();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("diseaseList", sortDisease(diseaseList, sort_num));
+        modelAndView.addObject("diseaseList", sort.sortDisease(diseaseList, sort_num));
         modelAndView.setViewName("admin/tables/disease");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_disease", method = RequestMethod.GET)
-    public ModelAndView addPageDisease() {
+    public ModelAndView addPageDisease( @ModelAttribute("message") String message) {
         Disease disease = new Disease();
 
         ModelAndView modelAndView = new ModelAndView();
+        if (message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
         modelAndView.addObject("disease", disease);
         modelAndView.setViewName("admin/forms/form_disease");
         return modelAndView;
@@ -582,16 +552,21 @@ public class AdminController {
         List<Specialization> specializationList = specializationService.allSpecialization();
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("specializationList", sortSpecialization(specializationList, sort_num));
+        modelAndView.addObject("specializationList", sort.sortSpecialization(specializationList, sort_num));
         modelAndView.setViewName("admin/tables/specialization");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_specialization", method = RequestMethod.GET)
-    public ModelAndView addPageSpecialization() {
+    public ModelAndView addPageSpecialization (@ModelAttribute("message") String message) {
         Specialization specialization = new Specialization();
 
         ModelAndView modelAndView = new ModelAndView();
+        if(message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
+
         modelAndView.addObject("specialization", specialization);
         modelAndView.setViewName("admin/forms/form_specialization");
         return modelAndView;
@@ -648,17 +623,23 @@ public class AdminController {
     //user
    @RequestMapping(value = "/user/{sort_num}", method = RequestMethod.GET)
     public ModelAndView allUserPage(@PathVariable("sort_num") int sort_num) {
-        ModelAndView modelAndView = new ModelAndView();
         List<User> userList = userService.allUsers();
-        userList.sort(Comparator.comparing(User::getUsername));
-        modelAndView.addObject("userList", userList);
-       modelAndView.setViewName("admin/tables/user");
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("userList", sort.sortUser(userList, sort_num));
+        modelAndView.setViewName("admin/tables/user");
         return modelAndView;
     }
 
     @GetMapping("/add_user")
-    public ModelAndView addPageUser() {
+    public ModelAndView addPageUser(@ModelAttribute("message") String message) {
         ModelAndView modelAndView = new ModelAndView();
+
+        if(message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
+
         modelAndView.addObject("user", new User());
         modelAndView.addObject("roles", roleService.allRole());
         modelAndView.setViewName("admin/forms/form_user");
@@ -667,30 +648,19 @@ public class AdminController {
     }
 
     @PostMapping("/add_user")
-    public ModelAndView addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
-                                @ModelAttribute("selected_role") int role_id) {
+    public ModelAndView addUser(@ModelAttribute("user") @Valid User user,
+                                @ModelAttribute("selected_role") int role_id) throws NoSuchAlgorithmException {
+        user.setId(SecureRandom.getInstance("SHA1PRNG").nextInt()+"_"+user.getUsername());
+        user.setSelected(false);
 
         ModelAndView modelAndView = new ModelAndView();
 
-        user.setId((userService.allUsers().size()+1)+"_"+user.getUsername());
-        user.setSelected(false);
-
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("admin/forms/form_user");
-        }
-        else if (!user.getPassword().equals(user.getPasswordConfirm())){
-            modelAndView.addObject("passwordError", "Пароли не совпадают");
-            modelAndView.setViewName("admin/forms/form_user");
-        }
-        else if (!userService.saveUser(user, role_id)){
-            modelAndView.addObject("usernameError", "Пользователь с таким именем уже существует");
-            modelAndView.setViewName("admin/forms/form_user");
+        if (!userService.saveUser(user, role_id)){
+            modelAndView.addObject("message","y");
+            modelAndView.setViewName("redirect:/admin/add_user");
         }
         else
-        {
             modelAndView.setViewName("redirect:/admin/user/1");
-
-        }
 
         return modelAndView;
     }
@@ -699,67 +669,71 @@ public class AdminController {
     @RequestMapping(value = "/change_password/{id}", method = RequestMethod.GET)
     public ModelAndView editPageUserPassword(@PathVariable("id") String id) {
         User user = userService.findUserById(id);
+        Optional<Role> role =  user.getRoles().stream().findFirst();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/forms/form_user_password");
         modelAndView.addObject("user", user);
-        Optional<Role> role =  user.getRoles().stream().findFirst();
         modelAndView.addObject("my_role_id", role.orElse(new Role()).getId());
 
         return modelAndView;
     }
 
     @RequestMapping(value = "/change_password", method = RequestMethod.POST, params = "edit")
-    public ModelAndView editUserPassword(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+    public ModelAndView editUserPassword(@ModelAttribute("user") @Valid User user,
                                          @ModelAttribute("my_role_id") int my_role_id) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("admin/forms/form_user_password");
-        }
-        else if (!user.getPassword().equals(user.getPasswordConfirm())){
-            modelAndView.addObject("passwordError", "Пароли не совпадают");
-            modelAndView.setViewName("admin/forms/form_user_password");
-        }
         userService.editUserPassword(user, my_role_id);
+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin/"+user.getUsername()+"/edit_user");
-
-
-
         return modelAndView;
     }
 
     @RequestMapping(value = "/{username}/edit_user", method = RequestMethod.GET)
     public ModelAndView editPageUser(@PathVariable("username") String  username) {
         User user = (User) userService.loadUserByUsername(username);
+        Optional<Role> role =   user.getRoles().stream().findFirst();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/forms/form_user");
         modelAndView.addObject("user", user);
         modelAndView.addObject("roles", roleService.allRole());
-
-        Optional<Role> role =   user.getRoles().stream().findFirst();
         modelAndView.addObject("my_role", role.orElse(new Role()));
 
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_user", method = RequestMethod.POST, params = "edit")
-    public ModelAndView editUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+    public ModelAndView editUser(@ModelAttribute("user") @Valid User user,
                                  @ModelAttribute("selected_role") int role_id) {
-        ModelAndView modelAndView = new ModelAndView();
 
-        if (bindingResult.hasErrors()) {
-            modelAndView.setViewName("admin/forms/form_user");
-        }
-        else if (!user.getPassword().equals(user.getPasswordConfirm())){
-            modelAndView.addObject("passwordError", "Пароли не совпадают");
-            modelAndView.setViewName("admin/forms/form_user");
-        }
         userService.editUser(user, role_id);
+
+        Optional<Role> role = user.getRoles().stream().findFirst();
+
+        if (!user.isSelected()) {
+            if (role.orElse(new Role()).getId() == 1 || role.orElse(new Role()).getId() == 4) {
+                System.out.println("doc");
+
+                Doctor doctor = doctorService.doctorByUser(user);
+                if(doctor!=null) {
+                    doctor.setUser(null);
+                    doctorService.add(doctor);
+                }
+
+            } else if (role.orElse(new Role()).getId() == 3) {
+                System.out.println("pat");
+                Patient patient = patientService.patientByUser(user);
+                if(patient!=null) {
+                    patient.setUser(null);
+                    patientService.add(patient);
+                }
+
+            }
+        }
+
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin/user/1");
-
-
 
         return modelAndView;
     }
@@ -778,16 +752,20 @@ public class AdminController {
    @RequestMapping(value = "/role/{sort_num}", method = RequestMethod.GET)
     public ModelAndView allRolePage(@PathVariable("sort_num") int sort_num) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("roleList", sortRole(roleService.allRole(), sort_num));
+        modelAndView.addObject("roleList", sort.sortRole(roleService.allRole(), sort_num));
         modelAndView.setViewName("admin/tables/role");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_role", method = RequestMethod.GET)
-    public ModelAndView addPageRole() {
+    public ModelAndView addPageRole(@ModelAttribute("message") String message) {
         Role role = new Role();
 
         ModelAndView modelAndView = new ModelAndView();
+        if (message.equals("y"))
+            modelAndView.addObject("message", message);
+        else
+            modelAndView.addObject("message", null);
         modelAndView.addObject("role", role);
         modelAndView.setViewName("admin/forms/form_role");
         return modelAndView;
@@ -843,13 +821,14 @@ public class AdminController {
     }
 
     //directions
-    @RequestMapping(value = "/{id_patient}/direction", method = RequestMethod.GET)
-    public ModelAndView allDirection(@PathVariable("id_patient") Long id_patient) {
+    @RequestMapping(value = "/{id_patient}/direction/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView allDirection(@PathVariable("id_patient") Long id_patient,
+                                     @PathVariable("sort_num") int sort_num) {
         ModelAndView modelAndView = new ModelAndView();
         Patient patient = patientService.getById(id_patient);
 
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("directionList", patient.getDirections());
+        modelAndView.addObject("directionList", sort.sortDirection(patient.getDirections(), sort_num));
         modelAndView.setViewName("admin/tables/direction");
         return modelAndView;
     }
@@ -868,17 +847,17 @@ public class AdminController {
     @RequestMapping(value = "/add_direction", method = RequestMethod.POST)
     public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
                                 @ModelAttribute("direction") Direction direction,
-                                @ModelAttribute("id_patient") Long id_patient) {
+                                @ModelAttribute("id_patient") Long id_patient) throws NoSuchAlgorithmException {
         ModelAndView modelAndView = new ModelAndView();
         Patient patient=patientService.getById(id_patient);
-        String id_direction=(patient.getDirections().size()+1) +"_"+patient.getRNTRC();
-
-        direction.setNumber(id_direction);
-        direction.setSpecialization(specializationService.getById(selected_spec));
-        direction.setStatus(true);
-        direction.setPatient(patient);
-        directionService.add(direction);
-        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction");
+        if(patient.isDirectionExists(specializationService.getById(selected_spec).getName())) {
+            direction.setNumber(String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextInt()));
+            direction.setSpecialization(specializationService.getById(selected_spec));
+            direction.setStatus(true);
+            direction.setPatient(patient);
+            directionService.add(direction);
+        }
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction/2");
 
         return modelAndView;
     }
@@ -898,7 +877,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/add_direction", method = RequestMethod.POST, params = "edit")
-    public ModelAndView editRole(@ModelAttribute("selected_spec") int selected_spec,
+    public ModelAndView editDirection(@ModelAttribute("selected_spec") int selected_spec,
                                  @ModelAttribute("direction") Direction direction,
                                  @ModelAttribute("id_patient") Long id_patient) {
         Patient patient=patientService.getById(id_patient);
@@ -909,7 +888,7 @@ public class AdminController {
         directionService.add(direction);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction");
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction/2");
 
         return modelAndView;
     }
@@ -918,25 +897,29 @@ public class AdminController {
     public ModelAndView deleteDirection(@PathVariable("id_patient") Long id_patient,
                                         @PathVariable("id") String id) {
         Direction direction = directionService.getById(id);
+        Patient patient = patientService.getById(id_patient);
+        patient.getDirections().remove(direction);
+
         directionService.delete(direction);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_patient+"/direction/");
+        modelAndView.setViewName("redirect:/admin/"+id_patient+"/direction/2");
 
         return modelAndView;
     }
 
     //visit
 
-    @RequestMapping(value = "/{id_patient}/visit", method = RequestMethod.GET)
-    public ModelAndView allVisits(@PathVariable("id_patient") Long id_patient) {
+    @RequestMapping(value = "/{id_patient}/visit/{sort_num}", method = RequestMethod.GET)
+    public ModelAndView allVisits(@PathVariable("id_patient") Long id_patient,
+                                  @PathVariable("sort_num") int sort_num) {
 
         Patient patient = patientService.getById(id_patient);
 
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("visitsList", patient.getVisits());
+        modelAndView.addObject("visitsList", sort.sortVisit(patient.getVisits(), sort_num));
 
         modelAndView.setViewName("admin/tables/visit");
 
@@ -964,12 +947,12 @@ public class AdminController {
                                  @ModelAttribute("selected_disease") String selected_disease,
                                  @ModelAttribute("selected_doctor") Long id_doctor,
                                  @ModelAttribute("id_patient") Long id_patient,
-                                 @ModelAttribute("notes") String notes) {
+                                 @ModelAttribute("notes") String notes) throws NoSuchAlgorithmException {
         Patient patient = patientService.getById(id_patient);
         Doctor doctor = doctorService.getById(id_doctor);
         Disease disease = patientService.getByIdDisease(selected_disease);
 
-        String id_visit = (patient.getVisits().size() + 1) + "_" + patient.getRNTRC();
+        String id_visit = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
 
         visit.setNumber(id_visit);
 
@@ -1035,7 +1018,7 @@ public class AdminController {
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit");
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit/1");
 
 
         return modelAndView;
@@ -1075,7 +1058,7 @@ public class AdminController {
 
 
 
-        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit");
+        modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/visit/1");
 
         return modelAndView;
     }
@@ -1086,7 +1069,7 @@ public class AdminController {
         patientService.deleteVisit(id);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_patient+"/visit/");
+        modelAndView.setViewName("redirect:/admin/"+id_patient+"/visit/1");
 
         return modelAndView;
     }

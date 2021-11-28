@@ -1,7 +1,10 @@
-package com.boots.entity;
+package com.boots.transientClasses;
+import com.boots.entity.Disease;
+import com.boots.transientClasses.Document;
+
 import java.sql.Date;
 //потібно вираховувати вік пацієнта
-public class Sick_leave extends Document{
+public class Sick_leave extends Document {
 
     private Date start_date;
     private Disease start_disease;

@@ -33,9 +33,11 @@
                                 <div class="col-sm-6">
                                     <select  name="selected_spec"  class="form-select">
                                         <c:forEach var="specialization" items="${specializationsList}" varStatus="i">
-                                            <option value="${specialization.id}" <c:if test="${!empty direction.number && direction.specialization.id==specialization.id}">
-                                                selected
-                                            </c:if>>${specialization.name}</option>
+                                            <c:if test="${specialization.id!=1}">
+                                                <option value="${specialization.id}" <c:if test="${!empty direction.number && direction.specialization.id==specialization.id}">
+                                                    selected
+                                                </c:if>>${specialization.name}</option>
+                                            </c:if>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -45,9 +47,18 @@
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Статус:</label>
                                     <div class="col-sm-6">
-                                        <input type="number" name="status" class="form-control" value="${direction.status ? 1 : 0 }" required>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" id="sex2" class="form-check-input" name="status" value="1"  <c:if test="${direction.status}">checked</c:if>>
+                                            <label for="sex2" class="form-check-label">Активний</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" id="sex1" class="form-check-input" name="status" value="0" <c:if test="${!direction.status}">checked</c:if>>
+                                            <label for="sex1" class="form-check-label" >Використаний</label>
+
+                                        </div>
                                     </div>
                                 </div>
+
                             </c:if>
 
 
@@ -75,7 +86,7 @@
                         <div class="modal-body">
                             <div class="text-center text-justify">
                                 <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Такий пацієнт вже існує</span>
+                                <span class="ml-2" style="font-size:16pt;">Такий направлення вже існує</span>
                             </div>
                             <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
                         </div>

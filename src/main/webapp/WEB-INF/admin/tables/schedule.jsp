@@ -19,9 +19,8 @@
                 <table class="table tableFixHead table-striped">
                     <thead>
                     <tr>
-                        <th>Ід</th>
-                        <th>День</th>
-                        <th>Час</th>
+                        <th>День<a href="/admin/${doctor.RNTRC}/schedule/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Час<a href="/admin/${doctor.RNTRC}/schedule/3" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Дії</th>
                     </tr>
                     </thead>
@@ -29,8 +28,7 @@
                     <tbody>
                     <c:forEach var="schedule" items="${doctor.schedules}" varStatus="i">
                         <tr>
-                            <td>${schedule.id}</td>
-                            <td>${schedule.day}</td>
+                            <td>${schedule.dayName}</td>
                             <td>${schedule.time}</td>
                             <td><a href="/admin/${doctor.RNTRC}/${schedule.id}/edit_schedule/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                 <a href="/admin/${doctor.RNTRC}/${schedule.id}/delete_schedule" class="btn btn_delete"><i class="bi bi-trash "></i></a>

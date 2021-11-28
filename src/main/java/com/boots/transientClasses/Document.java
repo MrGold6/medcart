@@ -1,4 +1,6 @@
-package com.boots.entity;
+package com.boots.transientClasses;
+
+import com.boots.entity.Visit;
 
 public abstract class Document {
     private Visit visit;

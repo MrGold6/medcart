@@ -1,4 +1,4 @@
-package com.boots.entity;
+package com.boots.transientClasses;
 
 public class Medicine {
     private String name;

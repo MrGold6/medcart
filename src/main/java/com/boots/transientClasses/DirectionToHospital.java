@@ -1,8 +1,9 @@
-package com.boots.entity;
+package com.boots.transientClasses;
 
 import java.sql.Date;
+import java.util.Calendar;
 
-public class DirectionToHospital  extends Document{
+public class DirectionToHospital  extends Document {
     private int number;
     private boolean typeHospital;
     private Date date;
@@ -137,5 +138,14 @@ public class DirectionToHospital  extends Document{
 
     public void setIs_independently(boolean is_independently) {
         this.is_independently = is_independently;
+    }
+    public String getDateToString()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.date);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return day+"."+month+"."+year;
     }
 }

@@ -18,7 +18,6 @@
                 <table class="table tableFixHead table-striped">
                     <thead>
                     <tr>
-                        <th>Ід<a href="/admin/${patient.RNTRC}/direction/1" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Спеціалізація<a href="/admin/${patient.RNTRC}/direction/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Статус<a href="/admin/${patient.RNTRC}/direction/3" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Дії</th>
@@ -29,9 +28,11 @@
                     <tbody>
                     <c:forEach var="direction" items="${directionList}" varStatus="i">
                         <tr>
-                            <td>${direction.number}</td>
                             <td>${direction.specialization.name}</td>
-                            <td>${direction.status}</td>
+                            <td>
+                                <c:if test="${direction.status}"><i class="bi bi-check-square text-success"></i></c:if>
+                                <c:if test="${!direction.status}"><i class="bi bi-dash-square text-danger"></i> </c:if>
+                            </td>
 
                             <td><a href="/admin/${patient.RNTRC}/${direction.number}/edit_direction/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                 <a href="/admin/${patient.RNTRC}/${direction.number}/delete_direction" class="btn btn_delete"><i class="bi bi-trash "></i></a>

@@ -11,28 +11,31 @@
     <div class="row">
         <jsp:include page="../template/nav.jsp" />
         <content class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3">Користувач</h2>
-
+            <h2 class="pt-3">Користувачі</h2>
+            <c:if test="${!userList.isEmpty()}">
             <div class="table-wrapper-scroll-y my-custom-scrollbar table-responsive">
 
                 <table class="table tableFixHead table-striped">
                     <thead>
                     <tr>
-                        <th>Ім'я</th>
+                        <th>Ім'я<a href="/admin/user/1" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Роль</th>
-                        <th>Статус</th>
+                        <th>Статус<a href="/admin/user/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Дії</th>
                     </tr>
                     </thead>
 
-                    <c:if test="${!userList.isEmpty()}">
+
                     <tbody>
 
                         <c:forEach var="user" items="${userList}" varStatus="i">
                             <tr>
                                 <td>${user.username}</td>
                                 <td> <c:forEach items="${user.roles}" var="role">${role.name} </c:forEach></td>
-                                <td>${user.selected}</td>
+                                <td>
+                                    <c:if test="${user.selected}"><i class="bi bi-link text-success"></i> </c:if>
+                                    <c:if test="${!user.selected}"><i class="bi bi-dash text-danger"></i></c:if>
+                                </td>
 
                                 <td><a href="/admin/${user.username}/edit_user/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                     <a href="/admin/${user.id}/delete_user" class="btn btn_delete"><i class="bi bi-trash "></i></a>
@@ -41,12 +44,13 @@
                         </c:forEach>
                     </tbody>
                 </table>
-                </c:if>
-                <c:if test="${userList.isEmpty()}">
-                    <h2><em><center>Спеціальностей немає</center></em></h2>
-                </c:if>
+
 
             </div>
+            </c:if>
+            <c:if test="${userList.isEmpty()}">
+                <h2><em><center>Користувачів немає</center></em></h2>
+            </c:if>
 
             <center>
                 <button onclick="document.location = '/admin/add_user';" type="button" class="btn my-2 btn_add">

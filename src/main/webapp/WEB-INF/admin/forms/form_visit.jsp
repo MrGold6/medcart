@@ -94,12 +94,22 @@
                             </div>
 
                             <c:if test="${!empty visit.number}">
+
                                 <div class="row mb-3">
                                     <label class="col-sm-6 col-form-label ln">Статус:</label>
                                     <div class="col-sm-6">
-                                        <input type="number" name="status" class="form-control" value="${visit.status ? 1 : 0 }" required>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" id="sex2" class="form-check-input" name="status" value="1"  <c:if test="${visit.status}">checked</c:if>>
+                                            <label for="sex2" class="form-check-label">Проведенений</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" id="sex1" class="form-check-input" name="status" value="0" <c:if test="${!visit.status}">checked</c:if>>
+                                            <label for="sex1" class="form-check-label" >Непроведенений</label>
+
+                                        </div>
                                     </div>
                                 </div>
+
                             </c:if>
 
 
@@ -132,7 +142,7 @@
                         <div class="modal-body">
                             <div class="text-center text-justify">
                                 <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Такий пацієнт вже існує</span>
+                                <span class="ml-2" style="font-size:16pt;">Такий візит вже існує</span>
                             </div>
                             <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
                         </div>

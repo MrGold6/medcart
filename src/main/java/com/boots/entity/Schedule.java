@@ -1,6 +1,7 @@
 package com.boots.entity;
 
 import javax.persistence.*;
+import java.util.Comparator;
 
 @Entity
 @Table(name = "schedule")
@@ -50,4 +51,42 @@ public class Schedule {
     public void setDoctor(Doctor doctor) {
         this.doctor1 = doctor;
     }
+
+    public String getDayName() {
+        String name=null;
+        switch (this.day)
+        {
+            case 1: {
+                name="Неділя";
+                break;
+            }
+            case 2: {
+                name="Понеділок";
+                break;
+            }
+            case 3: {
+                name="Вівторок";
+                break;
+            }
+            case 4: {
+                name="Середа";
+                break;
+            }
+            case 5: {
+                name="Четвер";
+                break;
+            }
+            case 6: {
+                name="П'ятниця";
+                break;
+            }
+            case 7: {
+                name="Субота";
+                break;
+            }
+        }
+
+        return name;
+    }
+
 }

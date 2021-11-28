@@ -1,8 +1,11 @@
 package com.boots.entity;
 
+import com.boots.transientClasses.Medicine;
+
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity
@@ -151,5 +154,20 @@ public class Visit {
 
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
+    }
+
+    public String getDateToString()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.date);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return day+"."+month+"."+year;
+    }
+
+    public boolean getIsTodayVisit()
+    {
+        return this.getDate().equals(Date.valueOf(LocalDate.now().toString()));
     }
 }

@@ -1,12 +1,10 @@
 package com.boots.controller;
 
 import com.boots.entity.*;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
+import com.boots.transientClasses.Analysis;
+import com.boots.transientClasses.DirectionToHospital;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/doctor2")
@@ -50,7 +48,11 @@ public class SpecialistDoctorController extends DoctorController{
                                      @ModelAttribute("id_visit") String id_visit) {
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
+        analysis.setNumber(patient.getCount_of_directionAnalysis()+1);
         analysis.setVisit(visit);
+
+        patient.setCount_of_directionAnalysis(patient.getCount_of_directionAnalysis()+1);
+        patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/doctor2/"+id_visit+"/analysis");
@@ -108,10 +110,14 @@ public class SpecialistDoctorController extends DoctorController{
                                                @ModelAttribute("is_independently") boolean is_independently) {
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
+        directionToHospital.setNumber(patient.getCount_of_directionToHospital()+1);
         directionToHospital.setVisit(visit);
         directionToHospital.setTypeHospital(typeHospital);
         directionToHospital.setIs_hepatitis(is_hepatitis);
         directionToHospital.setIs_independently(is_independently);
+
+        patient.setCount_of_directionToHospital(patient.getCount_of_directionToHospital()+1);
+        patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/doctor2/"+id_visit+"/directionToHospital");
