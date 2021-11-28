@@ -1,13 +1,13 @@
 package com.boots.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
-
+import java.sql.Date;
 import static java.util.Comparator.nullsFirst;
 
 @Entity
 @Table(name = "electronic_card")
-
 public class Patient extends Human {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -25,17 +25,22 @@ public class Patient extends Human {
     @Column(name = "Rh")
     private String Rh;
 
-
     @Column(name = "Count_of_recipe")
-    private int Count_of_recipe;
+    private int count_of_recipe;
 
     @Column(name = "Count_of_sick_leave")
-    private int Count_of_sick_leave;
+    private int count_of_sick_leave;
+
+    @Column(name = "Count_of_directionAnalysis")
+    private int count_of_directionAnalysis;
+
+    @Column(name = "Count_of_directionToHospital")
+    private int count_of_directionToHospital;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Visit> visits = new ArrayList <>();
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "patient")
     public List<Direction> directions = new ArrayList <>();
 
     public Patient() {}
@@ -89,15 +94,6 @@ public class Patient extends Human {
 
         return done;
     }
-/*
-    public List<Visit> getActiveDirection() {
-        List<Visit> active = new ArrayList<>();
-        for (Visit visit : this.visits)
-            if(!visit.getStatus())
-                active.add(visit);
-        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
-        return active;
-    }*/
 
     public List<Visit> getActiveVisits() {
         List<Visit> active = new ArrayList<>();
@@ -106,6 +102,20 @@ public class Patient extends Human {
                 active.add(visit);
         active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
         return active;
+    }
+
+    public List<Visit> expiredVisits() {
+        List<Visit> expired = this.getActiveVisits();
+        for (Visit visit : this.visits)
+          if (visit.getDate().equals(Date.valueOf(LocalDate.now().toString())) || visit.getDate().after(Date.valueOf(LocalDate.now().toString())))
+                expired.remove(visit);
+        return expired;
+    }
+
+    public void removeExpiredVisits() {
+        List<Visit> expired = this.expiredVisits();
+        for (Visit visit : expired)
+            this.visits.remove(visit);
     }
 
     public boolean findActiveVisitBySpecialization(Specialization specialization) {
@@ -125,7 +135,14 @@ public class Patient extends Human {
         visit.setPatient(this);
         this.visits.add(visit);
     }
+    public Visit findVisit(String id)
+    {
+        for (Visit visit : visits)
+            if (visit.getNumber().equals(id))
+                return visit;
 
+        return null;
+    }
 
     public List<Direction> getDirections() {
 
@@ -140,6 +157,15 @@ public class Patient extends Human {
         return active;
     }
 
+    public  boolean isDirectionExists(String specialization)
+    {
+        List<Direction> active = this.getActiveDirections();
+        for (Direction direction : active)
+            if(direction.getStatus() && direction.getSpecialization().getName().equals(specialization))
+                return false;
+
+        return true;
+    }
 
     public void setDirections(List<Direction> directions) {
 
@@ -186,16 +212,6 @@ public class Patient extends Human {
         return null;
     }
 
-    public Visit findVisit(String id)
-    {
-        for (Visit visit : visits)
-            if (visit.getNumber().equals(id))
-                return visit;
-
-        return null;
-    }
-
-
 
     public int getBlood_type() {
         return blood_type;
@@ -230,21 +246,6 @@ public class Patient extends Human {
     }
 
 
-    public int getCount_of_recipe() {
-        return Count_of_recipe;
-    }
-
-    public void setCount_of_recipe(int count_of_recipe) {
-        Count_of_recipe = count_of_recipe;
-    }
-
-    public int getCount_of_sick_leave() {
-        return Count_of_sick_leave;
-    }
-
-    public void setCount_of_sick_leave(int count_of_sick_leave) {
-        Count_of_sick_leave = count_of_sick_leave;
-    }
 
     public User getUser() {
         return user;
@@ -253,4 +254,57 @@ public class Patient extends Human {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public int getCount_of_directionAnalysis() {
+        return count_of_directionAnalysis;
+    }
+
+    public void setCount_of_directionAnalysis(int count_of_directionAnalysis) {
+        this.count_of_directionAnalysis = count_of_directionAnalysis;
+    }
+
+    public int getCount_of_directionToHospital() {
+        return count_of_directionToHospital;
+    }
+
+    public void setCount_of_directionToHospital(int count_of_directionToHospital) {
+        this.count_of_directionToHospital = count_of_directionToHospital;
+    }
+
+    public int getCount_of_recipe() {
+        return count_of_recipe;
+    }
+
+    public void setCount_of_recipe(int count_of_recipe) {
+        this.count_of_recipe = count_of_recipe;
+    }
+
+    public int getCount_of_sick_leave() {
+        return count_of_sick_leave;
+    }
+
+    public void setCount_of_sick_leave(int count_of_sick_leave) {
+        this.count_of_sick_leave = count_of_sick_leave;
+    }
+
+    public String getDateToString()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.date_of_birth);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return day+"."+month+"."+year;
+    }
+
+    /*
+    public List<Visit> getActiveDirection() {
+        List<Visit> active = new ArrayList<>();
+        for (Visit visit : this.visits)
+            if(!visit.getStatus())
+                active.add(visit);
+        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        return active;
+    }*/
+
 }

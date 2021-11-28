@@ -14,45 +14,49 @@
             <h1 class="pt-4">Електронна медична картка. Пацієнт: ${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.  </h1>
 
             <div class="table-wrapper-scroll-y my-custom-scrollbar table-responsive">
-
+                <c:if test="${!visitsList.isEmpty()}">
                 <table class="table tableFixHead table-striped">
                     <thead>
                     <tr>
-                        <th>Ід</th>
-                        <th>Дата</th>
-                        <th>Діагноз</th>
-                        <th>Лікар</th>
-                        <th>Час</th>
-                        <th>Статус</th>
+                        <th>Дата<a href="/admin/${patient.RNTRC}/visit/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Діагноз<a href="/admin/${patient.RNTRC}/visit/3" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Лікар<a href="/admin/${patient.RNTRC}/visit/4" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Час<a href="/admin/${patient.RNTRC}/visit/5" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Статус<a href="/admin/${patient.RNTRC}/visit/6" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Дії</th>
 
 
                     </tr>
                     </thead>
 
-                    <c:if test="${!visitsList.isEmpty()}">
+
                     <tbody>
                     <c:forEach var="visit" items="${visitsList}" varStatus="i">
                         <tr>
-                            <td>${visit.number}</td>
                             <td>${visit.date}</td>
                             <td>${visit.disease.name}</td>
                             <td>${visit.doctor.specialization.name}</td>
                             <td>${visit.schedule.time}</td>
-                            <td>${visit.status}</td>
+                            <td>
+                                <c:if test="${visit.status}"><i class="bi bi-check-square text-success"></i></c:if>
+                                <c:if test="${!visit.status}"><i class="bi bi-dash-square text-danger"></i> </c:if>
+                            </td>
 
                             <td><a href="/admin/${patient.RNTRC}/${visit.number}/edit_visit/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
                                 <a href="/admin/${patient.RNTRC}/${visit.number}/delete_visit" class="btn btn_delete"><i class="bi bi-trash "></i></a>
                             </td>
                         </tr>
                     </c:forEach>
+
                     </tbody>
+
                 </table>
+
                 </c:if>
+
                 <c:if test="${visitsList.isEmpty()}">
                     <h2><em><center>Візитів немає</center></em></h2>
                 </c:if>
-
             </div>
 
             <center>

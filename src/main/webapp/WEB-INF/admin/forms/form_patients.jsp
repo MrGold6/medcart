@@ -140,6 +140,34 @@
                                         </div>
                                     </div>
 
+                                    <div class="row mb-3">
+                                        <label class="col-sm-6 col-form-label ln">Кількість рецептів:</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" name="count_of_recipe" class="form-control no-validate"  value="${patient.count_of_recipe}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-sm-6 col-form-label ln">Кількість лікарняних:</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" name="count_of_sick_leave" class="form-control no-validate"  value="${patient.count_of_sick_leave}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-sm-6 col-form-label ln">Кількість направлень у лікарню:</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" name="count_of_directionToHospital" class="form-control no-validate"  value="${patient.count_of_directionToHospital}">
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <label class="col-sm-6 col-form-label ln">Кількість направлень на аналізи:</label>
+                                        <div class="col-sm-6">
+                                            <input type="number" name="count_of_directionAnalysis" class="form-control no-validate"  value="${patient.count_of_directionAnalysis}">
+                                        </div>
+                                    </div>
+
                                     <center>
                                         <c:if test="${!empty patient.RNTRC}">
                                             <a href="/admin/${patient.RNTRC}/set_user_for_patient/" class="btn btn_find_all">Змінити юзера</a>

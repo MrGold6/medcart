@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import javax.xml.crypto.Data;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
@@ -38,6 +40,27 @@ public class PatientController{
     @Autowired
     public void setDoctorService(DoctorService doctorService) {
         this.doctorService = doctorService;
+    }
+
+    public String dateToString(Date date)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return day+"."+month+"."+year;
+    }
+
+    public void deleteExpiredVisits(Patient patient)
+    {
+        for (Visit visit : patient.expiredVisits()) {
+            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+                patient.findNotActiveDirection(visit.getDoctor().getSpecialization()).setStatus(true);
+            patientService.deleteVisit(visit.getNumber());
+
+        }
+        patient.removeExpiredVisits();
     }
 
     //patient
@@ -67,11 +90,15 @@ public class PatientController{
     public ModelAndView allActiveVisits() {
 
         Patient patient = getAuthPatient();
+        deleteExpiredVisits(patient);
 
         ModelAndView modelAndView = new ModelAndView();
-
         modelAndView.addObject("patient", patient);
         modelAndView.addObject("visitsList", patient.getActiveVisits());
+
+
+
+
         modelAndView.setViewName("patient/pages/active_visits");
 
         return modelAndView;
@@ -99,12 +126,11 @@ public class PatientController{
 
         ModelAndView modelAndView = new ModelAndView();
         Doctor doctor = doctorService.getById(id);
+        List<Schedule> schedules =doctor.freeSchedule(LocalDate.now());
         modelAndView.addObject("doctor", doctor);
-
-        modelAndView.addObject("date", LocalDate.now().toString());
-
-        modelAndView.addObject("schedules", doctor.freeSchedule(LocalDate.now()));
-
+        modelAndView.addObject("date", Date.valueOf(LocalDate.now()));
+        modelAndView.addObject("dateV", dateToString(Date.valueOf(LocalDate.now())));
+        modelAndView.addObject("schedules", schedules);
         modelAndView.setViewName("patient/pages/schedule");
 
         return modelAndView;
@@ -116,10 +142,11 @@ public class PatientController{
 
         ModelAndView modelAndView = new ModelAndView();
         Doctor doctor = doctorService.getById(id);
-        modelAndView.addObject("date", date);
+        List<Schedule> schedules =doctor.freeSchedule(Date.valueOf(date).toLocalDate());
+        modelAndView.addObject("date", Date.valueOf(date));
+        modelAndView.addObject("dateV", dateToString(Date.valueOf(date)));
         modelAndView.addObject("doctor", doctor);
-
-        modelAndView.addObject("schedules", doctor.freeSchedule(Date.valueOf(date).toLocalDate()));
+        modelAndView.addObject("schedules", schedules);
 
         modelAndView.setViewName("patient/pages/schedule");
 
@@ -147,11 +174,11 @@ public class PatientController{
     @RequestMapping(value = "/add_visit_act", method = RequestMethod.POST)
     public ModelAndView addVisit(@ModelAttribute("visit") Visit visit,
                                  @ModelAttribute("id_doctor") Long id,
-                                 @ModelAttribute("id_schedule") int id_schedule) {
+                                 @ModelAttribute("id_schedule") int id_schedule) throws NoSuchAlgorithmException {
         Patient patient = getAuthPatient();
         Doctor doctor = doctorService.getById(id);
 
-        String id_visit = (patient.getVisits().size() + 1) + "_" + patient.getRNTRC();
+        String id_visit = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
         visit.setNumber(id_visit);
         visit.setStatus(false);
         visit.setPatient(patient);

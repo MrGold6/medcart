@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.print.Doc;
@@ -19,6 +20,7 @@ public class DoctorService {
     private EntityManager em;
     @Autowired
     private DoctorRepository doctorRepository;
+
 
     @Transactional
     public List<Doctor> allDoctors() {
@@ -34,24 +36,58 @@ public class DoctorService {
     }
 
    public Doctor getById(Long id) {
+       Doctor doctor = null;
+       try {
+           Optional<Doctor> doctorFromDb = doctorRepository.findById(id);
+           doctor =doctorFromDb.orElse(new Doctor());
+       } catch (NoResultException nre) {
 
-       Optional<Doctor> doctorFromDb = doctorRepository.findById(id);
-       return doctorFromDb.orElse(new Doctor());
+       }
 
+       return doctor;
    }
     public  List<Doctor> doctorBySpecialization(Specialization specialization) {
-        return (List<Doctor>) em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
-                .setParameter("specialization", specialization).getResultList();
+        List<Doctor> doctors = null;
+        try {
+            doctors =(List<Doctor>) em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
+                    .setParameter("specialization", specialization).getResultList();
+        } catch (NoResultException nre) {
+
+        }
+
+        return doctors;
+
+    }
+
+    public  List<Doctor> findTelephone_number(int telephone_number) {
+        List<Doctor> doctors = null;
+        try {
+            doctors= (List<Doctor>) em.createQuery("SELECT p FROM Doctor p WHERE p.telephone_number = :paramId", Doctor.class)
+                    .setParameter("paramId", telephone_number).getResultList();
+        } catch (NoResultException nre) {}
+
+        return doctors;
     }
 
     public Specialization getByIdSpecialization(int id) {
+        Specialization specialization = null;
+        try {
+            specialization = (Specialization) em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
+                    .setParameter("paramId", id).getSingleResult();
+        } catch (NoResultException nre) {}
 
-        return (Specialization) em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
-                .setParameter("paramId", id).getSingleResult();
+        return specialization;
     }
 
     public List<Specialization> allSpecializations() {
-        return  (List<Specialization>) em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
+        List<Specialization> specializations = null;
+        try {
+            specializations=  (List<Specialization>) em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
+
+        } catch (NoResultException nre) {}
+
+        return specializations;
+
     }
 
 
@@ -61,8 +97,16 @@ public class DoctorService {
     }
 
     public  Doctor doctorByUser(User user) {
-        return (Doctor) em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
-                .setParameter("user", user).getSingleResult();
+        Doctor doctor = null;
+        try {
+            doctor = (Doctor) em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
+                    .setParameter("user", user).getSingleResult();
+        } catch (NoResultException nre) {
+
+        }
+
+        return doctor;
+
     }
 
     public boolean checkRNTRC(Long id) {
@@ -72,15 +116,27 @@ public class DoctorService {
     }
 
     public List<Schedule> allSchedule() {
-        return  (List<Schedule>) em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
+        List<Schedule> schedules = null;
+        try {
+            schedules= (List<Schedule>) em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
+
+        } catch (NoResultException nre) {}
+
+        return schedules;
+
     }
 
     //id_schedule
 
     public Schedule getScheduleById(int id_schedule) {
-        return (Schedule) em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
-                .setParameter("paramId", id_schedule).getSingleResult();
+        Schedule schedule = null;
+        try {
+            schedule= (Schedule) em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
+                    .setParameter("paramId", id_schedule).getSingleResult();
 
+        } catch (NoResultException nre) {}
+
+        return schedule;
     }
 
     @Transactional

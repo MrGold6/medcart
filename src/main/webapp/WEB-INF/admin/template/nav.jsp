@@ -1,7 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+<nav id="" class=" sidebarMenu col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+
+
     <div class="position-sticky pt-3">
         <ul class="nav flex-column">
 
@@ -15,7 +17,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <p class="responsive__offer-text">Користувач</p>
+                        <p class="responsive__offer-text">Користувачі</p>
                     </div>
                 </a>
             </li>
@@ -30,13 +32,13 @@
                                 </svg>
                             </div>
                         </div>
-                        <p class="responsive__offer-text">Роль</p>
+                        <p class="responsive__offer-text">Ролі</p>
                     </div>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/admin/patients">
+                <a class="nav-link" href="/admin/patients/1">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">
@@ -52,7 +54,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="/admin/doctor">
+                <a class="nav-link" href="/admin/doctor/1">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">
@@ -112,7 +114,7 @@
                                 </svg>
                             </div>
                         </div>
-                        <p class="responsive__offer-text">Спеціалізація</p>
+                        <p class="responsive__offer-text">Спеціалізації</p>
                     </div>
                 </a>
             </li>

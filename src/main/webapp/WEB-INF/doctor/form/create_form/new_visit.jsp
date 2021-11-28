@@ -1,29 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: Lera Kos
-  Date: 27.04.2021
-  Time: 19:24
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<head>
-    <!-- Обязательные метатеги -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="<c:url value="/res/style.css"/>">
-    <link rel="icon" type="image/png" href="<c:url value="/res/medicine.png"/>"/>
-    <title>New visit</title>
-
-</head>
-
+<jsp:include page="../../template/head.jsp" />
 <body>
 <div class="container">
 
@@ -35,7 +14,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/${id_visit}/visits/';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/${id_visit}/visits/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
@@ -53,8 +32,11 @@
                                 <label class="col-sm-6 col-form-label ln">Діагноз:</label>
                                 <div class="col-sm-6">
                                     <select  name="selected_disease"  class="form-select">
+                                        <option value="0">Здоровий</option>
                                         <c:forEach var="disease" items="${diseasesList}" varStatus="i">
-                                            <option value="${disease.ICD_10}">${disease.name}</option>
+                                            <c:if test="${disease.ICD_10!='0'}">
+                                                <option value="${disease.ICD_10}">${disease.name}</option>
+                                            </c:if>
                                         </c:forEach>
                                     </select>
                                 </div>

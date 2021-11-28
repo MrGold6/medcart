@@ -11,7 +11,7 @@
     <div class="row">
         <jsp:include page="../template/nav.jsp" />
         <content class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3">Роль</h2>
+            <h2 class="pt-3">Ролі</h2>
 
             <div class="table-wrapper-scroll-y my-custom-scrollbar table-responsive">
 

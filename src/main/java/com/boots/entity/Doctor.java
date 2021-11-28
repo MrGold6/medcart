@@ -15,7 +15,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "doctor")
-
 public class Doctor extends Human {
 
     @OneToOne(fetch = FetchType.EAGER)
@@ -34,29 +33,13 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Schedule> schedules = new ArrayList<>();
 
-    public List<User> getUsers(List<User> allUsers) {
-        List<User> doctorUsers = new ArrayList<>();
-        int id=0;
-
-        if(this.getSpecialization().getId()==1) id =1;
-        else id=4;
-
-        for(User user:allUsers) {
-            Optional<Role> c_role =  user.getRoles().stream().findFirst();
-            if (c_role.orElse(new Role()).getId() == id && !user.isSelected())
-                doctorUsers.add(user);
-        }
-        return doctorUsers;
-    }
 
     public List<Schedule> getSchedules() {
         return schedules;
     }
-
     public void setSchedules(List<Schedule> schedules) {
         this.schedules = schedules;
     }
-
     public List<Schedule> getSchedulesByDay(LocalDate date) {
         Calendar c = Calendar.getInstance();
         c.setTime(Date.valueOf(date));
@@ -78,7 +61,6 @@ public class Doctor extends Human {
 
         return null;
     }
-
     public List<Schedule> freeSchedule(LocalDate date)
     {
         List<Schedule> freeSchedule;
@@ -99,7 +81,6 @@ public class Doctor extends Human {
 
         return freeSchedule;
     }
-
     public List<Schedule> getSchedulesByDayAndNotAfterCurrentTime(LocalDate date) {
         Calendar c = Calendar.getInstance();
         c.setTime(Date.valueOf(date));
@@ -113,25 +94,21 @@ public class Doctor extends Human {
 
         return scheduleByDay;
     }
-
-    public List<Visit> getVisits() {
-        return visits;
-    }
-
-    public void setVisits(List<Visit> visits) {
-        this.visits= visits;
-    }
-
-    public void addVisit(Visit visit) {
-        visit.setDoctor(this);
-        this.visits.add(visit);
-    }
-
     public void addSchedule(Schedule schedule) {
         schedule.setDoctor(this);
         this.schedules.add(schedule);
     }
 
+    public List<Visit> getVisits() {
+        return visits;
+    }
+    public void setVisits(List<Visit> visits) {
+        this.visits= visits;
+    }
+    public void addVisit(Visit visit) {
+        visit.setDoctor(this);
+        this.visits.add(visit);
+    }
     public List<Visit> getActiveVisitsByDay(LocalDate date)
     {
         List<Visit> visits =  new ArrayList <>();
@@ -141,7 +118,6 @@ public class Doctor extends Human {
 
         return visits;
     }
-
     public List<Visit> getDoneVisits()
     {
         List<Visit> visits =  new ArrayList <>();
@@ -151,7 +127,6 @@ public class Doctor extends Human {
 
         return visits;
     }
-
     public List<Visit> getDoneVisitsByDay(LocalDate date)
     {
         List<Visit> visits =  new ArrayList <>();
@@ -161,7 +136,6 @@ public class Doctor extends Human {
 
         return visits;
     }
-
     public List<Visit> getDoneVisitsByMonth(LocalDate date)
     {
         Calendar c1 = Calendar.getInstance();
@@ -179,19 +153,54 @@ public class Doctor extends Human {
         return visits;
     }
 
+    public List<Visit> getActiveVisits() {
+        List<Visit> active = new ArrayList<>();
+        for (Visit visit : this.visits)
+            if(!visit.getStatus())
+                active.add(visit);
+        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        return active;
+    }
+
+    public List<Visit> expiredVisits() {
+        List<Visit> expired = this.getActiveVisits();
+        for (Visit visit : this.visits)
+            if (visit.getDate().equals(Date.valueOf(LocalDate.now().toString())) || visit.getDate().after(Date.valueOf(LocalDate.now().toString())))
+                expired.remove(visit);
+        return expired;
+    }
+
+    public void removeExpiredVisits() {
+        List<Visit> expired = this.expiredVisits();
+        for (Visit visit : expired)
+            this.visits.remove(visit);
+    }
+
 
     public User getUser() {
         return user;
     }
-
     public void setUser(User user) {
         this.user = user;
+    }
+    public List<User> getUsers(List<User> allUsers) {
+        List<User> doctorUsers = new ArrayList<>();
+        int id=0;
+
+        if(this.getSpecialization().getId()==1) id =1;
+        else id=4;
+
+        for(User user:allUsers) {
+            Optional<Role> c_role =  user.getRoles().stream().findFirst();
+            if (c_role.orElse(new Role()).getId() == id && !user.isSelected())
+                doctorUsers.add(user);
+        }
+        return doctorUsers;
     }
 
     public Specialization getSpecialization() {
         return specialization;
     }
-
     public void setSpecialization(Specialization specialization) {
         this.specialization = specialization;
     }

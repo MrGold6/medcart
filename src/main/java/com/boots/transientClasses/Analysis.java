@@ -1,9 +1,9 @@
-package com.boots.entity;
+package com.boots.transientClasses;
 
-import java.time.LocalDate;
 import java.sql.Date;
+import java.util.Calendar;
 
-public class Analysis extends Document{
+public class Analysis extends Document {
     private int number;
     private Date date;
     private String laboratory;
@@ -49,5 +49,15 @@ public class Analysis extends Document{
 
     public void setDisease(String disease) {
         this.disease = disease;
+    }
+
+    public String getDateToString()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(this.date);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        return day+"."+month+"."+year;
     }
 }

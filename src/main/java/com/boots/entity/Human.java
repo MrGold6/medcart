@@ -9,7 +9,6 @@ import java.util.List;
 @Entity
 @Table(name = "human")
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public abstract class Human {
 
     @Id
