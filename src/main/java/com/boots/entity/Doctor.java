@@ -39,13 +39,21 @@ public class Doctor extends Human {
     public  void setSchedulesByRange(int day, String timeStart, String timeEnd) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         Calendar cal = Calendar.getInstance();
-
+        boolean uniq;
         while (LocalTime.parse(timeEnd).isAfter(LocalTime.parse(timeStart))) {
             Schedule schedule = new Schedule();
             schedule.setId(SecureRandom.getInstance("SHA1PRNG").nextInt());
             schedule.setDay(day);
             schedule.setTime(timeStart);
-            this.addSchedule(schedule);
+
+            uniq=true;
+            for(Schedule s1: this.getSchedules())
+                if (s1.getDay() == schedule.getDay() && s1.getTime().equals(schedule.getTime())) {
+                    uniq = false;
+                    break;
+                }
+            if(uniq)
+                this.addSchedule(schedule);
 
             cal.setTime(df.parse(timeStart));
             cal.add(Calendar.MINUTE, 20);

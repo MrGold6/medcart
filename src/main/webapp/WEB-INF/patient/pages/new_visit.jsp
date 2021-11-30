@@ -20,12 +20,26 @@
                     </div>
 
                     <div class="card-body">
-                        <legend class="card-title text-center">Візит</legend>
+                        <legend class="card-title text-center">Запис</legend>
                         <form:form  method="POST" modelAttribute="visit" action="/patient/add_visit_act">
 
                             <input name="id_doctor" type="hidden" value="${doctor.RNTRC}" maxlength="100" readonly>
 
                             <input name="id_schedule" type="hidden" value="${schedule.id}" maxlength="100" readonly>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Спеціалізація лікаря:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="doc" value="${doctor.specialization.name}" class="form-control" maxlength="20" data-inputmask="'alias': 'date','placeholder': '*'" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">ПІП лікаря:</label>
+                                <div class="col-sm-6">
+                                    <input type="text" name="doc" value="${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}." class="form-control" maxlength="20" data-inputmask="'alias': 'date','placeholder': '*'" readonly>
+                                </div>
+                            </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Дата:</label>
