@@ -148,16 +148,14 @@ public class FamilyDoctorController extends DoctorController {
     public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
                                      @ModelAttribute("direction") Direction direction,
                                      @ModelAttribute("id_visit") String id_visit) throws NoSuchAlgorithmException {
-        Patient patient =  patientService.getById(getIdPatientSplit(id_visit));
+        Patient patient=patientService.getById(getIdPatientSplit(id_visit));
         if(patient.isDirectionExists(specializationService.getById(selected_spec).getName())) {
-            String id_direction=SecureRandom.getInstance("SHA1PRNG").nextInt() +"_"+patient.getRNTRC();
-            direction.setNumber(id_direction);
-            direction.setSpecialization(doctorService.getByIdSpecialization(selected_spec));
+            direction.setNumber(String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextInt()));
+            direction.setSpecialization(specializationService.getById(selected_spec));
             direction.setStatus(true);
-            patient.addDirection(direction);
-            patientService.add(patient);
+            direction.setPatient(patient);
+            directionService.add(direction);
         }
-
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_med");
 

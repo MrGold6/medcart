@@ -3,20 +3,24 @@ package com.boots.controller;
 import com.boots.entity.*;
 import com.boots.service.*;
 import com.boots.transientClasses.Sort;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.rmi.server.UID;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.UUID;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
@@ -320,12 +324,9 @@ public class AdminController {
     @RequestMapping(value = "/{id_doctor}/schedule/{sort_num}", method = RequestMethod.GET)
     public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id_doctor,
                                      @PathVariable("sort_num") int sort_num){
-
-        ModelAndView modelAndView = new ModelAndView();
-
         Doctor doctor = doctorService.getById(id_doctor);
 
-
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doctor",doctor);
         modelAndView.addObject("schedules", sort.sortSchedule(doctor.getSchedules(), sort_num));
 
@@ -338,23 +339,23 @@ public class AdminController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_doctor", id_doctor);
-        modelAndView.addObject("schedule", new Schedule());
-        modelAndView.setViewName("admin/forms/form_schedule");
+       // modelAndView.addObject("schedule", new Schedule());
+        modelAndView.setViewName("admin/forms/form_new_schedule");
         return modelAndView;
     }
 
     @RequestMapping(value = "/add_schedule", method = RequestMethod.POST)
-    public ModelAndView addSchedule(@ModelAttribute("schedule") Schedule schedule,
-                                    @ModelAttribute("id_doctor") Long id_doctor) throws NoSuchAlgorithmException {
+    public ModelAndView addSchedule(@ModelAttribute("id_doctor") Long id_doctor,
+                                    @ModelAttribute("day") int day,
+                                    @ModelAttribute("timeStart") String timeStart,
+                                    @ModelAttribute("timeEnd") String timeEnd) throws NoSuchAlgorithmException, ParseException {
 
         Doctor doctor = doctorService.getById(id_doctor);
-
-        schedule.setId(SecureRandom.getInstance("SHA1PRNG").nextInt());
-        doctor.addSchedule(schedule);
+        doctor.setSchedulesByRange(day, timeStart, timeEnd);
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
+        modelAndView.setViewName("redirect:/admin/" + id_doctor + "/schedule/2");
 
         return modelAndView;
     }
@@ -378,7 +379,7 @@ public class AdminController {
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/2");
 
         return modelAndView;
     }
@@ -391,7 +392,7 @@ public class AdminController {
         doctorService.deleteSchedule(id_schedule);
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/1");
+        modelAndView.setViewName("redirect:/admin/"+id_doctor+"/schedule/2");
 
         return modelAndView;
     }
@@ -857,6 +858,7 @@ public class AdminController {
             direction.setPatient(patient);
             directionService.add(direction);
         }
+
         modelAndView.setViewName("redirect:/admin/"+patient.getRNTRC()+"/direction/2");
 
         return modelAndView;

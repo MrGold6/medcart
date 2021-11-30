@@ -34,6 +34,9 @@ public class DoctorController {
     @Autowired
     protected MedicineCatalogService medicineCatalogService;
 
+    @Autowired
+    protected DirectionService directionService;
+
     protected Sort sort = new Sort();
 
     @Autowired

@@ -52,7 +52,7 @@
                                 <c:if test="${doctor.user.username==null}"><a href="/admin/${doctor.RNTRC}/set_user_for_doctor/" class="btn btn_add"><i class="bi bi-person"></i></a> </c:if>
                                 <c:if test="${doctor.user.username!=null}">${doctor.user.username}</c:if></td>
 
-                            <td><a href="/admin/${doctor.RNTRC}/schedule/1" class="btn btn_find_all"><i class="bi bi-calendar4-event"></i></a></td>
+                            <td><a href="/admin/${doctor.RNTRC}/schedule/2" class="btn btn_find_all"><i class="bi bi-calendar4-event"></i></a></td>
 
 
                             <td><a href="/admin/${doctor.RNTRC}/edit_doctor/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
