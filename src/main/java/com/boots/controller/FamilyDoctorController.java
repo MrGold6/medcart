@@ -111,13 +111,16 @@ public class FamilyDoctorController extends DoctorController {
         user.setId(SecureRandom.getInstance("SHA1PRNG").nextInt()+"_"+user.getUsername());
         user.setSelected(true);
 
-
         if (!userService.saveUser(user, 3)){
             modelAndView.addObject("message","y");
             modelAndView.setViewName("doctor/familyDoctor/form/create_form/new_user");
         }
-        else
+        else {
+            Patient patient = patientService.getById(id_patient);
+            patient.setUser(user);
+            patientService.add(patient);
             modelAndView.setViewName("redirect:/doctor1/patients/1");
+        }
 
 
         return modelAndView;

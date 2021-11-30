@@ -100,7 +100,7 @@ public class Patient extends Human {
         for (Visit visit : this.visits)
             if(!visit.getStatus())
                 active.add(visit);
-        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+        active.sort(Comparator.comparing(Visit::getDate).thenComparing(o -> o.getSchedule().getTime()));
         return active;
     }
 
