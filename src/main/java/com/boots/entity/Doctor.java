@@ -4,8 +4,11 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -33,7 +36,23 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Schedule> schedules = new ArrayList<>();
 
+    public  void setSchedulesByRange(int day, String timeStart, String timeEnd) throws NoSuchAlgorithmException, ParseException {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+        Calendar cal = Calendar.getInstance();
 
+        while (LocalTime.parse(timeEnd).isAfter(LocalTime.parse(timeStart))) {
+            Schedule schedule = new Schedule();
+            schedule.setId(SecureRandom.getInstance("SHA1PRNG").nextInt());
+            schedule.setDay(day);
+            schedule.setTime(timeStart);
+            this.addSchedule(schedule);
+
+            cal.setTime(df.parse(timeStart));
+            cal.add(Calendar.MINUTE, 20);
+            timeStart = df.format(cal.getTime());
+
+        }
+    }
     public List<Schedule> getSchedules() {
         return schedules;
     }

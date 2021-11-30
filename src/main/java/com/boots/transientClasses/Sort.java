@@ -131,7 +131,7 @@ public class Sort {
                 break;
             }
             case 2: {
-                schedules.sort(Comparator.comparing(Schedule::getDayName));
+                schedules.sort(Comparator.comparing(Schedule::getDayName).thenComparing(Schedule::getTime));
                 break;
             }
 
