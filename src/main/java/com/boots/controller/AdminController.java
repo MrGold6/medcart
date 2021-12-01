@@ -348,10 +348,11 @@ public class AdminController {
     public ModelAndView addSchedule(@ModelAttribute("id_doctor") Long id_doctor,
                                     @ModelAttribute("day") int day,
                                     @ModelAttribute("timeStart") String timeStart,
-                                    @ModelAttribute("timeEnd") String timeEnd) throws NoSuchAlgorithmException, ParseException {
+                                    @ModelAttribute("timeEnd") String timeEnd,
+                                    @ModelAttribute("interval") int interval) throws NoSuchAlgorithmException, ParseException {
 
         Doctor doctor = doctorService.getById(id_doctor);
-        doctor.setSchedulesByRange(day, timeStart, timeEnd);
+        doctor.setSchedulesByRange(day, timeStart, timeEnd, interval);
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();

@@ -36,7 +36,7 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Schedule> schedules = new ArrayList<>();
 
-    public  void setSchedulesByRange(int day, String timeStart, String timeEnd) throws NoSuchAlgorithmException, ParseException {
+    public  void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
         Calendar cal = Calendar.getInstance();
         boolean uniq;
@@ -56,7 +56,7 @@ public class Doctor extends Human {
                 this.addSchedule(schedule);
 
             cal.setTime(df.parse(timeStart));
-            cal.add(Calendar.MINUTE, 20);
+            cal.add(Calendar.MINUTE, interval);
             timeStart = df.format(cal.getTime());
 
         }
@@ -105,6 +105,7 @@ public class Doctor extends Human {
                 }
             }
         }
+        freeSchedule.sort(Comparator.comparing(Schedule::getTime));
 
         return freeSchedule;
     }
@@ -142,6 +143,7 @@ public class Doctor extends Human {
         for (Visit visit : this.getVisits())
             if (!visit.getStatus() && visit.getDate().toLocalDate().equals(date))
                 visits.add(visit);
+        visits.sort(Comparator.comparing(o -> o.getSchedule().getTime()));
 
         return visits;
     }

@@ -60,6 +60,14 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Інтервал:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" name="interval" class="form-control" min="10"  max="60" required>
+                                </div>
+                            </div>
+
+
                             <center>
                                     <input type="submit" id="in"  class="btn btn_add" name="add_visit" value="Створити">
 
