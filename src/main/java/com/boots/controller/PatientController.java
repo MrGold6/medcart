@@ -96,9 +96,6 @@ public class PatientController{
         modelAndView.addObject("patient", patient);
         modelAndView.addObject("visitsList", patient.getActiveVisits());
 
-
-
-
         modelAndView.setViewName("patient/pages/active_visits");
 
         return modelAndView;
