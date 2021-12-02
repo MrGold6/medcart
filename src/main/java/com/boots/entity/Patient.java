@@ -70,7 +70,7 @@ public class Patient extends Human {
 
             switch (i) {
                 case 1: {
-                    done.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
+                    done.sort(Comparator.comparing(Visit::getDate).thenComparing(o -> o.getSchedule().getTime()).reversed());
                     break;
                 }
                 case 2: {
