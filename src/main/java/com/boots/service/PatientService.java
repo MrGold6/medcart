@@ -36,7 +36,7 @@ public class PatientService {
 
         Query query = em.createQuery("DELETE FROM Visit d WHERE d.number= :id_visit");
         query.setParameter("id_visit", id_visit);
-        int result = query.executeUpdate();
+        query.executeUpdate();
 
     }
 
@@ -44,22 +44,18 @@ public class PatientService {
     public  Patient patientByUser(User user) {
         Patient patient = null;
         try {
-            patient= (Patient) em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)
+            patient= em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)
                     .setParameter("user", user).getSingleResult();
 
         } catch (NoResultException nre) {}
 
         return patient;
     }
-    public boolean deletePatient(Long userId) {
+    public void deletePatient(Long userId) {
         if (patientRepository.findById(userId).isPresent()) {
             patientRepository.deleteById(userId);
-            return true;
         }
-        return false;
     }
-
-
 
     public Patient getById(Long id) {
         Patient patient = null;
@@ -73,7 +69,6 @@ public class PatientService {
 
     public int patientsCount() {
         return (int) patientRepository.count();
-
     }
 
     public boolean checkRNTRC(Long id) {
@@ -86,7 +81,7 @@ public class PatientService {
     public List<Disease> allDiseases() {
         List<Disease> diseases = null;
         try {
-            diseases= (List<Disease>) em.createQuery("SELECT d FROM Disease d", Disease.class).getResultList();
+            diseases= em.createQuery("SELECT d FROM Disease d", Disease.class).getResultList();
         } catch (NoResultException nre) {}
 
         return diseases;
@@ -95,7 +90,7 @@ public class PatientService {
     public Disease getByIdDisease(String id) {
         Disease disease = null;
         try {
-            disease= (Disease) em.createQuery("SELECT d FROM Disease d WHERE d.ICD_10 = :paramId", Disease.class)
+            disease= em.createQuery("SELECT d FROM Disease d WHERE d.ICD_10 = :paramId", Disease.class)
                     .setParameter("paramId", id).getSingleResult();
         } catch (NoResultException nre) {}
 
@@ -105,7 +100,7 @@ public class PatientService {
     public List<MedicineCatalog> allMedicines() {
         List<MedicineCatalog> medicineCatalogs = null;
         try {
-            medicineCatalogs= (List<MedicineCatalog>) em.createQuery("SELECT m FROM MedicineCatalog m", MedicineCatalog.class).getResultList();
+            medicineCatalogs= em.createQuery("SELECT m FROM MedicineCatalog m", MedicineCatalog.class).getResultList();
         } catch (NoResultException nre) {}
 
         return medicineCatalogs;
@@ -115,7 +110,7 @@ public class PatientService {
     public  List<Patient> findTelephone_number(int telephone_number) {
         List<Patient> patients = null;
         try {
-            patients= (List<Patient>) em.createQuery("SELECT p FROM Patient p WHERE p.telephone_number = :paramId", Patient.class)
+            patients= em.createQuery("SELECT p FROM Patient p WHERE p.telephone_number = :paramId", Patient.class)
                     .setParameter("paramId", telephone_number).getResultList();
         } catch (NoResultException nre) {}
 

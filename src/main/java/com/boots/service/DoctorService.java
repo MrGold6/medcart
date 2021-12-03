@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.print.Doc;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +48,7 @@ public class DoctorService {
     public  List<Doctor> doctorBySpecialization(Specialization specialization) {
         List<Doctor> doctors = null;
         try {
-            doctors =(List<Doctor>) em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
+            doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
                     .setParameter("specialization", specialization).getResultList();
         } catch (NoResultException nre) {
 
@@ -62,7 +61,7 @@ public class DoctorService {
     public  List<Doctor> findTelephone_number(int telephone_number) {
         List<Doctor> doctors = null;
         try {
-            doctors= (List<Doctor>) em.createQuery("SELECT p FROM Doctor p WHERE p.telephone_number = :paramId", Doctor.class)
+            doctors= em.createQuery("SELECT p FROM Doctor p WHERE p.telephone_number = :paramId", Doctor.class)
                     .setParameter("paramId", telephone_number).getResultList();
         } catch (NoResultException nre) {}
 
@@ -72,7 +71,7 @@ public class DoctorService {
     public Specialization getByIdSpecialization(int id) {
         Specialization specialization = null;
         try {
-            specialization = (Specialization) em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
+            specialization = em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
                     .setParameter("paramId", id).getSingleResult();
         } catch (NoResultException nre) {}
 
@@ -82,7 +81,7 @@ public class DoctorService {
     public List<Specialization> allSpecializations() {
         List<Specialization> specializations = null;
         try {
-            specializations=  (List<Specialization>) em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
+            specializations=  em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
 
         } catch (NoResultException nre) {}
 
@@ -99,7 +98,7 @@ public class DoctorService {
     public  Doctor doctorByUser(User user) {
         Doctor doctor = null;
         try {
-            doctor = (Doctor) em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
+            doctor = em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
                     .setParameter("user", user).getSingleResult();
         } catch (NoResultException nre) {
 
@@ -118,7 +117,7 @@ public class DoctorService {
     public List<Schedule> allSchedule() {
         List<Schedule> schedules = null;
         try {
-            schedules= (List<Schedule>) em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
+            schedules= em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
 
         } catch (NoResultException nre) {}
 
@@ -131,7 +130,7 @@ public class DoctorService {
     public Schedule getScheduleById(int id_schedule) {
         Schedule schedule = null;
         try {
-            schedule= (Schedule) em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
+            schedule= em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
                     .setParameter("paramId", id_schedule).getSingleResult();
 
         } catch (NoResultException nre) {}
@@ -143,7 +142,7 @@ public class DoctorService {
     public void deleteSchedule(int id_schedule) {
         Query query = em.createQuery("DELETE FROM Schedule d WHERE d.id= :id_schedule");
         query.setParameter("id_schedule", id_schedule);
-        int result = query.executeUpdate();
+        query.executeUpdate();
 
     }
 }

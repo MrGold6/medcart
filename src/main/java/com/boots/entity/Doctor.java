@@ -1,17 +1,11 @@
 package com.boots.entity;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import javax.persistence.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Date;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
@@ -29,7 +23,6 @@ public class Doctor extends Human {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    // другой правильній варіант https://stackoverflow.com/questions/22821695/how-to-fix-hibernate-lazyinitializationexception-failed-to-lazily-initialize-a
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)
     public List<Visit> visits = new ArrayList<>();
 
@@ -214,7 +207,7 @@ public class Doctor extends Human {
     }
     public List<User> getUsers(List<User> allUsers) {
         List<User> doctorUsers = new ArrayList<>();
-        int id=0;
+        int id;
 
         if(this.getSpecialization().getId()==1) id =1;
         else id=4;

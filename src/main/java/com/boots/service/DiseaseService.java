@@ -1,22 +1,15 @@
 package com.boots.service;
 
 import com.boots.entity.Disease;
-import com.boots.entity.MedicineCatalog;
 import com.boots.repository.DiseaseRepository;
-import com.boots.repository.MedicineCatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class DiseaseService {
-    @PersistenceContext
-    private EntityManager em;
     @Autowired
     private DiseaseRepository diseaseRepository;
 

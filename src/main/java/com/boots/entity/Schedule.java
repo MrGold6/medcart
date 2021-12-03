@@ -1,8 +1,6 @@
 package com.boots.entity;
 
 import javax.persistence.*;
-import java.util.Comparator;
-
 @Entity
 @Table(name = "schedule")
 public class Schedule {
