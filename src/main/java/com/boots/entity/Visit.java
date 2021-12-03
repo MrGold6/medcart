@@ -33,7 +33,7 @@ public class Visit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "electronic_card", referencedColumnName = "RNTRC")
     private Patient patient;
-//МБ нужно фиксануть EAGER
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "doctor", referencedColumnName = "RNTRC")
     private Doctor doctor;

@@ -6,9 +6,6 @@ import com.boots.entity.Patient;
 import com.boots.entity.User;
 import com.boots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,7 +32,6 @@ public class FamilyDoctorController extends DoctorController {
         return modelAndView;
     }
 
-//створення юзера
     @RequestMapping(value = "/patients/searchTelephone_number", method = RequestMethod.GET)
     public ModelAndView allPatientsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
         Doctor doctor=getAuthDoc();
@@ -131,6 +127,7 @@ public class FamilyDoctorController extends DoctorController {
     public ModelAndView choose_actionPageDirection(@ModelAttribute("message") String message,
                                                    @PathVariable("id_visit") String id_visit){
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
         modelAndView.setViewName("doctor/familyDoctor/form/choose_form/choose_action_direction");
         return modelAndView;
     }

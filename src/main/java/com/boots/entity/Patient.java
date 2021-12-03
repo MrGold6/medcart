@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.sql.Date;
-import static java.util.Comparator.nullsFirst;
 
 @Entity
 @Table(name = "electronic_card")
@@ -297,14 +296,5 @@ public class Patient extends Human {
         return day+"."+month+"."+year;
     }
 
-    /*
-    public List<Visit> getActiveDirection() {
-        List<Visit> active = new ArrayList<>();
-        for (Visit visit : this.visits)
-            if(!visit.getStatus())
-                active.add(visit);
-        active.sort(Collections.reverseOrder(Comparator.comparing(Visit::getDate)));
-        return active;
-    }*/
 
 }
