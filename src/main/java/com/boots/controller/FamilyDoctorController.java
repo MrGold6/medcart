@@ -6,10 +6,17 @@ import com.boots.entity.Patient;
 import com.boots.entity.User;
 import com.boots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
@@ -17,13 +24,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/doctor1")
 public class FamilyDoctorController extends DoctorController {
+
     @Autowired
     private UserService userService;
 
     @RequestMapping(value = "/patients/{sort_num}", method = RequestMethod.GET)
     public ModelAndView allPatientsPage(@PathVariable("sort_num") int sort_num) {
         List<Patient> patients = patientService.allPatients();
-        Doctor doctor=getAuthDoc();
+        Doctor doctor = getAuthDoc();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("patientsList", sort.sortPatient(patients, sort_num));
@@ -34,7 +42,7 @@ public class FamilyDoctorController extends DoctorController {
 
     @RequestMapping(value = "/patients/searchTelephone_number", method = RequestMethod.GET)
     public ModelAndView allPatientsWithCurrentTelephone_number(@ModelAttribute("telephone_number") int telephone_number) {
-        Doctor doctor=getAuthDoc();
+        Doctor doctor = getAuthDoc();
         List<Patient> patients = patientService.findTelephone_number(telephone_number);
 
         ModelAndView modelAndView = new ModelAndView();
@@ -51,10 +59,11 @@ public class FamilyDoctorController extends DoctorController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("patient", patient);
 
-        if(message.equals("y"))
+        if (message.equals("y")) {
             modelAndView.addObject("message", message);
-        else
+        } else {
             modelAndView.addObject("message", null);
+        }
 
         modelAndView.setViewName("doctor/familyDoctor/form/create_form/new_patient");
         return modelAndView;
@@ -72,10 +81,10 @@ public class FamilyDoctorController extends DoctorController {
             patient.setBlood_type(Integer.parseInt(Blood_type));
             patient.setRh(rh);
             patientService.add(patient);
-            modelAndView.setViewName("redirect:/doctor1/"+patient.getRNTRC()+"/add_user");
+            modelAndView.setViewName("redirect:/doctor1/" + patient.getRNTRC() + "/add_user");
 
         } else {
-            modelAndView.addObject("message","y");
+            modelAndView.addObject("message", "y");
             modelAndView.setViewName("redirect:/doctor1/add_patient");
         }
         return modelAndView;
@@ -86,10 +95,11 @@ public class FamilyDoctorController extends DoctorController {
                                     @ModelAttribute("message") String message) {
         ModelAndView modelAndView = new ModelAndView();
 
-        if(message.equals("y"))
+        if (message.equals("y")) {
             modelAndView.addObject("message", message);
-        else
+        } else {
             modelAndView.addObject("message", null);
+        }
 
         modelAndView.addObject("user", new User());
         modelAndView.addObject("id_patient", id_patient);
@@ -104,14 +114,13 @@ public class FamilyDoctorController extends DoctorController {
 
         ModelAndView modelAndView = new ModelAndView();
 
-        user.setId(SecureRandom.getInstance("SHA1PRNG").nextInt()+"_"+user.getUsername());
+        user.setId(SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + user.getUsername());
         user.setSelected(true);
 
-        if (!userService.saveUser(user, 3)){
-            modelAndView.addObject("message","y");
+        if (!userService.saveUser(user, 3)) {
+            modelAndView.addObject("message", "y");
             modelAndView.setViewName("doctor/familyDoctor/form/create_form/new_user");
-        }
-        else {
+        } else {
             Patient patient = patientService.getById(id_patient);
             patient.setUser(user);
             patientService.add(patient);
@@ -125,7 +134,7 @@ public class FamilyDoctorController extends DoctorController {
     //direction
     @RequestMapping(value = "/{id_visit}/choose_action_direction", method = RequestMethod.GET)
     public ModelAndView choose_actionPageDirection(@ModelAttribute("message") String message,
-                                                   @PathVariable("id_visit") String id_visit){
+                                                   @PathVariable("id_visit") String id_visit) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);
         modelAndView.setViewName("doctor/familyDoctor/form/choose_form/choose_action_direction");
@@ -134,7 +143,7 @@ public class FamilyDoctorController extends DoctorController {
 
     @RequestMapping(value = "/{id_visit}/add_new_direction", method = RequestMethod.GET)
     public ModelAndView addPageDirection(@ModelAttribute("message") String message,
-                                         @PathVariable("id_visit") String id_visit){
+                                         @PathVariable("id_visit") String id_visit) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);
         modelAndView.addObject("specializationsList", doctorService.allSpecializations());
@@ -148,8 +157,8 @@ public class FamilyDoctorController extends DoctorController {
     public ModelAndView addDirection(@ModelAttribute("selected_spec") int selected_spec,
                                      @ModelAttribute("direction") Direction direction,
                                      @ModelAttribute("id_visit") String id_visit) throws NoSuchAlgorithmException {
-        Patient patient=patientService.getById(getIdPatientSplit(id_visit));
-        if(patient.isDirectionExists(specializationService.getById(selected_spec).getName())) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        if (patient.isDirectionExists(specializationService.getById(selected_spec).getName())) {
             direction.setNumber(String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextInt()));
             direction.setSpecialization(specializationService.getById(selected_spec));
             direction.setStatus(true);
@@ -157,7 +166,7 @@ public class FamilyDoctorController extends DoctorController {
             directionService.add(direction);
         }
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/"+id_visit+"/choose_action_med");
+        modelAndView.setViewName("redirect:/" + id_visit + "/choose_action_med");
 
         return modelAndView;
     }

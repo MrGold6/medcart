@@ -11,6 +11,7 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
+/* Firefox */
 input[type=number] {
     -moz-appearance: textfield;
 }
@@ -218,6 +219,7 @@ header{
     color: #6b2644;
 }
 
+
 /* for custom scrollbar for webkit browser. not working with firefox*/
 
 ::-webkit-scrollbar {
@@ -378,5 +380,18 @@ tr:hover{
     text-decoration: none;
     display:block;
 }
+
+/*links*/
+
+.link-custom
+{
+    color: #9b3963;
+}
+
+.link-custom:hover
+{
+    color: #6b2644;
+}
+
 
 

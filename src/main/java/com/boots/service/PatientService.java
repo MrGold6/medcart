@@ -5,15 +5,18 @@ import com.boots.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PatientService {
+
     @PersistenceContext
     private EntityManager em;
     @Autowired
@@ -41,16 +44,18 @@ public class PatientService {
     }
 
 
-    public  Patient patientByUser(User user) {
+    public Patient patientByUser(User user) {
         Patient patient = null;
         try {
-            patient= em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)
+            patient = em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)
                     .setParameter("user", user).getSingleResult();
 
-        } catch (NoResultException nre) {}
+        } catch (NoResultException nre) {
+        }
 
         return patient;
     }
+
     public void deletePatient(Long userId) {
         if (patientRepository.findById(userId).isPresent()) {
             patientRepository.deleteById(userId);
@@ -61,8 +66,9 @@ public class PatientService {
         Patient patient = null;
         try {
             Optional<Patient> patientFromDb = patientRepository.findById(id);
-            patient= patientFromDb.orElse(new Patient());
-        } catch (NoResultException nre) {}
+            patient = patientFromDb.orElse(new Patient());
+        } catch (NoResultException nre) {
+        }
 
         return patient;
     }
@@ -81,8 +87,9 @@ public class PatientService {
     public List<Disease> allDiseases() {
         List<Disease> diseases = null;
         try {
-            diseases= em.createQuery("SELECT d FROM Disease d", Disease.class).getResultList();
-        } catch (NoResultException nre) {}
+            diseases = em.createQuery("SELECT d FROM Disease d", Disease.class).getResultList();
+        } catch (NoResultException nre) {
+        }
 
         return diseases;
     }
@@ -90,9 +97,10 @@ public class PatientService {
     public Disease getByIdDisease(String id) {
         Disease disease = null;
         try {
-            disease= em.createQuery("SELECT d FROM Disease d WHERE d.ICD_10 = :paramId", Disease.class)
+            disease = em.createQuery("SELECT d FROM Disease d WHERE d.ICD_10 = :paramId", Disease.class)
                     .setParameter("paramId", id).getSingleResult();
-        } catch (NoResultException nre) {}
+        } catch (NoResultException nre) {
+        }
 
         return disease;
     }
@@ -100,19 +108,21 @@ public class PatientService {
     public List<MedicineCatalog> allMedicines() {
         List<MedicineCatalog> medicineCatalogs = null;
         try {
-            medicineCatalogs= em.createQuery("SELECT m FROM MedicineCatalog m", MedicineCatalog.class).getResultList();
-        } catch (NoResultException nre) {}
+            medicineCatalogs = em.createQuery("SELECT m FROM MedicineCatalog m", MedicineCatalog.class).getResultList();
+        } catch (NoResultException nre) {
+        }
 
         return medicineCatalogs;
     }
 
 
-    public  List<Patient> findTelephone_number(int telephone_number) {
+    public List<Patient> findTelephone_number(int telephone_number) {
         List<Patient> patients = null;
         try {
-            patients= em.createQuery("SELECT p FROM Patient p WHERE p.telephone_number = :paramId", Patient.class)
+            patients = em.createQuery("SELECT p FROM Patient p WHERE p.telephone_number = :paramId", Patient.class)
                     .setParameter("paramId", telephone_number).getResultList();
-        } catch (NoResultException nre) {}
+        } catch (NoResultException nre) {
+        }
 
         return patients;
     }

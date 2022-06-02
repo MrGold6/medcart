@@ -1,16 +1,14 @@
 package com.boots.transientClasses;
 
 import com.boots.entity.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Comparator;
 import java.util.List;
 
+@NoArgsConstructor
 public class Sort {
 
-    public Sort()
-    {
-
-    }
     public List<User> sortUser(List<User> users, int i) {
         switch (i) {
             case 1: {
@@ -213,7 +211,8 @@ public class Sort {
                 break;
             }
             case 2: {
-                directions.sort(Comparator.comparing(o -> o.getSpecialization().getName()));                break;
+                directions.sort(Comparator.comparing(o -> o.getSpecialization().getName()));
+                break;
             }
 
             case 3: {

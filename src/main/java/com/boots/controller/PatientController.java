@@ -5,10 +5,17 @@ import com.boots.service.DoctorService;
 import com.boots.service.PatientService;
 import com.boots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.NoSuchAlgorithmException;
@@ -20,7 +27,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/patient")
 @PreAuthorize("hasRole('ROLE_PATIENT')")
-public class PatientController{
+public class PatientController {
+
     protected PatientService patientService;
 
     protected DoctorService doctorService;
@@ -39,21 +47,20 @@ public class PatientController{
         this.doctorService = doctorService;
     }
 
-    public String dateToString(Date date)
-    {
+    public String dateToString(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
         int year = cal.get(Calendar.YEAR);
-        return day+"."+month+"."+year;
+        return day + "." + month + "." + year;
     }
 
-    public void deleteExpiredVisits(Patient patient)
-    {
+    public void deleteExpiredVisits(Patient patient) {
         for (Visit visit : patient.expiredVisits()) {
-            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName())) {
                 patient.findNotActiveDirection(visit.getDoctor().getSpecialization()).setStatus(true);
+            }
             patientService.deleteVisit(visit.getNumber());
 
         }
@@ -61,11 +68,18 @@ public class PatientController{
     }
 
     //patient
-    public Patient getAuthPatient()
-    {
+    public Patient getAuthPatient() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
         return patientService.patientByUser(user);
+    }
+
+    @GetMapping("/getUserInfo")
+    public ResponseEntity<?> userInfo() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{sort_int}", method = RequestMethod.GET)
@@ -105,7 +119,7 @@ public class PatientController{
 
         ModelAndView modelAndView = new ModelAndView();
 
-        boolean exist =patient.findActiveVisitBySpecialization(doctorService.getByIdSpecialization(1));
+        boolean exist = patient.findActiveVisitBySpecialization(doctorService.getByIdSpecialization(1));
 
         modelAndView.addObject("exist", exist);
         modelAndView.addObject("patient", patient);
@@ -116,11 +130,11 @@ public class PatientController{
     }
 
     @RequestMapping(value = "/{id_doctor}/schedule", method = RequestMethod.GET)
-    public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id){
+    public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id) {
 
         ModelAndView modelAndView = new ModelAndView();
         Doctor doctor = doctorService.getById(id);
-        List<Schedule> schedules =doctor.freeSchedule(LocalDate.now());
+        List<Schedule> schedules = doctor.freeSchedule(LocalDate.now());
         modelAndView.addObject("doctor", doctor);
         modelAndView.addObject("date", Date.valueOf(LocalDate.now()));
         modelAndView.addObject("dateV", dateToString(Date.valueOf(LocalDate.now())));
@@ -132,11 +146,11 @@ public class PatientController{
 
     @RequestMapping(value = "/{id_doctor}/schedulesByDay", method = RequestMethod.GET)
     public ModelAndView schedulesByDay(@ModelAttribute("date1") String date,
-                                    @PathVariable("id_doctor") Long id){
+                                       @PathVariable("id_doctor") Long id) {
 
         ModelAndView modelAndView = new ModelAndView();
         Doctor doctor = doctorService.getById(id);
-        List<Schedule> schedules =doctor.freeSchedule(Date.valueOf(date).toLocalDate());
+        List<Schedule> schedules = doctor.freeSchedule(Date.valueOf(date).toLocalDate());
         modelAndView.addObject("date", Date.valueOf(date));
         modelAndView.addObject("dateV", dateToString(Date.valueOf(date)));
         modelAndView.addObject("doctor", doctor);
@@ -150,7 +164,7 @@ public class PatientController{
     @RequestMapping(value = "/{id_doctor}/add_visit/{date1}/{id_schedule}", method = RequestMethod.GET)
     public ModelAndView addPageVisit(@PathVariable("id_doctor") Long id,
                                      @PathVariable("date1") String date,
-                                     @PathVariable("id_schedule") int id_schedule){
+                                     @PathVariable("id_schedule") int id_schedule) {
 
         ModelAndView modelAndView = new ModelAndView();
         Doctor doctor = doctorService.getById(id);
@@ -179,8 +193,9 @@ public class PatientController{
         visit.setDoctor(doctor);
         visit.setSchedule(doctor.findSchedule(id_schedule));
 
-        if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+        if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName())) {
             patient.findActiveDirection(doctor.getSpecialization()).setStatus(false);
+        }
 
         doctor.addVisit(visit);
 
@@ -196,11 +211,12 @@ public class PatientController{
     @RequestMapping(value = "/deleteVisit/{id_visit}", method = RequestMethod.GET)
     public ModelAndView deleteVisit(@PathVariable("id_visit") String id_visit) {
         Patient patient = getAuthPatient();
-        Visit visit =patient.findVisit(id_visit);
+        Visit visit = patient.findVisit(id_visit);
         Doctor doctor = visit.getDoctor();
 
-        if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName()))
+        if (!Objects.equals(doctor.getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName())) {
             patient.findNotActiveDirection(doctor.getSpecialization()).setStatus(true);
+        }
 
         patientService.deleteVisit(id_visit);
         patientService.add(patient);
@@ -228,7 +244,7 @@ public class PatientController{
     }
 
     @RequestMapping(value = "/{specialization}/doctorsBySpecialization", method = RequestMethod.GET)
-    public ModelAndView allDoctorsBySpecialization( @PathVariable("specialization") int specialization) {
+    public ModelAndView allDoctorsBySpecialization(@PathVariable("specialization") int specialization) {
 
         Patient patient = getAuthPatient();
         List<Doctor> doctors = doctorService.doctorBySpecialization(doctorService.getByIdSpecialization(specialization));
@@ -246,7 +262,7 @@ public class PatientController{
     @RequestMapping(value = "/{id_visit}/visit", method = RequestMethod.GET)
     public ModelAndView PageVisit(@ModelAttribute("message") String message,
                                   @PathVariable("id_visit") String id_visit) {
-       Patient patient = getAuthPatient();
+        Patient patient = getAuthPatient();
         Visit visit = patient.findVisit(id_visit);
 
         ModelAndView modelAndView = new ModelAndView();
@@ -268,6 +284,7 @@ public class PatientController{
         return modelAndView;
     }
 
+
     @RequestMapping(value = "/edit_patient", method = RequestMethod.POST)
     public ModelAndView editPatient(@ModelAttribute("patient") Patient patient,
                                     @ModelAttribute("sex") String sex,
@@ -275,8 +292,9 @@ public class PatientController{
                                     @ModelAttribute("user_id") String user_id) {
         patient.setSex(Integer.parseInt(sex));
 
-        if(!user_id.isEmpty())
+        if (!user_id.isEmpty()) {
             patient.setUser(userService.findUserById(user_id));
+        }
         patientService.add(patient);
 
         ModelAndView modelAndView = new ModelAndView();
