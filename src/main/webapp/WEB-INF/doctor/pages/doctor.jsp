@@ -94,6 +94,13 @@
                             </div>
 
                             <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Стаж:</label>
+                                <div class="col-sm-6">
+                                    <input type="number" class="form-control" placeholder="standing" value="${standing}" readonly>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Електронна пошта:</label>
                                 <div class="col-sm-6">
                                     <input type="email" class="form-control" name="email" value="${doctor.email}" readonly>

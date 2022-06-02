@@ -6,17 +6,18 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import java.sql.Date;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "medicine_catalog")
-public class MedicineCatalog {
+public class SymptomsHistory {
 
     @Id
-    private String ATX;
-    private String name;
-
+    private String id;
+    private Date date;
+    private String symptoms;
+    private String notes;
 }

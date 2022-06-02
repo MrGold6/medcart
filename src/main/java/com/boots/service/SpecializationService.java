@@ -5,11 +5,13 @@ import com.boots.repository.SpecializationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SpecializationService {
+
     @Autowired
     private SpecializationRepository specializationRepository;
 
@@ -17,10 +19,12 @@ public class SpecializationService {
     public List<Specialization> allSpecialization() {
         return specializationRepository.findAll();
     }
+
     @Transactional
     public void add(Specialization specialization) {
         specializationRepository.save(specialization);
     }
+
     @Transactional
     public void delete(Specialization specialization) {
         specializationRepository.delete(specialization);

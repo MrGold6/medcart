@@ -111,6 +111,13 @@
                                 </div>
                             </div>
 
+                            <div class="row mb-3">
+                                <label class="col-sm-6 col-form-label ln">Дата початку роботи:</label>
+                                <div class="col-sm-6">
+                                    <input type="date" name="dateWhenStartWorking" class="form-control" value="${doctor.dateWhenStartWorking}" maxlength="20" data-inputmask="'alias': 'date','placeholder': '*'" required>
+                                </div>
+                            </div>
+
 
                             <center>
                                 <c:if test="${!empty doctor.RNTRC}">

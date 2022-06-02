@@ -5,11 +5,13 @@ import com.boots.repository.MedicineCatalogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class MedicineCatalogService {
+
     @Autowired
     private MedicineCatalogRepository medicineCatalogRepository;
 
@@ -17,10 +19,12 @@ public class MedicineCatalogService {
     public List<MedicineCatalog> allMedicine() {
         return medicineCatalogRepository.findAll();
     }
+
     @Transactional
     public void add(MedicineCatalog medicineCatalog) {
         medicineCatalogRepository.save(medicineCatalog);
     }
+
     @Transactional
     public void delete(MedicineCatalog medicineCatalog) {
         medicineCatalogRepository.delete(medicineCatalog);
