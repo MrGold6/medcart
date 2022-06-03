@@ -3,9 +3,9 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../../../template/head.jsp" />
+<jsp:include page="../../template/head.jsp" />
 
-<c:url value="/doctor1/add_patient" var="addUrl"/>
+<c:url value="/nurse/add_patient" var="addUrl"/>
 <body>
 <div class="container">
 
@@ -17,7 +17,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/doctor1/patients';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/nurse/patients/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>
@@ -172,7 +172,6 @@
                                 </div>
                             </div>
 
-                            <c:set value="edit_patient" var="edit_patient"/>
                             <center>
                                 <c:set value="add_patient" var="add_patient"/>
                                 <input type="submit" id="in" class="btn btn_form_add" name="${add_patient}" value="Створити">

@@ -234,10 +234,18 @@ public class Doctor extends Human {
         List<User> doctorUsers = new ArrayList<>();
         int id;
 
-        if (this.getSpecialization().getId() == 1) {
-            id = 1;
-        } else {
-            id = 4;
+        switch (this.getSpecialization().getId()) {
+            case 1:
+                id = 1;
+                break;
+
+            case 9:
+                id = 6;
+                break;
+
+            default:
+                id = 4;
+                break;
         }
 
         for (User user : allUsers) {
