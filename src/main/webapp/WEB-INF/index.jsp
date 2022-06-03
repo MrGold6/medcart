@@ -24,6 +24,10 @@
     <c:redirect url="/today_visits"/>
   </sec:authorize>
 
+  <sec:authorize access="hasRole('ROLE_NURSE')">"
+    <c:redirect url="/nurse/patients/1"/>
+  </sec:authorize>
+
 
   <sec:authorize access="hasRole('ROLE_ADMIN')">"
     <c:redirect url="/admin/user/1"/>

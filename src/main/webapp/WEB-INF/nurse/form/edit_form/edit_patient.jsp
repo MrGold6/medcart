@@ -13,7 +13,7 @@
                 <div class="card card_form">
 
                             <div id="return">
-                                <button onclick="document.location = '/${id_visit}/visits/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                                <button onclick="document.location = '/nurse/${id_patient}/visits/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                                     <i class="bi bi-arrow-left ar"></i>
                                 </button>
                             </div>
@@ -21,9 +21,10 @@
 
                     <div class="card-body">
                         <legend class="card-title text-center">Пацієнт</legend>
-                        <c:url value="/edit_patient" var="editUrl"/>
+                        <c:url value="/nurse/edit_patient" var="editUrl"/>
                         <form action="${editUrl}" name="patient" method="POST">
-                            <input type="hidden" name="id_visit" value="${id_visit}">
+                            <input type="hidden" name="id_patient" value="${id_patient}">
+
                             <input type="hidden" name="user_id" value="${patient.user.id}">
 
 
@@ -182,7 +183,6 @@
                                     <input type="number" name="abdominal_circumference" class="form-control" value="${patient.abdominal_circumference}" step="0.01" >
                                 </div>
                             </div>
-
 
                             <c:set value="edit_patient" var="edit_patient"/>
                                 <center>

@@ -32,6 +32,10 @@ public class Patient extends Human {
     private String chronic_disease;
     private String allergic_history;
     private String Rh;
+    private double height;
+    private double width;
+    private double chest_circumference;
+    private double abdominal_circumference;
     private int count_of_recipe;
     private int count_of_sick_leave;
     private int count_of_directionAnalysis;
@@ -77,7 +81,11 @@ public class Patient extends Human {
 
         switch (i) {
             case 1: {
-                done.sort(Comparator.comparing(Visit::getDate).thenComparing(o -> o.getSchedule().getTime()).reversed());
+                try {
+                    done.sort(Comparator.comparing(Visit::getDate).thenComparing(o -> o.getSchedule().getTime()).reversed());
+                } catch (Exception e) {
+                    done.sort(Comparator.comparing(Visit::getDate).reversed());
+                }
                 break;
             }
             case 2: {
