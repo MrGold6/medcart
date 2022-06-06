@@ -24,6 +24,12 @@
                                 Скарги
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link link-custom"  href="/${id_visit}/tests/1" tabindex="-1" aria-disabled="true">
+                                Аналізи
+                            </a>
+                        </li>
                     </ul>
 
 

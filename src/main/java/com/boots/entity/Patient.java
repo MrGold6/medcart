@@ -51,6 +51,9 @@ public class Patient extends Human {
     @OneToMany(mappedBy = "patient")
     public List<Direction> directions = new ArrayList<>();
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Test> tests = new ArrayList<>();
+
     @OneToMany
     public List<SymptomsHistory> symptomsHistories = new ArrayList<>();
 
@@ -152,10 +155,26 @@ public class Patient extends Human {
         this.visits.add(visit);
     }
 
+    public void addTest(Test test) {
+
+        test.setPatient(this);
+        this.tests.add(test);
+    }
+
     public Visit findVisit(String id) {
         for (Visit visit : visits) {
             if (visit.getNumber().equals(id)) {
                 return visit;
+            }
+        }
+
+        return null;
+    }
+
+    public Test findTest(String id) {
+        for (Test test : tests) {
+            if (test.getId().equals(id)) {
+                return test;
             }
         }
 
@@ -177,20 +196,47 @@ public class Patient extends Human {
         return directions;
     }
 
-    public List<Direction> getActiveDirections() {
+    public List<Direction> getActiveDirectionsWithoutTests() {
         List<Direction> active = new ArrayList<>();
         for (Direction direction : this.directions) {
-            if (direction.getStatus()) {
-                active.add(direction);
+            if (direction.getSpecialization().getId() != 8) {
+                if (direction.getStatus()) {
+                    active.add(direction);
+                }
             }
+
+        }
+        return active;
+    }
+
+    public List<Direction> getActiveDirectionsWithTests() {
+        List<Direction> active = new ArrayList<>();
+        for (Direction direction : this.directions) {
+            if (direction.getSpecialization().getId() == 8) {
+                if (direction.getStatus()) {
+                    active.add(direction);
+                }
+            }
+
         }
         return active;
     }
 
     public boolean isDirectionExists(String specialization) {
-        List<Direction> active = this.getActiveDirections();
+        List<Direction> active = this.getActiveDirectionsWithoutTests();
         for (Direction direction : active) {
             if (direction.getStatus() && direction.getSpecialization().getName().equals(specialization)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public boolean isTestTypeExists(String testType) {
+        List<Direction> active = this.getActiveDirectionsWithTests();
+        for (Direction direction : active) {
+            if (direction.getStatus() && direction.getTestsType().getName().equals(testType)) {
                 return false;
             }
         }

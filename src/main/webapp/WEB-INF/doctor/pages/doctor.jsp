@@ -11,7 +11,7 @@
                 <div class="card card_form">
 
                     <div id="return">
-                        <button onclick="document.location = '/today_visits';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                        <button onclick="document.location = '/';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
                             <i class="bi bi-arrow-left ar"></i>
                         </button>
                     </div>

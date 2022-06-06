@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-<jsp:include page="../../../template/head.jsp" />
+<jsp:include page="../../template/head.jsp" />
 <body>
 <div class="container">
 
@@ -12,15 +12,15 @@
                 <div class="card card_form">
                     <div class="card-body">
 
-                        <legend class="card-title text-center">Потрібне направлення до іншого лікаря?</legend>
+                        <legend class="card-title text-center">Потрібне направлення на локальні аналізи?</legend>
 
                         <div class="form">
                             <ul class="border">
                                 <li>
-                                    <a href="/doctor1/${id_visit}/add_new_direction">Так</a>
+                                    <a href="/${id_visit}/add_new_lab_direction">Так</a>
                                 </li>
                                 <li>
-                                    <a href="/${id_visit}/choose_action_lab_direction">Ні</a>
+                                    <a href="/${id_visit}/choose_action_med">Ні</a>
                                 </li>
                             </ul>
                         </div>

@@ -28,6 +28,10 @@
     <c:redirect url="/nurse/patients/1"/>
   </sec:authorize>
 
+  <sec:authorize access="hasRole('ROLE_LABORATORY')">"
+    <c:redirect url="/lab/patients/1"/>
+  </sec:authorize>
+
 
   <sec:authorize access="hasRole('ROLE_ADMIN')">"
     <c:redirect url="/admin/user/1"/>

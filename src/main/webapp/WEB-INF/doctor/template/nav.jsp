@@ -22,9 +22,20 @@
                     </li>
                 </c:if>
 
-                <li class="nav-item">
-                    <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
-                </li>
+                <c:if test="${doctor.specialization.id!=8}">
+                    <li class="nav-item">
+                        <a class="nav-link link active" href= '/today_visits'>Візити на сьогодні</a>
+                    </li>
+                </c:if>
+
+                <c:if test="${doctor.specialization.id==8}">
+                    <li class="nav-item">
+                        <a class="nav-link link active" href= '/lab/patients/1'>Пацієнти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link link active" href= '/lab/doneTests'>Проведені аналізи</a>
+                    </li>
+                </c:if>
                 <li class="nav-item">
                     <a class="nav-link link active" href= '/patients/doctor'>${doctor.specialization.name} ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</a>
                 </li>

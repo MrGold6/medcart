@@ -1,6 +1,7 @@
 package com.boots.controller;
 
 import com.boots.entity.*;
+import com.boots.service.DirectionService;
 import com.boots.service.DoctorService;
 import com.boots.service.PatientService;
 import com.boots.service.UserService;
@@ -36,6 +37,8 @@ public class PatientController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DirectionService directionService;
 
     @Autowired
     public void setPatientService(PatientService patientService) {
@@ -120,14 +123,80 @@ public class PatientController {
         ModelAndView modelAndView = new ModelAndView();
 
         boolean exist = patient.findActiveVisitBySpecialization(doctorService.getByIdSpecialization(1));
+        //List<Direction> directions = directionService.getActiveBySpecializationAndPatient(doctor.getSpecialization(), patientService.getById(patient_id));
 
         modelAndView.addObject("exist", exist);
         modelAndView.addObject("patient", patient);
-        modelAndView.addObject("directionsList", patient.getActiveDirections());
+        modelAndView.addObject("directionsList", patient.getActiveDirectionsWithoutTests());
         modelAndView.setViewName("patient/pages/directions");
 
         return modelAndView;
     }
+
+    //tests
+    @GetMapping(value = "/tests")
+    public ModelAndView allTestDirections() {
+        Patient patient = getAuthPatient();
+        List<Direction> directions = directionService.getActiveBySpecializationAndPatient(doctorService.getByIdSpecialization(8), patient);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("directionsList", directions);
+        modelAndView.addObject("patient", patient);
+        modelAndView.setViewName("patient/pages/test_directions");
+        return modelAndView;
+    }
+
+    @GetMapping("/doneTests")
+    public ModelAndView allTests() {
+        Patient patient = getAuthPatient();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("testList", patient.getTests());
+        modelAndView.addObject("patient", patient);
+        modelAndView.setViewName("patient/pages/tests");
+        return modelAndView;
+    }
+
+    @GetMapping("/test/{test_id}")
+    public ModelAndView TestPage(@PathVariable("test_id") String test_id) {
+        Patient patient = getAuthPatient();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("test", patient.findTest(test_id));
+        modelAndView.setViewName("patient/pages/test");
+        return modelAndView;
+    }
+
+    //symptoms
+    @GetMapping(value = "/symptoms/{sort_int}")
+    public ModelAndView allSymptoms(@PathVariable("sort_int") int sort_int) {
+        Patient patient = getAuthPatient();
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("symptomsList", patient.getSymptomsHistories());
+        modelAndView.setViewName("patient/pages/symptoms");
+
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/symptom/{id_symptom}")
+    public ModelAndView PageSymptom(@ModelAttribute("message") String message,
+                                    @PathVariable("id_symptom") String id_symptom) {
+
+        Patient patient = getAuthPatient();
+        SymptomsHistory record = patient.findSymptom(id_symptom);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("record", record);
+        modelAndView.setViewName("patient/pages/symptom");
+
+        return modelAndView;
+    }
+
+
+//schedule
 
     @RequestMapping(value = "/{id_doctor}/schedule", method = RequestMethod.GET)
     public ModelAndView PageSchedule(@PathVariable("id_doctor") Long id) {

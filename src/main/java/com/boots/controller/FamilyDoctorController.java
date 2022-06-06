@@ -3,6 +3,7 @@ package com.boots.controller;
 import com.boots.entity.Direction;
 import com.boots.entity.Doctor;
 import com.boots.entity.Patient;
+import com.boots.entity.Specialization;
 import com.boots.entity.User;
 import com.boots.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,9 +145,12 @@ public class FamilyDoctorController extends DoctorController {
     @RequestMapping(value = "/{id_visit}/add_new_direction", method = RequestMethod.GET)
     public ModelAndView addPageDirection(@ModelAttribute("message") String message,
                                          @PathVariable("id_visit") String id_visit) {
+        List<Specialization> specializationsList = doctorService.allSpecializations();
+        specializationsList.remove(doctorService.getByIdSpecialization(8));
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);
-        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("specializationsList", specializationsList);
         modelAndView.addObject("direction", new Direction());
         modelAndView.setViewName("doctor/familyDoctor/form/create_form/direction");
 
@@ -166,7 +170,7 @@ public class FamilyDoctorController extends DoctorController {
             directionService.add(direction);
         }
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/" + id_visit + "/choose_action_med");
+        modelAndView.setViewName("redirect:/" + id_visit + "/choose_action_lab_direction");
 
         return modelAndView;
     }
