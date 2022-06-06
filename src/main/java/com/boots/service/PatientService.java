@@ -1,6 +1,7 @@
 package com.boots.service;
 
 import com.boots.entity.*;
+import com.boots.repository.DirectionRepository;
 import com.boots.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +12,11 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PatientService {
@@ -21,6 +25,8 @@ public class PatientService {
     private EntityManager em;
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private DirectionRepository directionRepository;
 
     public List<Patient> allPatients() {
         return patientRepository.findAll();
@@ -125,6 +131,29 @@ public class PatientService {
         }
 
         return patients;
+    }
+
+    public Set<Patient> getPatientsByDirection(Specialization specialization, Boolean status) {
+        Set<Patient> patients = new HashSet<>();
+
+        for (Direction direction : directionRepository.findBySpecializationAndStatus(specialization, status)) {
+            patients.add(direction.getPatient());
+        }
+
+        return patients;
+
+    }
+
+    public List<Patient> getPatientsByDirection(Specialization specialization, Boolean status, int telephone_number) {
+        List<Patient> patients = new ArrayList<>();
+
+        for (Direction direction : directionRepository.findBySpecializationAndStatus(specialization, status)) {
+            if(direction.getPatient().getTelephone_number() == telephone_number)
+                patients.add(direction.getPatient());
+        }
+
+        return patients;
+
     }
 
 }

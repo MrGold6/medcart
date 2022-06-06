@@ -18,14 +18,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -270,7 +274,7 @@ public class DoctorController {
         if (doctor.getSpecialization() == doctorService.getByIdSpecialization(1)) {
             modelAndView.setViewName("redirect:/doctor1/" + visit.getNumber() + "/choose_action_direction");
         } else {
-            modelAndView.setViewName("redirect:/" + visit.getNumber() + "/choose_action_med");
+            modelAndView.setViewName("redirect:/" + visit.getNumber() + "/choose_action_lab_direction");
         }
 
 
@@ -444,6 +448,83 @@ public class DoctorController {
         modelAndView.addObject("date", dateToString(sick_leave.getVisit().getDate()));
         modelAndView.addObject("start_date", dateToString(sick_leave.getStart_date()));
         modelAndView.setViewName("doctor/document/sick_leave");
+        return modelAndView;
+    }
+
+    //directionToLab
+    @GetMapping(value = "/{id_visit}/choose_action_lab_direction")
+    public ModelAndView choose_actionPageLabDirection(@ModelAttribute("message") String message,
+                                                      @PathVariable("id_visit") String id_visit) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.setViewName("doctor/form/choose_form/choose_action_lab_direction");
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/{id_visit}/add_new_lab_direction")
+    public ModelAndView addPageLabDirection(@ModelAttribute("message") String message,
+                                            @PathVariable("id_visit") String id_visit) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("specialization", doctorService.getByIdSpecialization(8));
+        modelAndView.addObject("testTypeList", directionService.allTestTypes());
+        modelAndView.addObject("direction", new Direction());
+        modelAndView.setViewName("doctor/form/create_form/new_lab_direction");
+
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/add_lab_direction")
+    public ModelAndView addLabDirection(@ModelAttribute("selected_type") String selected_type,
+                                        @ModelAttribute("direction") Direction direction,
+                                        @ModelAttribute("id_visit") String id_visit) throws NoSuchAlgorithmException {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        if (patient.isTestTypeExists(directionService.getTestsTypeById(selected_type).getName())) {
+            direction.setNumber(String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextInt()));
+            direction.setSpecialization(specializationService.getById(8));
+            direction.setStatus(true);
+
+            System.out.println(selected_type);
+            System.out.println(directionService.getTestsTypeById(selected_type));
+            direction.setTestsType(directionService.getTestsTypeById(selected_type));
+
+            direction.setPatient(patient);
+            directionService.add(direction);
+        }
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/" + id_visit + "/choose_action_med");
+
+        return modelAndView;
+    }
+
+    //tests
+    @GetMapping("/{id_visit}/tests/{sort_int}")
+    public ModelAndView allTests(@PathVariable("id_visit") String id_visit,
+                                 @PathVariable("sort_int") int sort_int) {
+        Doctor doctor = getAuthDoc();
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("isActive", !patient.findVisit(id_visit).getStatus());
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("testList", patient.getTests());
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.setViewName("doctor/pages/tests");
+        return modelAndView;
+    }
+
+    @GetMapping("/{id_c_visit}/{test_id}/test")
+    public ModelAndView TestPage(@PathVariable("test_id") String test_id,
+                                 @PathVariable("id_c_visit") String id_c_visit) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_c_visit));
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_c_visit);
+        modelAndView.addObject("test", patient.findTest(test_id));
+
+        modelAndView.setViewName("doctor/pages/test");
         return modelAndView;
     }
 }

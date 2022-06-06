@@ -2,7 +2,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <jsp:include page="../template/head.jsp" />
-
 <body style="background-color: #ffffff;">
 <div class ="container-fluid">
     <div class="row">
@@ -15,7 +14,7 @@
 
                     <ul class="nav nav-tabs ">
                         <li class="nav-item">
-                            <a href="/patient/1" class="nav-link link-custom active" aria-current="page">
+                            <a href="/patient/1" class="nav-link link-custom" aria-disabled="true" tabindex="-1" >
                                 Візити
                             </a>
                         </li>
@@ -26,35 +25,32 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link link-custom" href="/patient/doneTests" tabindex="-1" aria-disabled="true">
+                            <a class="nav-link link-custom active"  href="/patient/doneTests" aria-current="page">
                                 Аналізи
                             </a>
                         </li>
                     </ul>
 
-
-                    <c:if test="${!visitsList.isEmpty()}">
+                    <c:if test="${!testList.isEmpty()}">
                     <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
                         <table class="table tableFixHead">
                             <thead>
                             <tr>
-                                <th>Дата<a href="/patient/1" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
-                               <th>Діагноз<a href="/patient/2" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
-                               <th>Лікар<a href="/patient/3" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
-                                <th>Виписані ліки</th>
+                                <th>Дата</th>
+                                <th>Тип аналізу</th>
+                                <th>Пацієнт</th>
+                                <th>Результат</th>
                             </tr>
                             </thead>
 
-
-
                             <tbody>
-                            <c:forEach var="visit" items="${visitsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/patient/${visit.number}/visit'/>"'>
-                                    <td>${visit.date}</td>
-                                    <td>${visit.disease.name}</td>
-                                    <td>${visit.doctor.specialization.name}</td>
-                                    <td>${empty visit.medicine ? "-" : visit.medicine }</td>
+                            <c:forEach var="test" items="${testList}" varStatus="i">
+                                <tr onclick='document.location="<c:url value='/patient/test/${test.id}'/>"'>
+                                    <td>${test.date}</td>
+                                    <td>${test.testsType.name}</td>
+                                    <td>${test.patient.surname} ${test.patient.name.charAt(0)}.${test.patient.middle_name.charAt(0)}.</td>
+                                    <td>${empty test.result ? "-" : test.result }</td>
                                 </tr>
                             </c:forEach>
 
@@ -63,10 +59,9 @@
                     </div>
                     </c:if>
 
-                    <c:if test="${visitsList.isEmpty()}">
-                        <h2 class="pt-5"><em><center>Візитів немає</center></em></h2>
+                    <c:if test="${testList.isEmpty()}">
+                        <h2 class="pt-5"><em><center>Аналізів немає</center></em></h2>
                     </c:if>
-
 
                 </content>
                 <footer></footer>

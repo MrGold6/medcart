@@ -13,7 +13,7 @@
                 <div class="card card_form">
                     <div class="card-body">
 
-                        <legend class="card-title text-center">Потрібне направлення на аналізи?</legend>
+                        <legend class="card-title text-center">Потрібне направлення на спеціалізовані аналізи?</legend>
                         <div class="form">
                             <ul class="border">
                                 <li>

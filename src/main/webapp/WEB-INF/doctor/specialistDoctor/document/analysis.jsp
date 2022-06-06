@@ -14,7 +14,7 @@
                 <div class="card card_form">
 
                     <div class="card-body">
-                        <legend class="card-title text-center">Аналіз</legend>
+                        <legend class="card-title text-center">Спеціалізований аналіз</legend>
                         <div id="source-html">
                             <center>
                                 <h1>НАПРАВЛЕННЯ НА АНАЛІЗ № <u>${analysis_JSP.number}</u></h1>

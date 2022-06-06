@@ -30,6 +30,8 @@ import java.util.*;
 @Table(name = "doctor")
 public class Doctor extends Human {
 
+    private Date dateWhenStartWorking;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization", referencedColumnName = "id")
     private Specialization specialization;
@@ -41,10 +43,12 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     public List<Visit> visits = new ArrayList<>();
 
+    @OneToMany(mappedBy = "doc", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Test> tests = new ArrayList<>();
+
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Schedule> schedules = new ArrayList<>();
 
-    protected Date dateWhenStartWorking;
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
@@ -237,6 +241,10 @@ public class Doctor extends Human {
         switch (this.getSpecialization().getId()) {
             case 1:
                 id = 1;
+                break;
+
+            case 8:
+                id = 5;
                 break;
 
             case 9:

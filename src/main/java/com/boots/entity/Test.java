@@ -10,30 +10,30 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
+import java.sql.Date;
 
 @Entity
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "direction")
-public class Direction {
+public class Test {
 
     @Id
-    private String number;
-    private Boolean status;
+    private String id;
+    private Date date;
+    private String result;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "specialization", referencedColumnName = "id")
-    private Specialization specialization;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "testsType", referencedColumnName = "id")
+    private TestsType testsType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "electronic_card", referencedColumnName = "RNTRC")
     private Patient patient;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "testsType", referencedColumnName = "id")
-    private TestsType testsType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "doctor", referencedColumnName = "RNTRC")
+    private Doctor doc;
 
 }

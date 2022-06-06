@@ -30,9 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     //Доступ только для не зарегистрированных пользователей
                     .antMatchers("/registration").not().fullyAuthenticated()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/doctor1/*").hasRole("DOCTOR1")
-                    .antMatchers("/doctor2/").hasRole("DOCTOR2")
-                    .antMatchers("/patient/*").hasRole("PATIENT")
+                    .antMatchers("/doctor1/**").hasRole("DOCTOR1")
+                    .antMatchers("/doctor2/**").hasRole("DOCTOR2")
+                    .antMatchers("/nurse/**").hasRole("NURSE")
+                    .antMatchers("/lab/**").hasRole("LABORATORY")
+                    .antMatchers("/patient/**").hasRole("PATIENT")
                 //Доступ разрешен всем пользователей
                 .antMatchers("/", "/resources/**").permitAll()
                 .antMatchers("/", "/res/**").permitAll()

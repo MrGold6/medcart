@@ -20,6 +20,10 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link link active" href= '/patient/tests'>Аналізи</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link link active" href= '/patient/allActiveVisits'>Мої записи</a>
                 </li>
 
