@@ -115,6 +115,8 @@ public class PatientController {
         return modelAndView;
     }
 
+    //direction
+
     @RequestMapping(value = "/directions", method = RequestMethod.GET)
     public ModelAndView allDirection() {
 
@@ -127,6 +129,7 @@ public class PatientController {
 
         modelAndView.addObject("exist", exist);
         modelAndView.addObject("patient", patient);
+        modelAndView.addObject("declaration", patient.getDeclaration());
         modelAndView.addObject("directionsList", patient.getActiveDirectionsWithoutTests());
         modelAndView.setViewName("patient/pages/directions");
 

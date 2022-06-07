@@ -13,11 +13,12 @@
                     <h2 class="text-center mt-3">Список доступних лікарів</h2>
                     <c:if test="${exist==false || !directionsList.isEmpty()}">
                     <div class="row row-cols-1 row-cols-md-4 g-4 mx-2 mt-1 mb-3">
-                        <c:if test="${exist==false}">
-                            <div class="col" onclick='document.location="<c:url value='/patient/${1}/doctorsBySpecialization'/>"'>
-                                <div class="card my_card">
+                        <c:if test="${declaration.consent==true && exist==false}">
+                            <div class="col" onclick='document.location="<c:url value='/patient/${declaration.doctor_dec.RNTRC}/schedule'/>"'>
+                                <div class="card my_card" >
                                     <div class="card-body">
-                                        <center><h4 class="card-title">Cімейний лікар</h4></center>
+                                        <center> <h4 class="card-title">${declaration.doctor_dec.surname} ${declaration.doctor_dec.name.charAt(0)}.${declaration.doctor_dec.middle_name.charAt(0)}.</h4></center>
+                                        <center> <h5 class="card-title">${declaration.doctor_dec.specialization.name}</h5></center>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +34,7 @@
                         </c:forEach>
                     </div>
                     </c:if>
-                    <c:if test="${exist!=false && directionsList.isEmpty()}">
+                    <c:if test="${declaration.consent!=true || exist!=false && directionsList.isEmpty()}">
                         <h2 class="pt-5"><em><center>Доступних лікарів немає</center></em></h2>
                     </c:if>
                 </content>

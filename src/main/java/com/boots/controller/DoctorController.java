@@ -92,6 +92,12 @@ public class DoctorController {
         doctor.removeExpiredVisits();
     }
 
+    public java.sql.Date currentDate() {
+        Calendar calendar = Calendar.getInstance();
+        java.util.Date currentDate = calendar.getTime();
+        return new java.sql.Date(currentDate.getTime());
+    }
+
     //doctor
     public Doctor getAuthDoc() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
