@@ -1,5 +1,6 @@
 package com.boots.controller;
 
+import com.boots.entity.Declaration;
 import com.boots.entity.Direction;
 import com.boots.entity.Doctor;
 import com.boots.entity.Patient;
@@ -59,6 +60,7 @@ public class FamilyDoctorController extends DoctorController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("patient", patient);
+        modelAndView.addObject("declaration", new Declaration());
 
         if (message.equals("y")) {
             modelAndView.addObject("message", message);
@@ -72,16 +74,30 @@ public class FamilyDoctorController extends DoctorController {
 
     @RequestMapping(value = "/add_patient", method = RequestMethod.POST)
     public ModelAndView addPatient(@ModelAttribute("patient") Patient patient,
+                                   @ModelAttribute("declaration") Declaration declaration,
                                    @ModelAttribute("sex") String sex,
                                    @ModelAttribute("Blood_type") String Blood_type,
-                                   @ModelAttribute("rh") String rh) {
+                                   @ModelAttribute("rh") String rh,
+                                   @ModelAttribute("consent") String consent) {
         ModelAndView modelAndView = new ModelAndView();
+        boolean isConsent = Integer.parseInt(consent) == 1;
 
-        if (patientService.checkRNTRC(patient.getRNTRC()) && doctorService.checkRNTRC(patient.getRNTRC())) {
+        if (isConsent && patientService.checkRNTRC(patient.getRNTRC()) && doctorService.checkRNTRC(patient.getRNTRC())) {
             patient.setSex(Integer.parseInt(sex));
             patient.setBlood_type(Integer.parseInt(Blood_type));
             patient.setRh(rh);
             patientService.add(patient);
+
+            Doctor doctor = getAuthDoc();
+            declaration.setDoctor_dec(doctor);
+            declaration.setConsent(isConsent);
+            declaration.setDate(currentDate());
+            declaration.setPatient(patient);
+            declaration.setId(patient.getRNTRC() + "_" + doctor.getRNTRC());
+
+            doctor.addDeclaration(declaration);
+            doctorService.add(doctor);
+
             modelAndView.setViewName("redirect:/doctor1/" + patient.getRNTRC() + "/add_user");
 
         } else {
@@ -90,6 +106,78 @@ public class FamilyDoctorController extends DoctorController {
         }
         return modelAndView;
     }
+
+    //declaration
+    @GetMapping("/{id_patient}/add_declaration")
+    public ModelAndView addPageDeclaration(@PathVariable("id_patient") Long id_patient,
+                                           @ModelAttribute("message") String message) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("declaration", new Declaration());
+        modelAndView.addObject("id_patient", id_patient);
+
+        if (message.equals("y")) {
+            modelAndView.addObject("message", message);
+        } else {
+            modelAndView.addObject("message", null);
+        }
+
+        modelAndView.setViewName("doctor/familyDoctor/form/create_form/new_declaration");
+        return modelAndView;
+    }
+
+    @PostMapping("/add_declaration")
+    public ModelAndView addDeclaration(@ModelAttribute("id_patient") Long id_patient,
+                                       @ModelAttribute("declaration") Declaration declaration,
+                                       @ModelAttribute("consent") String consent) {
+        ModelAndView modelAndView = new ModelAndView();
+        boolean isConsent = Integer.parseInt(consent) == 1;
+
+        if (isConsent) {
+            Doctor doctor = getAuthDoc();
+            Patient patient = patientService.getById(id_patient);
+
+            declaration.setDoctor_dec(doctor);
+            declaration.setConsent(true);
+            declaration.setDate(currentDate());
+            declaration.setPatient(patient);
+            declaration.setId(patient.getRNTRC() + "_" + doctor.getRNTRC());
+
+            doctor.addDeclaration(declaration);
+
+            doctorService.add(doctor);
+
+            patient.setDeclaration(declaration);
+            patientService.add(patient);
+
+            modelAndView.setViewName("redirect:/doctor1/" + id_patient + "/doc_declaration");
+
+        } else {
+            modelAndView.addObject("message", "y");
+            modelAndView.setViewName("redirect:/doctor1/" + id_patient + "/add_declaration");
+        }
+        return modelAndView;
+    }
+
+    @GetMapping("/{id_patient}/doc_declaration")
+    public ModelAndView documentPageDeclaration(@PathVariable("id_patient") Long id_patient,
+                                           @ModelAttribute("message") String message) {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("declaration", patientService.getById(id_patient).getDeclaration());
+        modelAndView.addObject("date", dateToString(patientService.getById(id_patient).getDeclaration().getDate()));
+
+
+        if (message.equals("y")) {
+            modelAndView.addObject("message", message);
+        } else {
+            modelAndView.addObject("message", null);
+        }
+
+        modelAndView.setViewName("doctor/familyDoctor/document/declaration");
+        return modelAndView;
+    }
+
 
     @GetMapping("/{id_patient}/add_user")
     public ModelAndView addPageUser(@PathVariable("id_patient") Long id_patient,

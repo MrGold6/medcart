@@ -54,6 +54,10 @@ public class Patient extends Human {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Test> tests = new ArrayList<>();
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "declaration", referencedColumnName = "id")
+    private Declaration declaration;
+
     @OneToMany
     public List<SymptomsHistory> symptomsHistories = new ArrayList<>();
 

@@ -49,6 +49,9 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor1", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Schedule> schedules = new ArrayList<>();
 
+    @OneToMany(mappedBy = "doctor_dec", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Declaration> declarations = new ArrayList<>();
+
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
@@ -148,6 +151,11 @@ public class Doctor extends Human {
     public void addSchedule(Schedule schedule) {
         schedule.setDoctor(this);
         this.schedules.add(schedule);
+    }
+
+    public void addDeclaration(Declaration declaration) {
+        declaration.setDoctor_dec(this);
+        this.declarations.add(declaration);
     }
 
     public void addVisit(Visit visit) {

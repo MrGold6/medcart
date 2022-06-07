@@ -37,6 +37,7 @@
                             <th>ПІП<a href="/doctor1/patients/2" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                             <th>Стать<a href="/doctor1/patients/3" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                             <th>Номер телефону<a href="/doctor1/patients/4" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                            <th>Декларація<a href="/doctor1/patients/4" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                             <th>Юзер</th>
 
                         </tr>
@@ -51,6 +52,11 @@
                                             <td>${patient.surname} ${patient.name.charAt(0)}.${patient.middle_name.charAt(0)}.</td>
                                             <td>${patient.sex== 0 ? "Чоловік" : "Жінка" }</td>
                                             <td>0${patient.telephone_number}</td>
+                                            <td>
+                                                <c:if test="${patient.declaration.id==null}"><a href="/doctor1/${patient.RNTRC}/add_declaration" class="btn btn_add"><i class="bi bi-file-text"></i></a> </c:if>
+                                                <c:if test="${patient.declaration.id!=null}">${patient.declaration.doctor_dec.surname} ${patient.declaration.doctor_dec.name.charAt(0)}.${patient.declaration.doctor_dec.middle_name.charAt(0)}.</c:if></td>
+
+
                                             <td>${patient.user.username}</td>
                                         </tr>
                                     </c:forEach>

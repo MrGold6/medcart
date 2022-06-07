@@ -5,7 +5,7 @@
 <html>
 <jsp:include page="../../../template/head.jsp" />
 
-<c:url value="/doctor1/add_user" var="addUrl"/>
+<c:url value="/doctor1/add_declaration" var="addUrl"/>
 <body>
 <div class="container">
 
@@ -16,34 +16,45 @@
 
                 <div class="card card_form">
 
+                    <div id="return">
+                        <button onclick="document.location = '/doctor1/patients/1';" type="button" class="btn btn-circle btn-lg d-flex justify-content-center align-items-center">
+                            <i class="bi bi-arrow-left ar"></i>
+                        </button>
+                    </div>
+
+
                     <div class="card-body">
-                        <legend class="card-title text-center">Акаунт</legend>
-                        <form:form action="${addUrl}" method="POST" name="user"  class="was-validated">
-                            <input type="hidden" name="id" class="form-control" value="${user.id}">
-                            <input type="hidden" name="id_patient" class="form-control" value="${id_patient}">
+                        <legend class="card-title text-center">Декларація</legend>
+                        <form:form action="${addUrl}" method="POST" name="declaration"  class="was-validated">
+
+                            <input class="form-control " type="hidden" name="id_patient" value="${id_patient}" readonly>
 
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Логін:</label>
+                                <label class="col-sm-6 col-form-label ln">Документ, що посвідчує особу:</label>
                                 <div class="col-sm-6">
-                                    <input type="text" name="username" minlength="5" class="form-control" value="${user.username}" required>
+                                    <input type="text"  name="document_identifier" class="form-control" value="${declaration.document_identifier}" required>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Пароль:</label>
+                                <label class="col-sm-6 col-form-label ln">Збір персональних даних:</label>
                                 <div class="col-sm-6">
-                                    <input type="password" name="password" minlength="5"  class="form-control" value="${user.password}" required>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="consent1" class="form-check-input" name="consent" value="1" required>
+                                        <label for="consent1" class="form-check-label" >Згоден</label>
+
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="consent2" class="form-check-input" name="consent" value="0" required>
+                                        <label for="consent2" class="form-check-label">Не згоден</label>
+                                    </div>
                                 </div>
                             </div>
-
-
-
-
 
                             <center>
-                                <c:set value="add_user" var="add_user"/>
-                                <input type="submit" id="in" class="btn btn_form_add" name="${add_user}" value="Створити">
+                                <c:set value="add_declaration" var="add_declaration"/>
+                                <input type="submit" id="in" class="btn btn_form_add" name="${add_declaration}" value="Створити">
 
                             </center>
 
@@ -60,7 +71,7 @@
                         <div class="modal-body">
                             <div class="text-center text-justify">
                                 <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Такий логін вже зайнятий</span>
+                                <span class="ml-2" style="font-size:16pt;">Такий пацієнт вже існує</span>
                             </div>
                             <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
                         </div>
