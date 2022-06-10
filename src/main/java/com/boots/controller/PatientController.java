@@ -25,6 +25,8 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.boots.transientClasses.ControllerMainTools.dateToString;
+
 @RestController
 @RequestMapping("/patient")
 @PreAuthorize("hasRole('ROLE_PATIENT')")
@@ -50,15 +52,6 @@ public class PatientController {
         this.doctorService = doctorService;
     }
 
-    public String dateToString(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        return day + "." + month + "." + year;
-    }
-
     public void deleteExpiredVisits(Patient patient) {
         for (Visit visit : patient.expiredVisits()) {
             if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName())) {
@@ -70,12 +63,14 @@ public class PatientController {
         patient.removeExpiredVisits();
     }
 
+
     //patient
     public Patient getAuthPatient() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return patientService.patientByUser(user);
     }
+
 
     @GetMapping("/getUserInfo")
     public ResponseEntity<?> userInfo() {

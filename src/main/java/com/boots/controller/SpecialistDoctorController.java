@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
+
 @RestController
 @RequestMapping("/doctor2")
 

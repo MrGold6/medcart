@@ -38,6 +38,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
+import static com.boots.transientClasses.ControllerMainTools.currentDate;
+import static com.boots.transientClasses.ControllerMainTools.dateToString;
+import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
+
 @RestController
 @RequestMapping("/nurse")
 @SessionAttributes(value = {"recipeJSP", "sick_leaveJSP"})
@@ -70,32 +74,13 @@ public class NurseController {
     }
 
 
-    public String dateToString(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-        return day + "." + month + "." + year;
-    }
-
-    public Long getIdPatientSplit(String id_visit) {
-        String[] words = id_visit.split("_");
-        return Long.parseLong(words[1]);
-    }
-
-    public java.sql.Date currentDate() {
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date currentDate = calendar.getTime();
-        return new java.sql.Date(currentDate.getTime());
-    }
-
     //doctor
-    public Doctor getAuthDoc() {
+    public  Doctor getAuthDoc() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return doctorService.doctorByUser(user);
     }
+
 
     @RequestMapping(value = "/doctor", method = RequestMethod.GET)
     public ModelAndView PageNurse() {

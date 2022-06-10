@@ -8,9 +8,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -24,7 +26,6 @@ import java.util.*;
 
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "doctor")
@@ -51,6 +52,11 @@ public class Doctor extends Human {
 
     @OneToMany(mappedBy = "doctor_dec", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Declaration> declarations = new ArrayList<>();
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department")
+    private Department department;
 
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
@@ -259,6 +265,10 @@ public class Doctor extends Human {
                 id = 6;
                 break;
 
+            case 10:
+                id = 7;
+                break;
+
             default:
                 id = 4;
                 break;
@@ -272,4 +282,6 @@ public class Doctor extends Human {
         }
         return doctorUsers;
     }
+
+
 }

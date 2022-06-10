@@ -1,5 +1,4 @@
-body
-{
+body {
     background-color: #f5dec5;
 }
 
@@ -16,34 +15,31 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-.front_card
-{
+.front_card {
     background-color: rgba(0, 0, 0, 0.09);
-    font-family:cursive;
+    font-family: cursive;
 }
 
 
 /*form*/
 
 
-.card_form{
+.card_form {
     background-color: #fdfdfda8;
 
 }
 
-legend
-{
-    font-family:cursive;
-    font-size:20pt;
+legend {
+    font-family: cursive;
+    font-size: 20pt;
 }
 
-input[readonly]{
-    background-color:#ffffff!important;
+input[readonly] {
+    background-color: #ffffff !important;
 }
 
 /*form label*/
-.ln
-{
+.ln {
     font-size: 15pt;
     font-family: serif;
 }
@@ -55,51 +51,44 @@ input[readonly]{
 }
 
 /*buttons*/
-.btn_find
-{
-    background: rgba(255, 234, 171, 0.77) ;
+.btn_find {
+    background: rgba(255, 234, 171, 0.77);
 }
 
-.btn_find:hover{
+.btn_find:hover {
     background: rgb(255, 234, 171);
 }
 
-
-
-.btn_find_all
-{
+.btn_find_all {
     background: rgba(181, 185, 206, 0.75);
 }
 
-.btn_find_all:hover{
+.btn_find_all:hover {
     background: rgb(181, 185, 206);
 }
 
-.btn_add
-{
+.btn_add {
     background: rgba(147, 212, 133, 0.67);
 }
 
-.btn_add:hover{
+.btn_add:hover {
 
     background: rgb(147, 212, 133);
 }
 
-.btn_form_add
-{
+.btn_form_add {
     background: rgba(145, 228, 127, 0.83)
 }
 
-.btn_form_add:hover{
+.btn_form_add:hover {
     background: rgb(157, 247, 138);
 }
 
-.btn_form_safe
-{
+.btn_form_safe {
     background: rgba(255, 175, 67, 0.78);
 }
 
-.btn_form_safe:hover{
+.btn_form_safe:hover {
     background: rgb(255, 175, 67);
 }
 
@@ -145,10 +134,10 @@ input[readonly]{
     border-radius: 25px;
     background-color: rgb(212 133 133);
 }
-.ar
-{
+
+.ar {
     color: #ffffff;
-    font-size:1.8rem;
+    font-size: 1.8rem;
 }
 
 #return {
@@ -157,22 +146,20 @@ input[readonly]{
     margin-left: 8px;
 }
 
-#add{
+#add {
     position: absolute;
     bottom: 5%;
     right: 24%;
 
 }
 
-.dang
-{
-    font-size:1.6rem;
+.dang {
+    font-size: 1.6rem;
 }
 
 
-
 /*nav*/
-header{
+header {
     background-color: rgb(210 193 193);
 }
 
@@ -182,14 +169,14 @@ header{
     text-decoration: none;
 }
 
-.navbar-nav > li{
-    margin-left:10px;
-    margin-right:10px;
-    padding-left:10px;
-    padding-right:10px;
+.navbar-nav > li {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.nav-item a{
+.nav-item a {
     font-family: "JetBrains Mono";
     font-size: 21px;
 }
@@ -204,18 +191,17 @@ header{
     -moz--transition: width .3s ease-in-out;
     transition: width .3s ease-in-out;
 }
+
 .nav-item a:hover:after,
 .nav-item a:focus:after {
     width: 100%;
 }
 
-.link-userLink
-{
+.link-userLink {
     color: #9b3963;
 }
 
-.link-userLink:hover
-{
+.link-userLink:hover {
     color: #6b2644;
 }
 
@@ -225,27 +211,29 @@ header{
 ::-webkit-scrollbar {
     width: 6px;
 }
+
 ::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
+
 ::-webkit-scrollbar-thumb {
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 /*h*/
-h1{
+h1 {
     font-size: 30px;
     color: #000000;
     font-weight: 500;
     text-align: center;
-    font-family:serif;
+    font-family: serif;
 }
 
-h2{
+h2 {
     font-weight: 600;
     color: #000000;
     text-align: center;
-    font-family:serif;
+    font-family: serif;
 }
 
 
@@ -265,82 +253,74 @@ h2{
     top: 0;
     z-index: 1;
     background-color: rgb(236 225 225);
-    font-weight:normal;
-    font-family:serif;
+    font-weight: normal;
+    font-family: serif;
     font-size: 14pt;
 }
 
-td
-{
+td {
     border-bottom: 1px solid rgb(250, 180, 180);
 }
 
-tr
-{
+tr {
     background: #ffffff;
 }
 
-.without_link tr:hover{
+.without_link tr:hover {
     background: #ffffff;
     cursor: auto;
 }
 
-tr:hover{
+tr:hover {
     background: #fff6e7;
     cursor: pointer;
 }
 
-#medicine_table:hover{
+#medicine_table:hover {
     background: #ffffff;
 }
 
 /*card*/
 
-.my_card
-{
+.my_card {
     border: 1px solid rgb(250, 180, 180);
 }
 
-.my_card_without_link
-{
+.my_card_without_link {
     border: 1px solid rgb(250, 180, 180);
 
 }
 
 
-.my_card:hover{
+.my_card:hover {
     background: #fff6e7;
     cursor: pointer;
 }
 
-.my_card h4, .my_card_without_link h4
-{
+.my_card h4, .my_card_without_link h4 {
     font-size: 18pt;
     color: #000000;
     font-weight: 500;
     text-align: center;
-    font-family:serif;
+    font-family: serif;
 }
 
-.time h4
-{
+.time h4 {
     font-size: 14pt;
     color: #000000;
     font-weight: 500;
     text-align: center;
-    font-family:serif;
+    font-family: serif;
 }
 
-.my_card h5, .my_card_without_link h5
-{
+.my_card h5, .my_card_without_link h5 {
     font-size: 14pt;
     color: rgba(0, 0, 0, 0.7);
     font-weight: 400;
     text-align: center;
 }
 
-#dateTime
-{
+#dateTime {
     font-size: 14pt;
     color: rgb(73, 78, 145);
     font-weight: 400;
@@ -351,8 +331,9 @@ tr:hover{
 .border {
     list-style: none;
     padding: 0;
-    border:none !important;
+    border: none !important;
 }
+
 .border li {
     font-family: "Trebuchet MS", "Lucida Sans";
     padding: 7px 20px;
@@ -369,27 +350,36 @@ tr:hover{
     2px 2px 5px 0 rgb(236 227 227),
     -2px 2px 5px 0 rgb(241, 183, 183);
 }
-.border li:nth-child(2){border-color: #f05d22; }
 
-.border li:hover {border-left: 10px solid transparent;}
-.border li:nth-child(1):hover {border-right: 10px solid #8bc63e;}
-.border li:nth-child(2):hover {border-right: 10px solid  #f05d22;}
+.border li:nth-child(2) {
+    border-color: #f05d22;
+}
+
+.border li:hover {
+    border-left: 10px solid transparent;
+}
+
+.border li:nth-child(1):hover {
+    border-right: 10px solid #8bc63e;
+}
+
+.border li:nth-child(2):hover {
+    border-right: 10px solid #f05d22;
+}
 
 .border a {
     color: #000000;
     text-decoration: none;
-    display:block;
+    display: block;
 }
 
 /*links*/
 
-.link-custom
-{
+.link-custom {
     color: #9b3963;
 }
 
-.link-custom:hover
-{
+.link-custom:hover {
     color: #6b2644;
 }
 

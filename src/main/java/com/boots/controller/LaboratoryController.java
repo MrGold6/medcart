@@ -31,6 +31,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
+import static com.boots.transientClasses.ControllerMainTools.currentDate;
+import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
+
 @RestController
 @RequestMapping("/lab")
 public class LaboratoryController {
@@ -44,23 +47,13 @@ public class LaboratoryController {
     @Autowired
     private DirectionService directionService;
 
-    public java.sql.Date currentDate() {
-        Calendar calendar = Calendar.getInstance();
-        java.util.Date currentDate = calendar.getTime();
-        return new java.sql.Date(currentDate.getTime());
-    }
-
-    public Long getIdPatientSplit(String id_visit) {
-        String[] words = id_visit.split("_");
-        return Long.parseLong(words[1]);
-    }
-
-
-    public Doctor getAuthDoc() {
+    public  Doctor getAuthDoc() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return doctorService.doctorByUser(user);
     }
+
+
 
     @GetMapping(value = "/patients/{sort_num}")
     public ModelAndView allPatientsPage(@PathVariable("sort_num") int sort_num) {

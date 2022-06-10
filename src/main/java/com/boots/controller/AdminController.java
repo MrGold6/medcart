@@ -28,7 +28,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-
     @Autowired
     private UserService userService;
 
@@ -54,7 +53,6 @@ public class AdminController {
     protected SpecializationService specializationService;
 
     protected Sort sort = new Sort();
-
 
     //patient
     @RequestMapping(value = "/patients/{sort_num}", method = RequestMethod.GET)
@@ -256,7 +254,6 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doctor", doctor);
         modelAndView.addObject("specializations", specializationService.allSpecialization());
-        //specialization
 
         if (message.equals("y")) {
             modelAndView.addObject("message", message);
