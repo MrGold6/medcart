@@ -16,7 +16,7 @@
 <div style="background-color: #ffffff;">
             <content>
 
-                <h1 class="pt-4">Список пацієнтів</h1>
+                <h1 class="pt-4">Список пацієнтів. Кількість декларацій: ${doctor.countOfDeclaration}</h1>
 
 
                 <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">

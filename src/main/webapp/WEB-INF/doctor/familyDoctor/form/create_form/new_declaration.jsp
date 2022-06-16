@@ -25,6 +25,12 @@
 
                     <div class="card-body">
                         <legend class="card-title text-center">Декларація</legend>
+
+                        <c:if test="${doctor.countOfDeclaration<=0}">
+                            <h2><em><center>Всі ваші декларації використані</center></em></h2>
+                        </c:if>
+
+                        <c:if test="${doctor.countOfDeclaration>0}">
                         <form:form action="${addUrl}" method="POST" name="declaration"  class="was-validated">
 
                             <input class="form-control " type="hidden" name="id_patient" value="${id_patient}" readonly>
@@ -58,8 +64,10 @@
 
                             </center>
 
-
                         </form:form>
+
+                        </c:if>
+
                     </div>
                 </div>
             </div>

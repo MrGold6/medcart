@@ -13,15 +13,16 @@ import javax.persistence.Query;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class DoctorService {
 
-    @PersistenceContext
-    private EntityManager em;
     @Autowired
     private DoctorRepository doctorRepository;
 
+    @PersistenceContext
+    private EntityManager em;
 
     @Transactional
     public List<Doctor> allDoctors() {
@@ -53,15 +54,25 @@ public class DoctorService {
     public List<Doctor> doctorBySpecialization(Specialization specialization) {
         List<Doctor> doctors = null;
         try {
-            doctors = em.createQuery("SELECT d FROM Doctor d WHERE d.specialization= :specialization", Doctor.class)
-                    .setParameter("specialization", specialization).getResultList();
+            doctors = doctorRepository.findBySpecialization(specialization);
+        } catch (NoResultException nre) {
+
+        }
+        return doctors;
+    }
+
+    /*
+    public List<Doctor> doctorBySpecializationList(List<Specialization> specializations) {
+        List<Doctor> doctors = null;
+        try {
+            doctors = doctorRepository.findBySpecialization(specializations);
         } catch (NoResultException nre) {
 
         }
 
         return doctors;
 
-    }
+    }*/
 
     public List<Doctor> findTelephone_number(int telephone_number) {
         List<Doctor> doctors = null;
@@ -106,8 +117,7 @@ public class DoctorService {
     public Doctor doctorByUser(User user) {
         Doctor doctor = null;
         try {
-            doctor = em.createQuery("SELECT d FROM Doctor d WHERE d.user= :user", Doctor.class)
-                    .setParameter("user", user).getSingleResult();
+            doctor = doctorRepository.findByUser(user);
         } catch (NoResultException nre) {
 
         }

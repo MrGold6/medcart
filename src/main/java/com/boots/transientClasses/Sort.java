@@ -25,6 +25,12 @@ public class Sort {
         return users;
     }
 
+    public List<Unit> sortUnit(List<Unit> units, int i) {
+        units.sort(Comparator.comparing(Unit::getName));
+
+        return units;
+    }
+
     public List<MedicineCatalog> sortMedicineCatalog(List<MedicineCatalog> medicineCatalog, int i) {
         switch (i) {
             case 1: {

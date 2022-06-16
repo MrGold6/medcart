@@ -1,13 +1,13 @@
 package com.boots.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,13 +24,14 @@ import java.util.*;
 
 
 @Entity
-@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "doctor")
 public class Doctor extends Human {
 
     private Date dateWhenStartWorking;
+    private int countOfDeclaration;
+    private int maxCountOfDeclaration;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization", referencedColumnName = "id")
@@ -52,6 +53,24 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor_dec", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Declaration> declarations = new ArrayList<>();
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department")
+    private Department department;
+
+    public void changeCountOfDeclaration(int i) {
+        int num = 0;
+
+        num = this.getCountOfDeclaration() + i;
+        if (this.getMaxCountOfDeclaration() >= num && num >= 0) {
+            this.setCountOfDeclaration(num);
+        }
+
+    }
+
+    public void setCountOfDeclaration() {
+        countOfDeclaration = getMaxCountOfDeclaration() - declarations.size();
+    }
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
@@ -259,6 +278,10 @@ public class Doctor extends Human {
                 id = 6;
                 break;
 
+            case 10:
+                id = 7;
+                break;
+
             default:
                 id = 4;
                 break;
@@ -272,4 +295,6 @@ public class Doctor extends Human {
         }
         return doctorUsers;
     }
+
+
 }

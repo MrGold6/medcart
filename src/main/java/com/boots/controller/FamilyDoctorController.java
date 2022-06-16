@@ -23,6 +23,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
 
+import static com.boots.transientClasses.ControllerMainTools.currentDate;
+import static com.boots.transientClasses.ControllerMainTools.dateToString;
+import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
+
 @RestController
 @RequestMapping("/doctor1")
 public class FamilyDoctorController extends DoctorController {
@@ -114,6 +118,7 @@ public class FamilyDoctorController extends DoctorController {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("declaration", new Declaration());
+        modelAndView.addObject("doctor", getAuthDoc());
         modelAndView.addObject("id_patient", id_patient);
 
         if (message.equals("y")) {
