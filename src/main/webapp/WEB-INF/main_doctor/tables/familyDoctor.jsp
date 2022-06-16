@@ -11,14 +11,14 @@
     <div class="row">
         <jsp:include page="../template/nav.jsp" />
         <content class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3">Лікарі</h2>
+            <h2 class="pt-3">Сімейні лікарі</h2>
             <c:if test="${!doctorList.isEmpty()}">
 
             <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">
-                <form class="d-flex" id="search" method="GET" action="/main_doctor/doctor/1">
+                <form class="d-flex" id="search" method="GET" action="/main_doctor/family_doctor/1">
                     <input class="form-control me-2 shadow bg-body rounded rounded-pill border-0" id="search_input" type="number" name="telephone_number" placeholder="номер телефону"  required>
                     <button class="btn btn_find mx-2" id="search_button" type="submit" name="search">Знайти</button>
-                    <a href="/main_doctor/doctor/1" class="btn btn_find_all">Всі</a>
+                    <a href="/main_doctor/family_doctor/1" class="btn btn_find_all">Всі</a>
                 </form>
             </div>
 
@@ -27,13 +27,12 @@
                 <table class="table tableFixHead table-striped">
                     <thead>
                     <tr>
-                        <th>РНОКПП<a href="/main_doctor/doctor/1" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
-                        <th>ПІП<a href="/main_doctor/doctor/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
-                        <th>Стать<a href="/main_doctor/doctor/3" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
-                        <th>Номер телефону<a href="/main_doctor/doctor/4" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
-                        <th>Спеціалізація<a href="/main_doctor/doctor/5" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>ПІП<a href="/main_doctor/family_doctor/2" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Стать<a href="/main_doctor/family_doctor/3" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
+                        <th>Номер телефону<a href="/main_doctor/family_doctor/4" class="btn btn-sm "><i class="bi bi-sort-down text-light"></i></a></th>
                         <th>Записи</th>
-                        <th>Проведені візити</th>
+                        <th>Кількість декларацій</th>
+                        <th>Залишилось декларацій</th>
                         <th>Дії</th>
 
                     </tr>
@@ -42,16 +41,14 @@
                     <tbody>
                     <c:forEach var="doctor" items="${doctorList}" varStatus="i">
                         <tr>
-                            <td>${doctor.RNTRC}</td>
                             <td>${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</td>
                             <td>${doctor.sex== 0 ? "Чоловік" : "Жінка" }</td>
                             <td>0${doctor.telephone_number}</td>
-                            <td>${doctor.specialization.name}</td>
                             <td>${doctor.getActiveVisits().size()}</td>
-                            <td>${doctor.visits.size()}</td>
-
-                            <td><a href="/main_doctor/${doctor.RNTRC}/doctor_info/" class="btn btn_look_at"><i class="bi bi-eye"></i></a>
-                            </td>
+                            <td>${doctor.maxCountOfDeclaration}</td>
+                            <td>${doctor.countOfDeclaration}</td>
+                            <td>
+                                <a href="/main_doctor/${doctor.RNTRC}/edit_family_doctor/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>                            </td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -63,6 +60,11 @@
                 <h2><em><center>Лікарів немає</center></em></h2>
             </c:if>
 
+            <center>
+                <button onclick="document.location = '/main_doctor/add_family_doctor';" type="button" class="btn my-2 btn_add">
+                    Встановити максимальну кількість декларацій для всіх
+                </button>
+            </center>
         </content>
 
     </div>

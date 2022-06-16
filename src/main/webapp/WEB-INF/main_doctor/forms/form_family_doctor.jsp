@@ -14,48 +14,31 @@
             <div class="col-xl-7 col-lg-10 col-md-10 col-sm-10 mx-auto p-3 pt-3">
                 <div class="card card_form shadow">
                     <div class="card-body ">
-                        <c:if test="${staffingScheme.number==null}">
+                        <c:if test="${doctor.RNTRC==null}">
                             <title>Add</title>
                         </c:if>
-                        <c:if test="${staffingScheme.number!=null}">
+                        <c:if test="${doctor.RNTRC!=null}">
                             <title>Edit</title>
                         </c:if>
-                        <legend class="card-title text-center">Штатна схема</legend>
+                        <legend class="card-title text-center">Максимальна кількість декларацій</legend>
 
 
-                        <form:form action="/main_doctor/add_staffing_scheme" method="POST" name="staffingScheme"  class="was-validated">
+                        <form:form action="/main_doctor/add_family_doctor" method="POST" name="doctor"  class="was-validated">
+                            <input class="form-control" type="hidden" name="id_doc" value="${doctor.RNTRC}" required>
+
 
                             <div class="row mb-3">
-                                <input type="hidden" name="id_department" class="form-control" value="${department.id}" readonly>
-                                <input type="hidden" name="number" class="form-control" value="${staffingScheme.number}" readonly>
-
-                                <label class="col-sm-6 col-form-label ln">Спеціалізація:</label>
+                                <label class="col-sm-6 col-form-label ln">Кількість декларацій:</label>
                                 <div class="col-sm-6">
-                                    <select name="selected_spec" class="form-select">
-                                        <c:if test="${!empty staffingScheme.specialization.id}">
-                                            <option value="${staffingScheme.specialization.id}" >${staffingScheme.specialization.name}</option>
-                                        </c:if>
-                                        <c:forEach var="specialization" items="${specializations}" varStatus="i">
-                                            <c:if test="${empty staffingScheme.specialization.id || specialization.id!=staffingScheme.specialization.id}">
-                                            <option value="${specialization.id}">${specialization.name}</option>
-                                            </c:if>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Кількість місць:</label>
-                                <div class="col-sm-6">
-                                    <input type="number" name="maxCount" class="form-control" value="${staffingScheme.maxCount}" required>
+                                    <input type="number" name="maxCount" class="form-control" value="${doctor.maxCountOfDeclaration}" required>
                                 </div>
                             </div>
 
                             <center>
-                                <c:if test="${staffingScheme.number == null}">
-                                    <input type="submit" id="in"  class="btn btn_add" name="add_staffingScheme" value="Створити">
+                                <c:if test="${doctor.RNTRC==null}">
+                                    <input type="submit" id="in"  class="btn btn_add" name="add_doctor" value="Створити">
                                 </c:if>
-                                <c:if test="${staffingScheme.number!=null}">
+                                <c:if test="${doctor.RNTRC!= null}">
                                     <input type="submit" id="edit"  class="btn btn_edit_form" name="edit" value="Змінити">
                                 </c:if>
 
@@ -75,7 +58,7 @@
                         <div class="modal-body">
                             <div class="text-center text-justify">
                                 <i class="bi bi-exclamation-triangle-fill text-danger pl-2 pt-2 dang  position-relative"></i>
-                                <span class="ml-2" style="font-size:16pt;">Така схема вже існує</span>
+                                <span class="ml-2" style="font-size:16pt;">Така спеціалізація вже існує</span>
                             </div>
                             <center><button type="button" class="btn btn-outline-primary mt-3" data-bs-dismiss="modal">OK</button></center>
                         </div>

@@ -20,13 +20,17 @@ public class StaffingScheme {
     @Id
     private String number;
     private double count;
+    private double maxCount;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization", referencedColumnName = "id")
     private Specialization specialization;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_s")
     private Department department_s;
 
+    public void setCountDueToMaxCount(int countOfDoctors) {
+        this.setCount(this.getMaxCount() - countOfDoctors);
+    }
 }

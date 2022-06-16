@@ -118,6 +118,7 @@ public class FamilyDoctorController extends DoctorController {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.addObject("declaration", new Declaration());
+        modelAndView.addObject("doctor", getAuthDoc());
         modelAndView.addObject("id_patient", id_patient);
 
         if (message.equals("y")) {

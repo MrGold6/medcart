@@ -25,12 +25,8 @@
 
                         <form:form action="/main_doctor/add_department" method="POST" name="department"  class="was-validated">
 
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Ід:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="number" name="id" value="${department.id}" required>
-                                </div>
-                            </div>
+                            <input class="form-control" type="hidden" name="id" value="${department.id}" required>
+
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Назва:</label>

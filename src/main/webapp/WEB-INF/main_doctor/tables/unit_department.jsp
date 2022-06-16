@@ -11,7 +11,7 @@
     <div class="row">
         <jsp:include page="../template/nav.jsp" />
         <content class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3">Відділення</h2>
+            <h2 class="pt-3">Відділення підрозділу ${unit.name} </h2>
 
             <div class="table-wrapper-scroll-y my-custom-scrollbar table-responsive">
                 <c:if test="${!departmentList.isEmpty()}">
@@ -34,8 +34,8 @@
                                 <td><a href="/main_doctor/${department.id}/department_doctor/1" class="btn btn_look_at"><i class="bi bi-person"></i></a></td>
                                 <td><a href="/main_doctor/${department.id}/staffing_scheme/1" class="btn btn_look_at"><i class="bi bi-file-text"></i></a></td>
 
-                                <td><a href="/main_doctor/${department.id}/edit_department/" class="btn btn_edit"><i class="bi bi-vector-pen "></i></a>
-                                    <a href="/main_doctor/${department.id}/delete_department" class="btn btn_delete"><i class="bi bi-trash "></i></a>
+                                <td>
+                                    <a href="/main_doctor/${unit.id}/${department.id}/delete_department_from_unit" class="btn btn_delete"><i class="bi bi-trash "></i></a>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -49,8 +49,8 @@
             </div>
 
             <center>
-                <button onclick="document.location = '/main_doctor/add_department';" type="button" class="btn my-2 btn_add">
-                    Створити
+                <button onclick="document.location = '/main_doctor/${unit.id}/add_unit_to_department';" type="button" class="btn my-2 btn_add">
+                    Додати відділення
                 </button>
             </center>
         </content>

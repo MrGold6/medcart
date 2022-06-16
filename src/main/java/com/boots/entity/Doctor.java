@@ -1,7 +1,6 @@
 package com.boots.entity;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.CascadeType;
@@ -12,7 +11,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -32,6 +30,8 @@ import java.util.*;
 public class Doctor extends Human {
 
     private Date dateWhenStartWorking;
+    private int countOfDeclaration;
+    private int maxCountOfDeclaration;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "specialization", referencedColumnName = "id")
@@ -58,6 +58,19 @@ public class Doctor extends Human {
     @JoinColumn(name = "department")
     private Department department;
 
+    public void changeCountOfDeclaration(int i) {
+        int num = 0;
+
+        num = this.getCountOfDeclaration() + i;
+        if (this.getMaxCountOfDeclaration() >= num && num >= 0) {
+            this.setCountOfDeclaration(num);
+        }
+
+    }
+
+    public void setCountOfDeclaration() {
+        countOfDeclaration = getMaxCountOfDeclaration() - declarations.size();
+    }
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
         SimpleDateFormat df = new SimpleDateFormat("HH:mm");
