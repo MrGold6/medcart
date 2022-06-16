@@ -175,6 +175,7 @@ public class DoctorController {
         modelAndView.addObject("patient", patient);
         modelAndView.addObject("id_visit", id_visit);
         modelAndView.addObject("visitsList", patient.getDoneVisits(sort_int));
+
         modelAndView.addObject("doctor", doctor);
         modelAndView.setViewName("doctor/pages/visits");
 
@@ -211,6 +212,26 @@ public class DoctorController {
         modelAndView.addObject("id_visit", id_c_visit);
         modelAndView.addObject("record", record);
         modelAndView.setViewName("doctor/pages/symptom");
+
+        return modelAndView;
+    }
+
+    //graph
+    @GetMapping("/{id_visit}/graph")
+    public ModelAndView PageGraph(@PathVariable("id_visit") String id_visit) {
+        Doctor doctor = getAuthDoc();
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("isActive", !patient.findVisit(id_visit).getStatus());
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("visitList", patient.getDoneVisits(1));
+        modelAndView.addObject("diseaseList", patient.getDiseaseDoneVisits());
+        modelAndView.addObject("specializationList", patient.getSpecializationDoneVisits());
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.setViewName("doctor/pages/graph");
 
         return modelAndView;
     }
@@ -285,6 +306,7 @@ public class DoctorController {
 
         return modelAndView;
     }
+
 
 
     //recipe

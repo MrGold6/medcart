@@ -19,7 +19,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link link-custom active" href="/patient/symptoms/1" aria-current="page">
+                            <a class="nav-link link-custom " href="/patient/symptoms/1" aria-disabled="true" tabindex="-1">
                                 Скарги
                             </a>
                         </li>
@@ -29,42 +29,15 @@
                                 Аналізи
                             </a>
                         </li>
+
                         <li class="nav-item">
-                            <a class="nav-link link-custom "  href="/patient/graph"  aria-disabled="true" tabindex="-1" >
+                            <a class="nav-link link-custom active"  href="/patient/graph"  aria-current="page">
                                 Граф діагнозів
                             </a>
                         </li>
                     </ul>
 
-                    <c:if test="${!symptomsList.isEmpty()}">
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
-
-                        <table class="table tableFixHead">
-                            <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Скарги</th>
-                                <th>Нотатки</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <c:forEach var="record" items="${symptomsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/patient/symptom/${record.id}'/>"'>
-                                    <td>${record.date}</td>
-                                    <td>${record.symptoms}</td>
-                                    <td>${empty record.notes ? "-" : record.notes }</td>
-                                </tr>
-                            </c:forEach>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    </c:if>
-
-                    <c:if test="${symptomsList.isEmpty()}">
-                        <h2 class="pt-5"><em><center>Скарг немає</center></em></h2>
-                    </c:if>
+                    <jsp:include page="../template/graphPatientDisease.jsp"/>
 
                 </content>
                 <footer></footer>

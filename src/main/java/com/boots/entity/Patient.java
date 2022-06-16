@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -78,12 +80,39 @@ public class Patient extends Human {
         return visits;
     }
 
+    public List<Specialization> getSpecializationDoneVisits() {
+        List<Specialization> specializations = new ArrayList<>();
+        for (Visit visit : this.getDoneVisits(1)) {
+
+            if (!specializations.contains(visit.getDoctor().getSpecialization())) {
+                specializations.add(visit.getDoctor().getSpecialization());
+            }
+
+        }
+        return specializations;
+
+    }
+
+    public List<Disease> getDiseaseDoneVisits() {
+        List<Disease> diseases = new ArrayList<>();
+        for (Visit visit : this.getDoneVisits(1)) {
+
+            if (!diseases.contains(visit.getDisease())) {
+                diseases.add(visit.getDisease());
+            }
+
+        }
+        return diseases;
+    }
+
+
     public List<Visit> getDoneVisits(int i) {
         List<Visit> done = new ArrayList<>();
         for (Visit visit : this.visits) {
             if (visit.getStatus()) {
                 done.add(visit);
             }
+
         }
 
         switch (i) {

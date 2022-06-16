@@ -28,6 +28,11 @@
                                 Аналізи
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-custom"  href="/${id_visit}/graph" tabindex="-1" aria-disabled="true">
+                                Граф діагнозів
+                            </a>
+                        </li>
                     </ul>
 
                     <c:if test="${!testList.isEmpty()}">
