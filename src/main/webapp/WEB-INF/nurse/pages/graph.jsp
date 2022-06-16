@@ -20,48 +20,19 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" href="/nurse/${patient.RNTRC}/symptoms/1"  aria-current="page" >
+                            <a  href="/nurse/${patient.RNTRC}/symptoms/1" class="nav-link link-custom" tabindex="-1"  aria-disabled="true">
                                 Скарги
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="/nurse/${patient.RNTRC}/graph" class="nav-link link-custom" tabindex="-1"  aria-disabled="true">
+                            <a class="nav-link active" href="/nurse/${patient.RNTRC}/graph"  aria-current="page" >
                                 Граф діагнозів
                             </a>
                         </li>
                     </ul>
 
-                    <c:if test="${!symptomsList.isEmpty()}">
-                    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <jsp:include page="../template/graphPatientDisease.jsp"/>
 
-                        <table class="table tableFixHead">
-                            <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Скарги</th>
-                                <th>Нотатки</th>
-                            </tr>
-                            </thead>
-
-
-
-                            <tbody>
-                            <c:forEach var="record" items="${symptomsList}" varStatus="i">
-                                <tr onclick='document.location="<c:url value='/nurse/${patient.RNTRC}/${record.id}/symptom'/>"'>
-                                    <td>${record.date}</td>
-                                    <td>${record.symptoms}</td>
-                                    <td>${empty record.notes ? "-" : record.notes }</td>
-                                </tr>
-                            </c:forEach>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    </c:if>
-
-                    <c:if test="${symptomsList.isEmpty()}">
-                        <h2 class="pt-5"><em><center>Скарг немає</center></em></h2>
-                    </c:if>
 
                     <center>
                         <button onclick="document.location = '/nurse/${patient.RNTRC}/add_visit';" type="button" class="btn my-2 btn_find">

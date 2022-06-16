@@ -29,6 +29,11 @@
                                 Аналізи
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link link-custom "  href="/patient/graph"  aria-disabled="true" tabindex="-1" >
+                                Граф діагнозів
+                            </a>
+                        </li>
                     </ul>
 
                     <c:if test="${!testList.isEmpty()}">

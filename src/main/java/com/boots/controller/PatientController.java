@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static com.boots.transientClasses.ControllerMainTools.dateToString;
+import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
 
 @RestController
 @RequestMapping("/patient")
@@ -106,6 +107,21 @@ public class PatientController {
         modelAndView.addObject("visitsList", patient.getActiveVisits());
 
         modelAndView.setViewName("patient/pages/active_visits");
+
+        return modelAndView;
+    }
+    //graph
+    @GetMapping("/graph")
+    public ModelAndView PageGraph() {
+        Patient patient = getAuthPatient();
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("visitList", patient.getDoneVisits(1));
+        modelAndView.addObject("diseaseList", patient.getDiseaseDoneVisits());
+        modelAndView.addObject("specializationList", patient.getSpecializationDoneVisits());
+        modelAndView.setViewName("patient/pages/graph");
 
         return modelAndView;
     }

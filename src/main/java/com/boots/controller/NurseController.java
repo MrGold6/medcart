@@ -135,6 +135,24 @@ public class NurseController {
 
         return modelAndView;
     }
+    //graph
+    @GetMapping("/{id_patient}/graph")
+    public ModelAndView PageGraph(@PathVariable("id_patient") Long id) {
+
+        Doctor doctor = getAuthDoc();
+        Patient patient = patientService.getById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.addObject("visitList", patient.getDoneVisits(1));
+        modelAndView.addObject("diseaseList", patient.getDiseaseDoneVisits());
+        modelAndView.addObject("specializationList", patient.getSpecializationDoneVisits());
+        modelAndView.setViewName("nurse/pages/graph");
+
+        return modelAndView;
+    }
 
 
     @RequestMapping(value = "/{id_patient}/symptoms/{sort_int}", method = RequestMethod.GET)

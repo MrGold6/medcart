@@ -24,6 +24,11 @@
                                 Скарги
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="/nurse/${patient.RNTRC}/graph" class="nav-link link-custom" tabindex="-1"  aria-disabled="true">
+                                Граф діагнозів
+                            </a>
+                        </li>
                     </ul>
 
 
