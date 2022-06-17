@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -56,12 +57,32 @@ public class Patient extends Human {
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Test> tests = new ArrayList<>();
 
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Rate> rates = new ArrayList<>();
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "declaration", referencedColumnName = "id")
     private Declaration declaration;
 
     @OneToMany
     public List<SymptomsHistory> symptomsHistories = new ArrayList<>();
+
+    public void addRate(Rate rate) {
+        rate.setPatient(this);
+        this.rates.add(rate);
+    }
+
+    public Rate getRateByDoctor(Doctor doctor) {
+
+        for (Rate rate : this.rates) {
+           if(Objects.equals(rate.getD_rate(), doctor))
+               return rate;
+        }
+        return null;
+    }
 
     public List<User> getUsers(List<User> allUsers, int id) {
         List<User> patientUsers = new ArrayList<>();
@@ -181,6 +202,12 @@ public class Patient extends Human {
         }
         return false;
     }
+
+    public void addComment(Comment comment) {
+        comment.setPatient(this);
+        this.comments.add(comment);
+    }
+
 
     public void addVisit(Visit visit) {
 
