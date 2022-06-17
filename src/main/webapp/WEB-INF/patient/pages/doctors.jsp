@@ -16,7 +16,7 @@
                     <c:if test="${!doctorsList.isEmpty()}">
                         <div class="row row-cols-1 row-cols-md-4 g-4 mx-2 mt-1 mb-3">
                             <c:forEach var="doctor" items="${doctorsList}" varStatus="i">
-                                <div class="col" onclick='document.location="<c:url value='/patient/${doctor.RNTRC}/schedule'/>"'>
+                                <div class="col" onclick='document.location="<c:url value='/patient/${doctor.RNTRC}/doctor_info'/>"'>
                                     <div class="card my_card" >
                                         <div class="card-body">
                                             <center> <h4 class="card-title">${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.</h4></center>

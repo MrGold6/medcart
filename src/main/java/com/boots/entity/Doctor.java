@@ -53,6 +53,11 @@ public class Doctor extends Human {
     @OneToMany(mappedBy = "doctor_dec", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Declaration> declarations = new ArrayList<>();
 
+    @OneToMany(mappedBy = "d_com", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "d_rate", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Rate> rates = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department")
@@ -170,6 +175,24 @@ public class Doctor extends Human {
     public void addSchedule(Schedule schedule) {
         schedule.setDoctor(this);
         this.schedules.add(schedule);
+    }
+
+    public void addComment(Comment comment) {
+        comment.setD_com(this);
+        this.comments.add(comment);
+    }
+
+    public void addRate(Rate rate) {
+        rate.setD_rate(this);
+        this.rates.add(rate);
+    }
+
+    public double getAverageRate() {
+        double sum = 0;
+        for (Rate rate : this.rates) {
+            sum += rate.getCount();
+        }
+        return sum / this.rates.size();
     }
 
     public void addDeclaration(Declaration declaration) {

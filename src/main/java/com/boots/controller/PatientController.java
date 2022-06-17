@@ -13,9 +13,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,6 +29,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
+import static com.boots.transientClasses.ControllerMainTools.currentDate;
 import static com.boots.transientClasses.ControllerMainTools.dateToString;
 import static com.boots.transientClasses.ControllerMainTools.getIdPatientSplit;
 
@@ -110,6 +115,7 @@ public class PatientController {
 
         return modelAndView;
     }
+
     //graph
     @GetMapping("/graph")
     public ModelAndView PageGraph() {
@@ -209,6 +215,74 @@ public class PatientController {
         return modelAndView;
     }
 
+//doctor_info
+
+    @GetMapping("/{id_doctor}/doctor_info")
+    public ModelAndView PageDoctorInfo(@PathVariable("id_doctor") Long id) throws NoSuchAlgorithmException {
+
+        ModelAndView modelAndView = new ModelAndView();
+        Doctor doctor = doctorService.getById(id);
+
+        List<Schedule> schedules = doctor.freeSchedule(LocalDate.now());
+        modelAndView.addObject("doctor", doctor);
+
+        modelAndView.setViewName("patient/pages/doctor_info");
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/{id_doctor}/doctor_info/rate/{rate}")
+    public ModelAndView addRate(@PathVariable("rate") int count,
+                                @PathVariable("id_doctor") Long id) throws NoSuchAlgorithmException {
+
+        ModelAndView modelAndView = new ModelAndView();
+        Doctor doctor = doctorService.getById(id);
+        Patient patient = getAuthPatient();
+
+        Rate rate = new Rate();
+        String id_rate = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + doctor.getRNTRC() + "_" + getAuthPatient().getRNTRC();
+        if (patient.getRateByDoctor(doctor) != null) {
+            rate.setId(patient.getRateByDoctor(doctor).getId());
+        } else {
+            rate.setId(id_rate);
+        }
+        rate.setD_rate(doctor);
+        rate.setPatient(patient);
+        rate.setCount(count);
+        doctor.addRate(rate);
+        doctorService.add(doctor);
+
+        List<Schedule> schedules = doctor.freeSchedule(LocalDate.now());
+        modelAndView.addObject("doctor", doctor);
+        modelAndView.addObject("date", Date.valueOf(LocalDate.now()));
+        modelAndView.addObject("dateV", dateToString(Date.valueOf(LocalDate.now())));
+        modelAndView.addObject("schedules", schedules);
+        modelAndView.setViewName("patient/pages/doctor_info");
+
+        return modelAndView;
+    }
+
+    @PostMapping("/add_comment")
+    public ModelAndView addComment(@ModelAttribute("doctor_id") Long doctor_id,
+                                   @ModelAttribute("comment") Comment comment) throws NoSuchAlgorithmException {
+
+        ModelAndView modelAndView = new ModelAndView();
+        Doctor doctor = doctorService.getById(doctor_id);
+
+        String id_rate = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + doctor.getRNTRC() + "_" + getAuthPatient().getRNTRC();
+        comment.setId(id_rate);
+        comment.setD_com(doctor);
+        comment.setPatient(getAuthPatient());
+        comment.setDate(currentDate());
+
+        doctor.addComment(comment);
+        doctorService.add(doctor);
+
+        modelAndView.setViewName("redirect:/patient/" + doctor_id + "/doctor_info");
+
+        return modelAndView;
+    }
 
 //schedule
 

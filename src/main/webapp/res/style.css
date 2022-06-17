@@ -50,7 +50,29 @@ input[readonly] {
     background: #ffffff;
 }
 
+/*icons*/
+.star
+{
+    color:yellow;
+    text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+}
+
+.star:hover
+{
+    font-size:35px;
+    color:yellow;
+    text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+}
 /*buttons*/
+.btn_look_at {
+    background: rgba(133, 203, 212, 0.67);
+}
+
+.btn_look_at:hover {
+
+    background: rgb(133, 203, 212);
+}
+
 .btn_find {
     background: rgba(255, 234, 171, 0.77);
 }

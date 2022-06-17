@@ -14,7 +14,7 @@
                     <c:if test="${exist==false || !directionsList.isEmpty()}">
                     <div class="row row-cols-1 row-cols-md-4 g-4 mx-2 mt-1 mb-3">
                         <c:if test="${declaration.consent==true && exist==false}">
-                            <div class="col" onclick='document.location="<c:url value='/patient/${declaration.doctor_dec.RNTRC}/schedule'/>"'>
+                            <div class="col" onclick='document.location="<c:url value='/patient/${declaration.doctor_dec.RNTRC}/doctor_info'/>"'>
                                 <div class="card my_card" >
                                     <div class="card-body">
                                         <center> <h4 class="card-title">${declaration.doctor_dec.surname} ${declaration.doctor_dec.name.charAt(0)}.${declaration.doctor_dec.middle_name.charAt(0)}.</h4></center>
