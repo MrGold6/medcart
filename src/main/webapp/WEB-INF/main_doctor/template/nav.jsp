@@ -87,7 +87,7 @@
             </li>
 
             <li class="nav-item">
-                <a class="nav-link"  href="/main_doctor/disease/1">
+                <a class="nav-link"  href="/main_doctor/disease">
                     <div class="responsive__offer">
                         <div class="responsive__offer-icon">
                             <div class="c">

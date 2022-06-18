@@ -1,17 +1,21 @@
 package com.boots.controller;
 
 import com.boots.entity.Department;
+import com.boots.entity.Disease;
 import com.boots.entity.Doctor;
 import com.boots.entity.Specialization;
 import com.boots.entity.StaffingScheme;
 import com.boots.entity.Unit;
 import com.boots.repository.DepartmentRepository;
 import com.boots.service.DepartmentService;
+import com.boots.service.DiseaseService;
 import com.boots.service.DoctorService;
 import com.boots.service.PatientService;
 import com.boots.service.SpecializationService;
 import com.boots.service.StaffingSchemeService;
 import com.boots.service.UnitService;
+import com.boots.transientClasses.DiseaseStatistic;
+import com.boots.transientClasses.DoctorStatistic;
 import com.boots.transientClasses.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +29,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.boots.transientClasses.ControllerMainTools.firstMinusSecondArraysDepartment;
@@ -56,6 +66,8 @@ public class MainDoctorController {
     @Autowired
     private UnitService unitService;
 
+    @Autowired
+    protected DiseaseService diseaseService;
 
     protected Sort sort = new Sort();
 
@@ -157,13 +169,107 @@ public class MainDoctorController {
         return modelAndView;
     }
 
+    @GetMapping("/{id_doctor}/doctor_info/done")
+    public ModelAndView PageDoctorDone(@PathVariable("id_doctor") Long id_doctor,
+                                       @ModelAttribute("message") String message) {
+
+        LocalDate currentdate = LocalDate.now();
+        Month month = currentdate.getMonth();
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        List<DoctorStatistic> countVisits = new ArrayList<>();
+        for (int i = 1; i <= 4; i++) {
+            countVisits.add(new DoctorStatistic(i, doctor.getDoneVisitsByWeek(i, month.getValue()).size()));
+        }
+
+        int maxCountDisease = countVisits.stream()
+                .max(Comparator.comparingInt(DoctorStatistic::getCount))
+                .get().getCount();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("countVisits", countVisits);
+        modelAndView.addObject("date", month.getValue());
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
+        modelAndView.addObject("doctor", doctorService.getById(id_doctor));
+
+        modelAndView.setViewName("main_doctor/tables/doctor_info_done_visits");
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/{id_doctor}/doctor_info/done", params = "search")
+    public ModelAndView DoctorInfoByMonthDonePage(@PathVariable("id_doctor") Long id_doctor,
+                                              @ModelAttribute("message") String message,
+                                              @ModelAttribute("month") int month) {
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        List<DoctorStatistic> countVisits = new ArrayList<>();
+        for (int i = 1; i <= 4; i++) {
+            countVisits.add(new DoctorStatistic(i, doctor.getDoneVisitsByWeek(i, month).size()));
+        }
+
+        int maxCountDisease = countVisits.stream()
+                .max(Comparator.comparingInt(DoctorStatistic::getCount))
+                .get().getCount();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("countVisits", countVisits);
+        modelAndView.addObject("date", month);
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
+        modelAndView.addObject("doctor", doctorService.getById(id_doctor));
+
+        modelAndView.setViewName("main_doctor/tables/doctor_info_done_visits");
+        return modelAndView;
+    }
+
     @GetMapping("/{id_doctor}/doctor_info")
     public ModelAndView PageDoctorInfo(@PathVariable("id_doctor") Long id_doctor,
                                        @ModelAttribute("message") String message) {
 
+        LocalDate currentdate = LocalDate.now();
+        Month month = currentdate.getMonth();
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        List<DoctorStatistic> countVisits = new ArrayList<>();
+        for (int i = 1; i <= 4; i++) {
+            countVisits.add(new DoctorStatistic(i, doctor.getActiveVisitsByWeek(i, month.getValue()).size()));
+        }
+
+        int maxCountDisease = countVisits.stream()
+                .max(Comparator.comparingInt(DoctorStatistic::getCount))
+                .get().getCount();
+
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("main_doctor/tables/doctor_info");
+        modelAndView.addObject("countVisits", countVisits);
+        modelAndView.addObject("date", month.getValue());
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
         modelAndView.addObject("doctor", doctorService.getById(id_doctor));
+
+        modelAndView.setViewName("main_doctor/tables/doctor_info");
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/{id_doctor}/doctor_info", params = "search")
+    public ModelAndView DoctorInfoByMonthPage(@PathVariable("id_doctor") Long id_doctor,
+                                              @ModelAttribute("message") String message,
+                                              @ModelAttribute("month") int month) {
+
+        Doctor doctor = doctorService.getById(id_doctor);
+        List<DoctorStatistic> countVisits = new ArrayList<>();
+        for (int i = 1; i <= 4; i++) {
+            countVisits.add(new DoctorStatistic(i, doctor.getActiveVisitsByWeek(i, month).size()));
+        }
+
+        int maxCountDisease = countVisits.stream()
+                .max(Comparator.comparingInt(DoctorStatistic::getCount))
+                .get().getCount();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("countVisits", countVisits);
+        modelAndView.addObject("date", month);
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
+        modelAndView.addObject("doctor", doctorService.getById(id_doctor));
+
+        modelAndView.setViewName("main_doctor/tables/doctor_info");
         return modelAndView;
     }
 
@@ -316,7 +422,7 @@ public class MainDoctorController {
 
     @GetMapping("/{unit_id}/unit_department/{sort_num}")
     public ModelAndView allUnitDepartmentsPage(@PathVariable("sort_num") int sort_num,
-                                                 @PathVariable("unit_id") String unit_id) {
+                                               @PathVariable("unit_id") String unit_id) {
         Unit unit = unitService.getById(unit_id);
         List<Department> departmentList = unit.getDepartmentList();
 
@@ -331,7 +437,7 @@ public class MainDoctorController {
 
     @GetMapping("/{unit_id}/add_unit_to_department")
     public ModelAndView addPageDepartmentToUnit(@ModelAttribute("message") String message,
-                                                  @PathVariable("unit_id") String unit_id) {
+                                                @PathVariable("unit_id") String unit_id) {
 
         ModelAndView modelAndView = new ModelAndView();
         if (message.equals("y")) {
@@ -351,7 +457,7 @@ public class MainDoctorController {
 
     @PostMapping("/add_unit_to_department")
     public ModelAndView addDepartmentToUnit(@ModelAttribute("department_id") String department_id,
-                                              @ModelAttribute("id_unit") String id_unit) {
+                                            @ModelAttribute("id_unit") String id_unit) {
         ModelAndView modelAndView = new ModelAndView();
 
         Unit unit = unitService.getById(id_unit);
@@ -365,7 +471,7 @@ public class MainDoctorController {
 
     @GetMapping("/{id_unit}/{department_id}/delete_department_from_unit")
     public ModelAndView deleteDepartmentFromUnit(@PathVariable("department_id") String department_id,
-                                                   @PathVariable("id_unit") String id_unit) {
+                                                 @PathVariable("id_unit") String id_unit) {
         ModelAndView modelAndView = new ModelAndView();
 
         Unit unit = unitService.getById(id_unit);
@@ -638,6 +744,42 @@ public class MainDoctorController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/main_doctor/" + id_department + "/staffing_scheme/1");
 
+        return modelAndView;
+    }
+
+
+    //disease
+    @GetMapping("/disease")
+    public ModelAndView allDiseasePage() {
+
+        LocalDate currentdate = LocalDate.now();
+        Month month = currentdate.getMonth();
+
+        List<DiseaseStatistic> countDiseases = diseaseService.countDiseaseMonth(month.getValue());
+        Long maxCountDisease = countDiseases.size() > 0 ? countDiseases.stream()
+                .max(Comparator.comparingLong(DiseaseStatistic::getCount))
+                .get().getCount() : 0;
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("countDiseases", countDiseases);
+        modelAndView.addObject("date", month.getValue());
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
+        modelAndView.setViewName("main_doctor/tables/disease_chart");
+        return modelAndView;
+    }
+
+    @GetMapping(value = "/disease", params = "search")
+    public ModelAndView allDiseaseByMonthPage(@ModelAttribute("month") int month) {
+        List<DiseaseStatistic> countDiseases = diseaseService.countDiseaseMonth(month);
+        Long maxCountDisease = countDiseases.size() > 0 ? countDiseases.stream()
+                .max(Comparator.comparingLong(DiseaseStatistic::getCount))
+                .get().getCount() : 0;
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("countDiseases", countDiseases);
+        modelAndView.addObject("date", month);
+        modelAndView.addObject("maxCountDisease", maxCountDisease);
+        modelAndView.setViewName("main_doctor/tables/disease_chart");
         return modelAndView;
     }
 }

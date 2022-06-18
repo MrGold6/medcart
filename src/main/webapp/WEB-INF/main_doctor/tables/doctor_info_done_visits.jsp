@@ -26,20 +26,21 @@
 
             <ul class="nav nav-tabs ">
                 <li class="nav-item">
-                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info" class="nav-link link-custom active" aria-current="page">
+                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info" class="nav-link link-custom " tabindex="-1" aria-disabled="true">
                         Записи
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link link-custom" href="/main_doctor/${doctor.RNTRC}/doctor_info/done" tabindex="-1" aria-disabled="true">
+                    <a class="nav-link link-custom active" href="/main_doctor/${doctor.RNTRC}/doctor_info/done" aria-current="page" >
                         Проведені візити
                     </a>
                 </li>
 
             </ul>
 
+
             <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">
-                <form class="d-flex" id="search" method="GET" action="/main_doctor/${doctor.RNTRC}/doctor_info">
+                <form class="d-flex" id="search" method="GET" action="/main_doctor/${doctor.RNTRC}/doctor_info/done">
 
                     <select name="month" class="form-select">
                         <option value="1"  <c:if test="${date==1}">selected</c:if>>Січень</option>
@@ -57,7 +58,7 @@
                     </select>
 
                     <button class="btn btn_find mx-2" id="search_button" type="submit" name="search">Обрати</button>
-                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info" class="btn btn_find_all">Поточний</a>
+                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info/done" class="btn btn_find_all">Поточний</a>
                 </form>
             </div>
 
