@@ -124,3 +124,14 @@ td, th {
     font-size: 15pt;
     font-family: serif;
 }
+
+/*links*/
+
+.link-custom {
+    color: #9b3963;
+}
+
+.link-custom:hover {
+    color: #6b2644;
+}
+

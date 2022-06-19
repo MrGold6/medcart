@@ -3,43 +3,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 
-<jsp:include page="../template/head.jsp" />
+<jsp:include page="../template/head.jsp"/>
 
 <body class="d-flex flex-column min-vh-100">
-<jsp:include page="../template/header.jsp" />
+<jsp:include page="../template/header.jsp"/>
 <div class="container-fluid">
     <div class="row">
-        <jsp:include page="../template/nav.jsp" />
+        <jsp:include page="../template/nav.jsp"/>
         <content class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <h2 class="pt-3">
-                Лікар: ${doctor.surname} ${doctor.name.charAt(0)}.${doctor.middle_name.charAt(0)}.
-                Відділення: <c:if test="${department.name!=''}">${doctor.department.name}</c:if>
-                <c:if test="${department.name==null}">
-                    <a href="/admin/${doctor.RNTRC}/add_department" class="btn btn_add">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022zM6 8.694 1 10.36V15h5V8.694zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5V15z"/>
-                            <path d="M2 11h1v1H2v-1zm2 0h1v1H4v-1zm-2 2h1v1H2v-1zm2 0h1v1H4v-1zm4-4h1v1H8V9zm2 0h1v1h-1V9zm-2 2h1v1H8v-1zm2 0h1v1h-1v-1zm2-2h1v1h-1V9zm0 2h1v1h-1v-1zM8 7h1v1H8V7zm2 0h1v1h-1V7zm2 0h1v1h-1V7zM8 5h1v1H8V5zm2 0h1v1h-1V5zm2 0h1v1h-1V5zm0-2h1v1h-1V3z"/>
-                        </svg>
-                    </a>
-                </c:if>
-            </h2>
-
-            <ul class="nav nav-tabs ">
-                <li class="nav-item">
-                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info" class="nav-link link-custom active" aria-current="page">
-                        Записи
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link link-custom" href="/main_doctor/${doctor.RNTRC}/doctor_info/done" tabindex="-1" aria-disabled="true">
-                        Проведені візити
-                    </a>
-                </li>
-
-            </ul>
+            <h2 class="pt-3">Захворювання</h2>
 
             <div class="col-xl-5 col-lg-5 col-md-7 col-sm-5 pt-1 px-2 pb-2 mx-auto">
-                <form class="d-flex" id="search" method="GET" action="/main_doctor/${doctor.RNTRC}/doctor_info">
+                <form class="d-flex" id="search" method="GET" action="/main_doctor/disease">
 
                     <select name="month" class="form-select">
                         <option value="1"  <c:if test="${date==1}">selected</c:if>>Січень</option>
@@ -57,7 +32,7 @@
                     </select>
 
                     <button class="btn btn_find mx-2" id="search_button" type="submit" name="search">Обрати</button>
-                    <a href="/main_doctor/${doctor.RNTRC}/doctor_info" class="btn btn_find_all">Поточний</a>
+                    <a href="/main_doctor/disease" class="btn btn_find_all">Поточний</a>
                 </form>
             </div>
 
@@ -76,8 +51,9 @@
 
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
 
 
 </body>
@@ -87,9 +63,9 @@
 <script>
 
     var data = [
-        <c:forEach var="statistic" items="${countVisits}" varStatus="i">
+        <c:forEach var="statistic" items="${countDiseases}" varStatus="i">
         {
-            Week: "Тиждень ${statistic.weekNum}",
+            Disease: "${statistic.disease.name}",
             Value: ${statistic.count}
         },
         </c:forEach>
@@ -111,6 +87,10 @@
             "translate(" + margin.left + "," + margin.top + ")");
 
 
+    // sort data
+    data.sort(function (b, a) {
+        return a.Value - b.Value;
+    });
 
     // Add X axis
     var x = d3.scaleLinear()
@@ -129,7 +109,7 @@
     var y = d3.scaleBand()
         .range([0, height])
         .domain(data.map(function (d) {
-            return d.Week;
+            return d.Disease;
         }))
         .padding(1);
     svg.append("g")
@@ -144,10 +124,10 @@
         .attr("x1", x(0))
         .attr("x2", x(0))
         .attr("y1", function (d) {
-            return y(d.Week);
+            return y(d.Disease);
         })
         .attr("y2", function (d) {
-            return y(d.Week);
+            return y(d.Disease);
         })
         .attr("stroke", "grey")
 
@@ -158,7 +138,7 @@
         .append("circle")
         .attr("cx", x(0))
         .attr("cy", function (d) {
-            return y(d.Week);
+            return y(d.Disease);
         })
         .attr("r", "7")
         .style("fill", "#85CBD4FF")

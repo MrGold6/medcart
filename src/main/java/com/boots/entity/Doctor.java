@@ -239,6 +239,75 @@ public class Doctor extends Human {
         return visits;
     }
 
+
+
+    public List<Visit> getActiveVisitsByWeek(int week, int month) {
+        Calendar calendar;
+        int numberWeekOfYear;
+        int monthOfDate;
+
+        List<Visit> visits = new ArrayList<>();
+        for (Visit visit : this.getActiveVisits()) {
+            calendar = Calendar.getInstance();
+
+            calendar.setTime(visit.getDate());
+
+            monthOfDate = calendar.get(Calendar.MONTH)+1;
+
+
+            if (monthOfDate ==month) {
+                //System.out.println(visit.getDate());
+
+                calendar = Calendar.getInstance();
+                calendar.setFirstDayOfWeek(Calendar.MONDAY);
+                calendar.setMinimalDaysInFirstWeek(4);
+                calendar.setTime(visit.getDate());
+                numberWeekOfYear = calendar.get(Calendar.WEEK_OF_MONTH);
+                //System.out.println(numberWeekOfYear);
+
+                if (numberWeekOfYear == week) {
+                    visits.add(visit);
+                }
+            }
+        }
+
+        return visits;
+    }
+
+    public List<Visit> getDoneVisitsByWeek(int week, int month) {
+        Calendar calendar;
+        int numberWeekOfYear;
+        int monthOfDate;
+
+        List<Visit> visits = new ArrayList<>();
+        for (Visit visit : this.getDoneVisits()) {
+            calendar = Calendar.getInstance();
+
+            calendar.setTime(visit.getDate());
+
+            monthOfDate = calendar.get(Calendar.MONTH)+1;
+
+
+            if (monthOfDate ==month) {
+                //System.out.println(visit.getDate());
+
+                calendar = Calendar.getInstance();
+                calendar.setFirstDayOfWeek(Calendar.MONDAY);
+                calendar.setMinimalDaysInFirstWeek(4);
+                calendar.setTime(visit.getDate());
+                numberWeekOfYear = calendar.get(Calendar.WEEK_OF_MONTH);
+                //System.out.println(numberWeekOfYear);
+
+                if (numberWeekOfYear == week) {
+                    visits.add(visit);
+                }
+            }
+        }
+
+        return visits;
+    }
+
+
     public List<Visit> getDoneVisitsByMonth(LocalDate date) {
         Calendar c1 = Calendar.getInstance();
         c1.setTime(Date.valueOf(date));

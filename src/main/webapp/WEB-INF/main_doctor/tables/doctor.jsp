@@ -48,7 +48,7 @@
                             <td>0${doctor.telephone_number}</td>
                             <td>${doctor.specialization.name}</td>
                             <td>${doctor.getActiveVisits().size()}</td>
-                            <td>${doctor.visits.size()}</td>
+                            <td>${doctor.getDoneVisits().size()}</td>
 
                             <td><a href="/main_doctor/${doctor.RNTRC}/doctor_info/" class="btn btn_look_at"><i class="bi bi-eye"></i></a>
                             </td>

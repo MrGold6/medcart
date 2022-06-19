@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -66,4 +67,5 @@ public class ControllerMainTools {
         firstArray.removeAll(secondArray);
         return new ArrayList<Specialization>(firstArray);
     }
+
 }

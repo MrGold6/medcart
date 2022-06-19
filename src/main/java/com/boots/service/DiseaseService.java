@@ -1,12 +1,18 @@
 package com.boots.service;
 
 import com.boots.entity.Disease;
+import com.boots.entity.Doctor;
+import com.boots.entity.Visit;
 import com.boots.repository.DiseaseRepository;
+import com.boots.transientClasses.DiseaseStatistic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
+
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,4 +46,17 @@ public class DiseaseService {
         return diseaseFromDb.orElse(new Disease());
 
     }
+
+    public List<DiseaseStatistic> countDisease() {
+        return diseaseRepository.countDisease();
+
+    }
+
+
+    public List<DiseaseStatistic> countDiseaseMonth(int month) {
+
+        return diseaseRepository.countDiseaseMonth(month);
+
+    }
 }
+
