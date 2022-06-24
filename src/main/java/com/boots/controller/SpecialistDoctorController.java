@@ -123,6 +123,7 @@ public class SpecialistDoctorController extends DoctorController {
         directionToHospital.setTypeHospital(typeHospital);
         directionToHospital.set_hepatitis(is_hepatitis);
         directionToHospital.set_independently(is_independently);
+       // directionToHospital.is_hepatitis();
 
         patient.setCount_of_directionToHospital(patient.getCount_of_directionToHospital() + 1);
         patientService.add(patient);

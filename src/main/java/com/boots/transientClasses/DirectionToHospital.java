@@ -36,4 +36,12 @@ public class DirectionToHospital extends Document {
         int year = cal.get(Calendar.YEAR);
         return day + "." + month + "." + year;
     }
+
+    public boolean getHepatitis() {
+        return is_hepatitis;
+    }
+
+    public boolean getIndependently() {
+        return is_independently;
+    }
 }

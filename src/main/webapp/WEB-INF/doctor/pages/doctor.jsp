@@ -78,7 +78,7 @@
                                     <input type="number" class="form-control" placeholder="telephone_number" value="${doctor.telephone_number}" readonly>
                                 </div>
                             </div>
-
+                            <c:if test="${doctor.specialization.id!=8}">
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Кількість проведених візитів за цей місяць:</label>
                                 <div class="col-sm-6">
@@ -92,7 +92,7 @@
                                     <input type="number" class="form-control" placeholder="telephone_number" value="${todayVisitsList.size()}" readonly>
                                 </div>
                             </div>
-
+                            </c:if>
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Стаж:</label>
                                 <div class="col-sm-6">

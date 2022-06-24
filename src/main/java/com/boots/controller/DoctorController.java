@@ -6,6 +6,7 @@ import com.boots.service.DoctorService;
 import com.boots.service.MedicineCatalogService;
 import com.boots.service.PatientService;
 import com.boots.service.SpecializationService;
+import com.boots.service.TestTypeService;
 import com.boots.service.UserService;
 
 import com.boots.transientClasses.Medicine;
@@ -58,6 +59,9 @@ public class DoctorController {
 
     @Autowired
     protected DirectionService directionService;
+
+    @Autowired
+    protected TestTypeService testTypeService;
 
     protected Sort sort = new Sort();
 
@@ -478,7 +482,7 @@ public class DoctorController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);
         modelAndView.addObject("specialization", doctorService.getByIdSpecialization(8));
-        modelAndView.addObject("testTypeList", directionService.allTestTypes());
+        modelAndView.addObject("testTypeList", testTypeService.allTestTypes());
         modelAndView.addObject("direction", new Direction());
         modelAndView.setViewName("doctor/form/create_form/new_lab_direction");
 
@@ -490,14 +494,14 @@ public class DoctorController {
                                         @ModelAttribute("direction") Direction direction,
                                         @ModelAttribute("id_visit") String id_visit) throws NoSuchAlgorithmException {
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
-        if (patient.isTestTypeExists(directionService.getTestsTypeById(selected_type).getName())) {
+        if (patient.isTestTypeExists(testTypeService.getTestsTypeById(selected_type).getName())) {
             direction.setNumber(String.valueOf(SecureRandom.getInstance("SHA1PRNG").nextInt()));
             direction.setSpecialization(specializationService.getById(8));
             direction.setStatus(true);
 
             System.out.println(selected_type);
-            System.out.println(directionService.getTestsTypeById(selected_type));
-            direction.setTestsType(directionService.getTestsTypeById(selected_type));
+            System.out.println(testTypeService.getTestsTypeById(selected_type));
+            direction.setTestsType(testTypeService.getTestsTypeById(selected_type));
 
             direction.setPatient(patient);
             directionService.add(direction);

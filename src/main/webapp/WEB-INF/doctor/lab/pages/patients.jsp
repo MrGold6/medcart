@@ -27,7 +27,7 @@
                         </form>
                 </div>
 
-
+                <c:if test="${!patientsList.isEmpty()}">
                 <div class="table-wrapper-scroll-y my-custom-scrollbar">
 
                     <table class="table tableFixHead">
@@ -43,7 +43,7 @@
                         </thead>
 
 
-                            <c:if test="${!patientsList.isEmpty()}">
+
                             <tbody>
                                     <c:forEach var="patient" items="${patientsList}" varStatus="i">
                                         <tr onclick='document.location="<c:url value='/lab/${patient.RNTRC}/tests'/>"'>

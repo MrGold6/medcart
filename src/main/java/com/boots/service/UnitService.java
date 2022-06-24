@@ -1,11 +1,13 @@
 package com.boots.service;
 
+import com.boots.entity.TestsType;
 import com.boots.entity.Unit;
 import com.boots.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +18,9 @@ public class UnitService {
 
     @Transactional
     public List<Unit> allUnit() {
-        return unitRepository.findAll();
+        List<Unit> units = unitRepository.findAll();
+        units.sort(Comparator.comparing(Unit::getName));
+        return units;
     }
 
     @Transactional

@@ -12,14 +12,14 @@
                 <div class="card card_form">
                     <div class="card-body">
 
-                        <legend class="card-title text-center">Потрібна довідка?</legend>
+                        <legend class="card-title text-center">Потрібно ввести характеристики пацієнта?</legend>
                         <div class="form">
                             <ul class="border">
                                 <li>
-                                    <a href="/nurse/${id_visit}/add_sick_leave">Так</a>
+                                    <a href="/nurse/${id_visit}/edit_patient_spec_data">Так</a>
                                 </li>
                                 <li>
-                                    <a href="/nurse/${id_visit}/choose_patient_spec_data">Ні</a>
+                                    <a href="/nurse/${id_patient}/visits/1">Ні</a>
                                 </li>
                             </ul>
                         </div>

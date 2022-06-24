@@ -30,7 +30,7 @@
                             <p>з <u>${start_date}</u> по <u>${date}</u>
                         </div>
                         <center>
-                            <a  href="/nurse/${id_patient}/visits/1" class="btn btn_form_add">Далі</a>
+                            <a  href="/nurse/${id_visit}/choose_patient_spec_data" class="btn btn_form_add">Далі</a>
                         </center>
                     </div>
                 </div>

@@ -21,6 +21,7 @@ import javax.validation.Valid;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.boots.transientClasses.ControllerMainTools.currentDate;
@@ -78,29 +79,19 @@ public class FamilyDoctorController extends DoctorController {
 
     @RequestMapping(value = "/add_patient", method = RequestMethod.POST)
     public ModelAndView addPatient(@ModelAttribute("patient") Patient patient,
-                                   @ModelAttribute("declaration") Declaration declaration,
                                    @ModelAttribute("sex") String sex,
                                    @ModelAttribute("Blood_type") String Blood_type,
-                                   @ModelAttribute("rh") String rh,
-                                   @ModelAttribute("consent") String consent) {
+                                   @ModelAttribute("rh") String rh
+                                  ) {
         ModelAndView modelAndView = new ModelAndView();
-        boolean isConsent = Integer.parseInt(consent) == 1;
 
-        if (isConsent && patientService.checkRNTRC(patient.getRNTRC()) && doctorService.checkRNTRC(patient.getRNTRC())) {
+
+        if (patientService.checkRNTRC(patient.getRNTRC()) && doctorService.checkRNTRC(patient.getRNTRC())) {
             patient.setSex(Integer.parseInt(sex));
             patient.setBlood_type(Integer.parseInt(Blood_type));
             patient.setRh(rh);
             patientService.add(patient);
 
-            Doctor doctor = getAuthDoc();
-            declaration.setDoctor_dec(doctor);
-            declaration.setConsent(isConsent);
-            declaration.setDate(currentDate());
-            declaration.setPatient(patient);
-            declaration.setId(patient.getRNTRC() + "_" + doctor.getRNTRC());
-
-            doctor.addDeclaration(declaration);
-            doctorService.add(doctor);
 
             modelAndView.setViewName("redirect:/doctor1/" + patient.getRNTRC() + "/add_user");
 
@@ -149,6 +140,8 @@ public class FamilyDoctorController extends DoctorController {
             declaration.setId(patient.getRNTRC() + "_" + doctor.getRNTRC());
 
             doctor.addDeclaration(declaration);
+            doctor.setCountOfDeclaration();
+
 
             doctorService.add(doctor);
 
@@ -240,6 +233,11 @@ public class FamilyDoctorController extends DoctorController {
                                          @PathVariable("id_visit") String id_visit) {
         List<Specialization> specializationsList = doctorService.allSpecializations();
         specializationsList.remove(doctorService.getByIdSpecialization(8));
+        specializationsList.remove(doctorService.getByIdSpecialization(9));
+        specializationsList.remove(doctorService.getByIdSpecialization(1));
+        specializationsList.remove(doctorService.getByIdSpecialization(10));
+
+        specializationsList.sort(Comparator.comparing(Specialization::getName));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);

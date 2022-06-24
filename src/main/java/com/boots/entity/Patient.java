@@ -54,13 +54,13 @@ public class Patient extends Human {
     @OneToMany(mappedBy = "patient")
     public List<Direction> directions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "patient")
     public List<Test> tests = new ArrayList<>();
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "patient")
     public List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "patient")
     public List<Rate> rates = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.EAGER)

@@ -16,7 +16,7 @@
 
                             <c:forEach var="directions" items="${directionsList}" varStatus="i">
                                 <div class="col">
-                                    <div class="card my_card" >
+                                    <div class="card my_card_without_link" >
                                         <div class="card-body">
                                             <center> <h4 class="card-title">${directions.testsType.name}</h4></center>
                                         </div>

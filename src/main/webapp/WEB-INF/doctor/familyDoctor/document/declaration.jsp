@@ -29,9 +29,7 @@
                                 <p><b>1.7 Контактні дані</b></p>
                                 <p>1.7.1 Номер телефону: <u>0${declaration.patient.telephone_number}</u></p>
                                 <p>1.7.2 Адреса електронної пошти: <u>${declaration.patient.email}</u></p>
-                                <p><b>1.8 Документ,що посвідчує особу:</b></p>
-                                <p>1.8.1 РНОКПП: <u>0${declaration.patient.RNTRC}</u></p>
-                                <p>1.8.1 РНОКПП: <u>0${declaration.patient.RNTRC}</u></p>
+                                <p>1.8 Документ,що посвідчує особу: <u>${declaration.document_identifier}</u></p>
 
                                 <p><b>2. ЛІКАР, ЯКИЙ НАДАЄ ПМД</b></p>
                                 <p>2.1 Прізвище: <u>${declaration.doctor_dec.surname}</u></p>

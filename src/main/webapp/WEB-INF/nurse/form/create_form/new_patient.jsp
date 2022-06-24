@@ -144,34 +144,6 @@
                             </div>
 
 
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Зріст:</label>
-                                <div class="col-sm-6">
-                                    <input type="number" name="height" class="form-control" value="${patient.height}" step="0.01">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Маса тіла:</label>
-                                <div class="col-sm-6">
-                                    <input type="number" name="width" class="form-control" value="${patient.width}" step="0.01">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Окружність грудної клітки:</label>
-                                <div class="col-sm-6">
-                                    <input type="number" name="chest_circumference" class="form-control" value="${patient.chest_circumference}"  step="0.01">
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Окружність живота:</label>
-                                <div class="col-sm-6">
-                                    <input type="number" name="abdominal_circumference" class="form-control" value="${patient.abdominal_circumference}" step="0.01" >
-                                </div>
-                            </div>
-
                             <center>
                                 <c:set value="add_patient" var="add_patient"/>
                                 <input type="submit" id="in" class="btn btn_form_add" name="${add_patient}" value="Створити">

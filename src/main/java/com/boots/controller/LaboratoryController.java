@@ -28,6 +28,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -96,9 +97,11 @@ public class LaboratoryController {
     @GetMapping("/doneTests")
     public ModelAndView allTests() {
         Doctor doctor = getAuthDoc();
+        List<Test> tests =doctor.getTests();
+        tests.sort(Comparator.comparing(Test::getDate).reversed());
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("testList", doctor.getTests());
+        modelAndView.addObject("testList", tests);
         modelAndView.addObject("doctor", doctor);
         modelAndView.setViewName("doctor/lab/pages/tests");
         return modelAndView;

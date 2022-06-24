@@ -150,7 +150,7 @@ public class MainDoctorController {
     //doctor
     @RequestMapping(value = "/doctor/{sort_num}", method = RequestMethod.GET)
     public ModelAndView allDoctorsPage(@PathVariable("sort_num") int sort_num) {
-        List<Doctor> doctors = doctorService.allDoctors();
+        List<Doctor> doctors = doctorService.doctorByNotSpecialization(specializationService.getById(10));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("doctorList", sort.sortDoctor(doctors, sort_num));
@@ -198,8 +198,8 @@ public class MainDoctorController {
 
     @GetMapping(value = "/{id_doctor}/doctor_info/done", params = "search")
     public ModelAndView DoctorInfoByMonthDonePage(@PathVariable("id_doctor") Long id_doctor,
-                                              @ModelAttribute("message") String message,
-                                              @ModelAttribute("month") int month) {
+                                                  @ModelAttribute("message") String message,
+                                                  @ModelAttribute("month") int month) {
 
         Doctor doctor = doctorService.getById(id_doctor);
         List<DoctorStatistic> countVisits = new ArrayList<>();
@@ -448,7 +448,7 @@ public class MainDoctorController {
 
         Unit unit = unitService.getById(unit_id);
 
-        modelAndView.addObject("departmentList", firstMinusSecondArraysDepartment(departmentService.allDepartment(), unit.getDepartmentList()));
+        modelAndView.addObject("departmentList", firstMinusSecondArraysDepartment(departmentService.allDepartmentWithoutUnit(), unit.getDepartmentList()));
         modelAndView.addObject("unit", unit);
         modelAndView.setViewName("main_doctor/forms/form_department_for_unit");
         return modelAndView;
@@ -673,9 +673,14 @@ public class MainDoctorController {
         } else {
             modelAndView.addObject("message", null);
         }
+        List<Specialization> specializationsList = specializationService.allSpecialization();
+        specializationsList.remove(doctorService.getByIdSpecialization(10));
+
+        List<Specialization> specializations = firstMinusSecondArraysSpecialization(specializationsList, department.getSpecializationListByScheme());
+        specializations.sort(Comparator.comparing(Specialization::getName));
 
         modelAndView.addObject("department", department);
-        modelAndView.addObject("specializations", firstMinusSecondArraysSpecialization(specializationService.allSpecialization(), department.getSpecializationListByScheme()));
+        modelAndView.addObject("specializations", specializations);
         modelAndView.addObject("staffingScheme", new StaffingScheme());
         modelAndView.setViewName("main_doctor/forms/form_staffing_scheme");
         return modelAndView;

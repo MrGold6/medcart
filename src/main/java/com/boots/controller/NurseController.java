@@ -75,7 +75,7 @@ public class NurseController {
 
 
     //doctor
-    public  Doctor getAuthDoc() {
+    public Doctor getAuthDoc() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return doctorService.doctorByUser(user);
@@ -135,6 +135,7 @@ public class NurseController {
 
         return modelAndView;
     }
+
     //graph
     @GetMapping("/{id_patient}/graph")
     public ModelAndView PageGraph(@PathVariable("id_patient") Long id) {
@@ -326,7 +327,47 @@ public class NurseController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/{id_visit}/choose_patient_spec_data", method = RequestMethod.GET)
+    public ModelAndView choose_actionPatientSpecData(@ModelAttribute("message") String message,
+                                                   @PathVariable("id_visit") String id_visit) {
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("id_visit", id_visit);
+        modelAndView.addObject("id_patient", getIdPatientSplit(id_visit));
+
+        modelAndView.setViewName("nurse/form/choose_form/choose_action_specData");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{id_visit}/edit_patient_spec_data", method = RequestMethod.GET)
+    public ModelAndView editPagePatientSpecData(@PathVariable("id_visit") String id_visit) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("nurse/form/create_form/new_specDataPatient");
+        modelAndView.addObject("patient", patient);
+        modelAndView.addObject("id_visit", id_visit);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/edit_patient_spec_data", method = RequestMethod.POST)
+    public ModelAndView editPatientSpecData(@ModelAttribute("patient") Patient p,
+                                            @ModelAttribute("id_visit") String id_visit) {
+        Patient patient = patientService.getById(getIdPatientSplit(id_visit));
+        patient.setAbdominal_circumference(p.getAbdominal_circumference());
+        patient.setChest_circumference(p.getChest_circumference());
+        patient.setWidth(p.getWidth());
+        patient.setHeight(p.getHeight());
+        patientService.add(patient);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/nurse/" + getIdPatientSplit(id_visit) + "/visits/1");
+
+        return modelAndView;
+    }
+
     //patient
+
     @RequestMapping(value = "/{id_patient}/visits/edit_patient", method = RequestMethod.GET)
     public ModelAndView editPagePatient(@PathVariable("id_patient") Long id_patient,
                                         @ModelAttribute("message") String message) {

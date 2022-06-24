@@ -6,10 +6,13 @@ import com.boots.transientClasses.Sort;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,12 +25,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+
     @Autowired
     private UserService userService;
 
@@ -41,16 +46,25 @@ public class AdminController {
     protected DoctorService doctorService;
 
     @Autowired
+    protected BodyPartService bodyPartService;
+
+    @Autowired
     protected DirectionService directionService;
 
     @Autowired
     protected MedicineCatalogService medicineCatalogService;
 
     @Autowired
+    protected SymptomsService symptomsService;
+
+    @Autowired
     protected DiseaseService diseaseService;
 
     @Autowired
     protected SpecializationService specializationService;
+
+    @Autowired
+    protected TestTypeService testTypeService;
 
     protected Sort sort = new Sort();
 
@@ -191,6 +205,160 @@ public class AdminController {
 
         return modelAndView;
     }
+
+    //bodyPart
+    @GetMapping("/bodyPart")
+    public ModelAndView allBodyPart() {
+        List<BodyPart> bodyParts = bodyPartService.allBodyPart();
+        bodyParts.sort(Comparator.comparing(BodyPart::getName));
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("bodyPartList", bodyParts);
+        modelAndView.setViewName("admin/tables/bodyPart");
+        return modelAndView;
+
+    }
+
+    @RequestMapping(value = "/add_bodyPart", method = RequestMethod.GET)
+    public ModelAndView addBodyPartPage(@ModelAttribute("message") String message) {
+        BodyPart bodyPart = new BodyPart();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("bodyPart", bodyPart);
+
+        if (message.equals("y")) {
+            modelAndView.addObject("message", message);
+        } else {
+            modelAndView.addObject("message", null);
+        }
+
+        modelAndView.setViewName("admin/forms/form_bodyPart");
+        return modelAndView;
+    }
+
+    @PostMapping("/add_bodyPart")
+    public ModelAndView addBodyPart(@ModelAttribute("bodyPart") BodyPart bodyPart) throws NoSuchAlgorithmException {
+        ModelAndView modelAndView = new ModelAndView();
+        String id = SecureRandom.getInstance("SHA1PRNG").nextInt() + "";
+        bodyPart.setId(id);
+        bodyPartService.addBodyPart(bodyPart);
+        modelAndView.setViewName("redirect:/admin/bodyPart");
+
+        return modelAndView;
+    }
+
+
+    @GetMapping("/{id}/edit_bodyPart")
+    public ModelAndView editPageBodyPart(@PathVariable("id") String id) {
+        BodyPart bodyPart = bodyPartService.getById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_bodyPart");
+        modelAndView.addObject("bodyPart", bodyPart);
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/add_bodyPart", params = "edit")
+    public ModelAndView editBodyPart(@ModelAttribute("bodyPart") BodyPart bodyPart) {
+        bodyPartService.addBodyPart(bodyPart);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/bodyPart");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/delete_bodyPart")
+    public ModelAndView deleteBodyPart(@PathVariable("id") String id) {
+        BodyPart bodyPart = bodyPartService.getById(id);
+
+        bodyPartService.delete(bodyPart);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/bodyPart");
+
+        return modelAndView;
+    }
+    //symptoms
+    @GetMapping("/{bodyPart_id}/symptom")
+    public ModelAndView allSymptomsByBodyPart(@PathVariable("bodyPart_id") String bodyPart_id) {
+        BodyPart bodyPart = bodyPartService.getById(bodyPart_id);
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.addObject("symptomList", bodyPart.getSymptoms());
+        modelAndView.addObject("bodyPart", bodyPart);
+        modelAndView.setViewName("admin/tables/symptom");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{bodyPart_id}/add_symptom")
+    public ModelAndView addSymptomPage(@ModelAttribute("message") String message,
+                                       @PathVariable("bodyPart_id") String bodyPart_id) {
+        Symptom symptom = new Symptom();
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("symptom", symptom);
+        modelAndView.addObject("bodyPart_id", bodyPart_id);
+
+        if (message.equals("y")) {
+            modelAndView.addObject("message", message);
+        } else {
+            modelAndView.addObject("message", null);
+        }
+
+        modelAndView.setViewName("admin/forms/form_symptom");
+        return modelAndView;
+    }
+
+    @PostMapping("/add_symptom")
+    public ModelAndView addSymptom(@ModelAttribute("symptom") Symptom symptom,
+                                    @ModelAttribute("bodyPart_id") String bodyPart_id) throws NoSuchAlgorithmException {
+        ModelAndView modelAndView = new ModelAndView();
+        String id = SecureRandom.getInstance("SHA1PRNG").nextInt() + "";
+        symptom.setId(id);
+
+        symptomsService.addSymptom(symptom, bodyPart_id);
+        modelAndView.setViewName("redirect:/admin/"+bodyPart_id+"/symptom");
+
+        return modelAndView;
+    }
+/*
+    @GetMapping("/{bodyPart_id}/{id}/edit_symptom")
+    public ModelAndView editPageSymptom(@PathVariable("id") String id,
+                                        @PathVariable("bodyPart_id") String bodyPart_id) {
+        Symptom symptom = symptomsService.getById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_symptom");
+        modelAndView.addObject("symptom", symptom);
+        modelAndView.addObject("bodyPart_id", bodyPart_id);
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/add_symptom", params = "edit")
+    public ModelAndView editSymptom(@ModelAttribute("symptom") Symptom symptom,
+                                     @ModelAttribute("bodyPart_id") String bodyPart_id) {
+        symptomsService.addSymptom(symptom, bodyPart_id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+bodyPart_id+"/symptom");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{bodyPart_id}/{id}/delete_symptom")
+    public ModelAndView deleteSymptom(@PathVariable("id") String id,
+                                      @PathVariable("bodyPart_id") String bodyPart_id) {
+        Symptom symptom = symptomsService.getById(id);
+
+        symptomsService.delete(symptom);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/"+bodyPart_id+"/symptom");
+
+        return modelAndView;
+    }*/
 
     //doctor
     @RequestMapping(value = "/doctor/{sort_num}", method = RequestMethod.GET)
@@ -555,6 +723,86 @@ public class AdminController {
 
         return modelAndView;
     }
+
+    //testType
+    @GetMapping("/testType/{sort_num}")
+    public ModelAndView allTestTypePage(@PathVariable("sort_num") int sort_num) {
+        List<TestsType> testsTypes = testTypeService.allTestTypes();
+
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("testTypeList", testsTypes);
+        modelAndView.setViewName("admin/tables/testType");
+        return modelAndView;
+    }
+
+    @GetMapping("/add_testType")
+    public ModelAndView addPageTestType(@ModelAttribute("message") String message) {
+        TestsType testType = new TestsType();
+
+        ModelAndView modelAndView = new ModelAndView();
+        if (message.equals("y")) {
+            modelAndView.addObject("message", message);
+        } else {
+            modelAndView.addObject("message", null);
+        }
+
+        modelAndView.addObject("testType", testType);
+        modelAndView.setViewName("admin/forms/form_testType");
+        return modelAndView;
+    }
+
+
+    @PostMapping("/add_testType")
+    public ModelAndView addTestType(@ModelAttribute("testType") TestsType testType) throws NoSuchAlgorithmException {
+        ModelAndView modelAndView = new ModelAndView();
+        String id = SecureRandom.getInstance("SHA1PRNG").nextInt() + "";
+
+        testType.setId(id);
+
+        if (testTypeService.checkId(testType.getId())) {
+            testTypeService.add(testType);
+            modelAndView.setViewName("redirect:/admin/testType/1");
+        } else {
+            modelAndView.addObject("message", "y");
+            modelAndView.setViewName("redirect:/admin/add_testType");
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/edit_testType")
+    public ModelAndView editPageTestType(@PathVariable("id") String id) {
+        TestsType testsType = testTypeService.getTestsTypeById(id);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("admin/forms/form_testType");
+        modelAndView.addObject("testType", testsType);
+        return modelAndView;
+    }
+
+    @PostMapping(value = "/add_testType", params = "edit")
+    public ModelAndView editTestType(@ModelAttribute("testType") TestsType testType) {
+        testTypeService.add(testType);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/testType/1");
+
+        return modelAndView;
+    }
+
+    @GetMapping("/{id}/delete_testType")
+    public ModelAndView deleteTestType(@PathVariable("id") String id) {
+        TestsType testsType = testTypeService.getTestsTypeById(id);
+
+        testTypeService.delete(testsType);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("redirect:/admin/testType/1");
+
+        return modelAndView;
+    }
+
 
     //specialization
     @RequestMapping(value = "/specialization/{sort_num}", method = RequestMethod.GET)

@@ -20,23 +20,13 @@ public class DirectionService {
     @Autowired
     private DirectionRepository directionRepository;
 
-    @Autowired
-    private TestTypeRepository testTypeRepository;
+
 
     @Transactional
     public List<Direction> allDirection() {
         return directionRepository.findAll();
     }
 
-    @Transactional
-    public List<TestsType> allTestTypes() {
-        return testTypeRepository.findAll();
-    }
-
-    @Transactional
-    public TestsType getTestsTypeById(String id) {
-        return testTypeRepository.findTestsTypeById(id);
-    }
 
     @Transactional
     public void add(Direction direction) {

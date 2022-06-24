@@ -10,7 +10,7 @@
             <div style="background-color: #ffffff;">
                 <content>
 
-                    <h1 class="pt-4">Проведені аналізи.</h1>
+                    <h1 class="pt-4">Проведені аналізи</h1>
 
                     <c:if test="${!testList.isEmpty()}">
                     <div class="table-wrapper-scroll-y my-custom-scrollbar">

@@ -23,7 +23,7 @@
                         <form class="d-flex" id="search" method="GET" action="/doctor1/patients/searchTelephone_number">
                             <input class="form-control me-2 shadow bg-body rounded rounded-pill border-0" id="search_input" type="number" name="telephone_number" placeholder="номер телефону"  required>
                             <button class="btn btn_find mx-2" id="search_button" type="submit">Знайти</button>
-                            <a href="/doctor1/patients" class="btn btn_find_all">Всі</a>
+                            <a href="/doctor1/patients/1" class="btn btn_find_all">Всі</a>
                         </form>
                 </div>
 
@@ -37,7 +37,7 @@
                             <th>ПІП<a href="/doctor1/patients/2" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                             <th>Стать<a href="/doctor1/patients/3" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
                             <th>Номер телефону<a href="/doctor1/patients/4" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
-                            <th>Декларація<a href="/doctor1/patients/4" class="btn btn-sm "><i class="bi bi-sort-down"></i></a></th>
+                            <th>Декларація</th>
                             <th>Юзер</th>
 
                         </tr>

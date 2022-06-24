@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <div>
-    <svg width="960" height="299"></svg>
+    <svg></svg>
 
     <script src="https://d3js.org/d3.v4.min.js"></script>
 </div>

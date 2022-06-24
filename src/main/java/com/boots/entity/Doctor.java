@@ -74,7 +74,7 @@ public class Doctor extends Human {
     }
 
     public void setCountOfDeclaration() {
-        countOfDeclaration = getMaxCountOfDeclaration() - declarations.size();
+        this.countOfDeclaration = this.getMaxCountOfDeclaration() - declarations.size();
     }
 
     public void setSchedulesByRange(int day, String timeStart, String timeEnd, int interval) throws NoSuchAlgorithmException, ParseException {
@@ -240,7 +240,6 @@ public class Doctor extends Human {
     }
 
 
-
     public List<Visit> getActiveVisitsByWeek(int week, int month) {
         Calendar calendar;
         int numberWeekOfYear;
@@ -252,10 +251,10 @@ public class Doctor extends Human {
 
             calendar.setTime(visit.getDate());
 
-            monthOfDate = calendar.get(Calendar.MONTH)+1;
+            monthOfDate = calendar.get(Calendar.MONTH) + 1;
 
 
-            if (monthOfDate ==month) {
+            if (monthOfDate == month) {
                 //System.out.println(visit.getDate());
 
                 calendar = Calendar.getInstance();
@@ -285,10 +284,10 @@ public class Doctor extends Human {
 
             calendar.setTime(visit.getDate());
 
-            monthOfDate = calendar.get(Calendar.MONTH)+1;
+            monthOfDate = calendar.get(Calendar.MONTH) + 1;
 
 
-            if (monthOfDate ==month) {
+            if (monthOfDate == month) {
                 //System.out.println(visit.getDate());
 
                 calendar = Calendar.getInstance();

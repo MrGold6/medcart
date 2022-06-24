@@ -27,7 +27,7 @@
                             <input name="id_visit" type="hidden" value="${id_visit}" maxlength="100" readonly>
 
                             <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Спеціалізація лікрая:</label>
+                                <label class="col-sm-6 col-form-label ln">Спеціалізація лікаря:</label>
                                 <div class="col-sm-6">
                                     <input class="form-control" type="text" name="name" value="${specialization.name}" readonly>
                                 </div>

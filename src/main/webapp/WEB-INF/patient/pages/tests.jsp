@@ -44,7 +44,6 @@
                             <tr>
                                 <th>Дата</th>
                                 <th>Тип аналізу</th>
-                                <th>Пацієнт</th>
                                 <th>Результат</th>
                             </tr>
                             </thead>
@@ -54,7 +53,6 @@
                                 <tr onclick='document.location="<c:url value='/patient/test/${test.id}'/>"'>
                                     <td>${test.date}</td>
                                     <td>${test.testsType.name}</td>
-                                    <td>${test.patient.surname} ${test.patient.name.charAt(0)}.${test.patient.middle_name.charAt(0)}.</td>
                                     <td>${empty test.result ? "-" : test.result }</td>
                                 </tr>
                             </c:forEach>

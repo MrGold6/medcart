@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
-  //  List<Doctor> findBySpecializationList(List<Specialization> specializations);
     List<Doctor> findBySpecialization(Specialization specializations);
+    List<Doctor> findBySpecializationNot(Specialization specializations);
     Doctor findByUser(User user);
 
 }

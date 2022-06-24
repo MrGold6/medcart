@@ -37,12 +37,6 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-3">
-                                <label class="col-sm-6 col-form-label ln">Пацієнт:</label>
-                                <div class="col-sm-6">
-                                    <input class="form-control" type="text" placeholder="немає" value="${test.patient.surname} ${test.patient.name.charAt(0)}.${test.patient.middle_name.charAt(0)}." maxlength="100" readonly>
-                                </div>
-                            </div>
 
                             <div class="row mb-3">
                                 <label class="col-sm-6 col-form-label ln">Результат:</label>

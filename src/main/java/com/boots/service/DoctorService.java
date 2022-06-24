@@ -61,18 +61,16 @@ public class DoctorService {
         return doctors;
     }
 
-    /*
-    public List<Doctor> doctorBySpecializationList(List<Specialization> specializations) {
+    public List<Doctor> doctorByNotSpecialization(Specialization specialization) {
         List<Doctor> doctors = null;
         try {
-            doctors = doctorRepository.findBySpecialization(specializations);
+            doctors = doctorRepository.findBySpecializationNot(specialization);
         } catch (NoResultException nre) {
 
         }
-
         return doctors;
+    }
 
-    }*/
 
     public List<Doctor> findTelephone_number(int telephone_number) {
         List<Doctor> doctors = null;

@@ -30,11 +30,11 @@
 
                             <p>Діагноз: &nbsp;<u>${directionToHospital.disease}</u></p>
                             <p>Непереносимість препаратів: &nbsp;<u>${directionToHospital.bad_medicine}${empty directionToHospital.bad_medicine ? "<u>Немає</u>" : "" }</u></p>
-                            <p>Вірусний гепатит ${directionToHospital.is_hepatitis== false ? "ТАК/<u>НІ</u>" : "<u>ТАК</u>/НІ" }</p>
+                            <p>Вірусний гепатит ${directionToHospital.getHepatitis()== false ? "ТАК/<u>НІ</u>" : "<u>ТАК</u>/НІ" }</p>
                             <p>Флюрографія: &nbsp;<u>${directionToHospital.fluorography}${empty directionToHospital.fluorography ? "<u>Немає</u>" : "" }</u>&nbsp;&nbsp;Онкопрофогляд: &nbsp;<u>${directionToHospital.oncoprofoglyad}${empty directionToHospital.oncoprofoglyad ? "<u>Немає</u>" : "" }</u></p>
 
                             <p>t <sup>&deg;</sup>&nbsp;<u>${directionToHospital.temperature}</u>&nbsp;&nbsp;AT &nbsp;<u>${directionToHospital.at}</u>&nbsp;&nbsp;Пульс &nbsp;<u>${directionToHospital.pulse}</u> &nbsp;&nbsp;ЧД &nbsp;<u>${directionToHospital.respiratory_rate}</u></p>
-                            <p>Потребує супроводу ${directionToHospital.is_independently== true ? "мед.правцівника, <u>самостійно</u>" : "<u>мед.правцівника</u>, самостійно" }</p>
+                            <p>Потребує супроводу ${directionToHospital.getIndependently()== true ? "мед.правцівника, <u>самостійно</u>" : "<u>мед.правцівника</u>, самостійно" }</p>
                             <p>Лікар &nbsp;<u>${directionToHospital.visit.doctor.specialization.name}</u>&nbsp;&nbsp;<u>${directionToHospital.visit.doctor.surname} ${directionToHospital.visit.doctor.name.charAt(0)}.${directionToHospital.visit.doctor.middle_name.charAt(0)}.</u>&nbsp;&nbsp;тел. &nbsp;<u>0${directionToHospital.visit.doctor.telephone_number}</u></p>
 
 
