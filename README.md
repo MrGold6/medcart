@@ -8,7 +8,7 @@ Also patient have symptoms mobile app where he can make chronology of symptoms (
 
 Project created using design pattern MVC and OOP principles. 
 
-## Project use:
+## Stack of technologies:
 * Java on framework Spring Boot
 * Spring Security
 * Hibernate
