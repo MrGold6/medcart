@@ -2,18 +2,15 @@ package com.boots.service;
 
 import com.boots.entity.*;
 import com.boots.repository.DoctorRepository;
+import com.boots.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class DoctorService {
@@ -21,8 +18,9 @@ public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
 
-    @PersistenceContext
-    private EntityManager em;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
 
     @Transactional
     public List<Doctor> allDoctors() {
@@ -75,41 +73,11 @@ public class DoctorService {
     public List<Doctor> findTelephone_number(int telephone_number) {
         List<Doctor> doctors = null;
         try {
-            doctors = em.createQuery("SELECT p FROM Doctor p WHERE p.telephone_number = :paramId", Doctor.class)
-                    .setParameter("paramId", telephone_number).getResultList();
+            doctors = doctorRepository.findDocTelephoneNumber(telephone_number);
         } catch (NoResultException nre) {
-        }
 
+        }
         return doctors;
-    }
-
-    public Specialization getByIdSpecialization(int id) {
-        Specialization specialization = null;
-        try {
-            specialization = em.createQuery("SELECT d FROM Specialization d WHERE d.id = :paramId", Specialization.class)
-                    .setParameter("paramId", id).getSingleResult();
-        } catch (NoResultException nre) {
-        }
-
-        return specialization;
-    }
-
-    public List<Specialization> allSpecializations() {
-        List<Specialization> specializations = null;
-        try {
-            specializations = em.createQuery("SELECT d FROM Specialization d", Specialization.class).getResultList();
-
-        } catch (NoResultException nre) {
-        }
-
-        return specializations;
-
-    }
-
-
-    @Transactional
-    public int doctorsCount() {
-        return (int) doctorRepository.count();
     }
 
     public Doctor doctorByUser(User user) {
@@ -130,37 +98,20 @@ public class DoctorService {
 
     }
 
-    public List<Schedule> allSchedule() {
-        List<Schedule> schedules = null;
-        try {
-            schedules = em.createQuery("SELECT d FROM Schedule d", Schedule.class).getResultList();
-
-        } catch (NoResultException nre) {
-        }
-
-        return schedules;
-
-    }
-
-    //id_schedule
-
     public Schedule getScheduleById(int id_schedule) {
+
         Schedule schedule = null;
         try {
-            schedule = em.createQuery("SELECT d FROM Schedule d WHERE d.id = :paramId", Schedule.class)
-                    .setParameter("paramId", id_schedule).getSingleResult();
-
+            Optional<Schedule> scheduleFromDb = scheduleRepository.findById(id_schedule);
+            schedule = scheduleFromDb.orElse(new Schedule());
         } catch (NoResultException nre) {
-        }
 
+        }
         return schedule;
     }
 
     @Transactional
     public void deleteSchedule(int id_schedule) {
-        Query query = em.createQuery("DELETE FROM Schedule d WHERE d.id= :id_schedule");
-        query.setParameter("id_schedule", id_schedule);
-        query.executeUpdate();
-
+        scheduleRepository.deleteById(id_schedule);
     }
 }

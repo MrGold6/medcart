@@ -1,12 +1,10 @@
 package com.boots.controller;
 
 import com.boots.entity.Department;
-import com.boots.entity.Disease;
 import com.boots.entity.Doctor;
 import com.boots.entity.Specialization;
 import com.boots.entity.StaffingScheme;
 import com.boots.entity.Unit;
-import com.boots.repository.DepartmentRepository;
 import com.boots.service.DepartmentService;
 import com.boots.service.DiseaseService;
 import com.boots.service.DoctorService;
@@ -29,16 +27,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static com.boots.transientClasses.ControllerMainTools.firstMinusSecondArraysDepartment;
 import static com.boots.transientClasses.ControllerMainTools.firstMinusSecondArraysDoctor;
@@ -173,8 +166,8 @@ public class MainDoctorController {
     public ModelAndView PageDoctorDone(@PathVariable("id_doctor") Long id_doctor,
                                        @ModelAttribute("message") String message) {
 
-        LocalDate currentdate = LocalDate.now();
-        Month month = currentdate.getMonth();
+        LocalDate current_date = LocalDate.now();
+        Month month = current_date.getMonth();
 
         Doctor doctor = doctorService.getById(id_doctor);
         List<DoctorStatistic> countVisits = new ArrayList<>();
@@ -225,8 +218,8 @@ public class MainDoctorController {
     public ModelAndView PageDoctorInfo(@PathVariable("id_doctor") Long id_doctor,
                                        @ModelAttribute("message") String message) {
 
-        LocalDate currentdate = LocalDate.now();
-        Month month = currentdate.getMonth();
+        LocalDate current_date = LocalDate.now();
+        Month month = current_date.getMonth();
 
         Doctor doctor = doctorService.getById(id_doctor);
         List<DoctorStatistic> countVisits = new ArrayList<>();
@@ -674,7 +667,7 @@ public class MainDoctorController {
             modelAndView.addObject("message", null);
         }
         List<Specialization> specializationsList = specializationService.allSpecialization();
-        specializationsList.remove(doctorService.getByIdSpecialization(10));
+        specializationsList.remove(specializationService.getById(10));
 
         List<Specialization> specializations = firstMinusSecondArraysSpecialization(specializationsList, department.getSpecializationListByScheme());
         specializations.sort(Comparator.comparing(Specialization::getName));
@@ -757,8 +750,8 @@ public class MainDoctorController {
     @GetMapping("/disease")
     public ModelAndView allDiseasePage() {
 
-        LocalDate currentdate = LocalDate.now();
-        Month month = currentdate.getMonth();
+        LocalDate current_date = LocalDate.now();
+        Month month = current_date.getMonth();
 
         List<DiseaseStatistic> countDiseases = diseaseService.countDiseaseMonth(month.getValue());
         Long maxCountDisease = countDiseases.size() > 0 ? countDiseases.stream()

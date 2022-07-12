@@ -2,7 +2,6 @@ package com.boots.service;
 
 import com.boots.entity.BodyPart;
 import com.boots.entity.Symptom;
-import com.boots.entity.Symptom;
 import com.boots.repository.BodyPartRepository;
 import com.boots.repository.SymptomsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,10 +22,6 @@ public class SymptomsService {
 
     @Autowired
     private SymptomsRepository symptomsRepository;
-
-    public List<Symptom> allSymptoms() {
-        return symptomsRepository.findAll();
-    }
 
     public void addSymptom(Symptom symptom, String bodyPartId) {
         symptomsRepository.save(symptom);

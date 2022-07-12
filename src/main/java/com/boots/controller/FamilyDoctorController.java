@@ -231,11 +231,11 @@ public class FamilyDoctorController extends DoctorController {
     @RequestMapping(value = "/{id_visit}/add_new_direction", method = RequestMethod.GET)
     public ModelAndView addPageDirection(@ModelAttribute("message") String message,
                                          @PathVariable("id_visit") String id_visit) {
-        List<Specialization> specializationsList = doctorService.allSpecializations();
-        specializationsList.remove(doctorService.getByIdSpecialization(8));
-        specializationsList.remove(doctorService.getByIdSpecialization(9));
-        specializationsList.remove(doctorService.getByIdSpecialization(1));
-        specializationsList.remove(doctorService.getByIdSpecialization(10));
+        List<Specialization> specializationsList = specializationService.allSpecialization();
+        specializationsList.remove(specializationService.getById(8));
+        specializationsList.remove(specializationService.getById(9));
+        specializationsList.remove(specializationService.getById(1));
+        specializationsList.remove(specializationService.getById(10));
 
         specializationsList.sort(Comparator.comparing(Specialization::getName));
 

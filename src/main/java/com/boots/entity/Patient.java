@@ -18,11 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -70,16 +68,12 @@ public class Patient extends Human {
     @OneToMany
     public List<SymptomsHistory> symptomsHistories = new ArrayList<>();
 
-    public void addRate(Rate rate) {
-        rate.setPatient(this);
-        this.rates.add(rate);
-    }
-
     public Rate getRateByDoctor(Doctor doctor) {
 
         for (Rate rate : this.rates) {
-           if(Objects.equals(rate.getD_rate(), doctor))
-               return rate;
+            if (Objects.equals(rate.getD_rate(), doctor)) {
+                return rate;
+            }
         }
         return null;
     }
@@ -203,22 +197,10 @@ public class Patient extends Human {
         return false;
     }
 
-    public void addComment(Comment comment) {
-        comment.setPatient(this);
-        this.comments.add(comment);
-    }
-
-
     public void addVisit(Visit visit) {
 
         visit.setPatient(this);
         this.visits.add(visit);
-    }
-
-    public void addTest(Test test) {
-
-        test.setPatient(this);
-        this.tests.add(test);
     }
 
     public Visit findVisit(String id) {
@@ -302,27 +284,6 @@ public class Patient extends Human {
         }
 
         return true;
-    }
-
-    public void addDirection(Direction direction1) {
-        boolean canAdd = true;
-
-        if (this.directions.isEmpty()) {
-            direction1.setPatient(this);
-            this.directions.add(direction1);
-        } else {
-            for (Direction direction : this.directions) {
-                if (direction.getStatus() && direction.getSpecialization().getName().equals(direction1.getSpecialization().getName())) {
-                    canAdd = false;
-                    break;
-                }
-            }
-
-            if (canAdd) {
-                direction1.setPatient(this);
-                this.directions.add(direction1);
-            }
-        }
     }
 
     public Direction findActiveDirection(Specialization specialization) {

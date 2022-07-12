@@ -6,13 +6,10 @@ import com.boots.transientClasses.Sort;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -323,42 +320,6 @@ public class AdminController {
 
         return modelAndView;
     }
-/*
-    @GetMapping("/{bodyPart_id}/{id}/edit_symptom")
-    public ModelAndView editPageSymptom(@PathVariable("id") String id,
-                                        @PathVariable("bodyPart_id") String bodyPart_id) {
-        Symptom symptom = symptomsService.getById(id);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("admin/forms/form_symptom");
-        modelAndView.addObject("symptom", symptom);
-        modelAndView.addObject("bodyPart_id", bodyPart_id);
-        return modelAndView;
-    }
-
-    @PostMapping(value = "/add_symptom", params = "edit")
-    public ModelAndView editSymptom(@ModelAttribute("symptom") Symptom symptom,
-                                     @ModelAttribute("bodyPart_id") String bodyPart_id) {
-        symptomsService.addSymptom(symptom, bodyPart_id);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+bodyPart_id+"/symptom");
-
-        return modelAndView;
-    }
-
-    @GetMapping("/{bodyPart_id}/{id}/delete_symptom")
-    public ModelAndView deleteSymptom(@PathVariable("id") String id,
-                                      @PathVariable("bodyPart_id") String bodyPart_id) {
-        Symptom symptom = symptomsService.getById(id);
-
-        symptomsService.delete(symptom);
-
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("redirect:/admin/"+bodyPart_id+"/symptom");
-
-        return modelAndView;
-    }*/
 
     //doctor
     @RequestMapping(value = "/doctor/{sort_num}", method = RequestMethod.GET)
@@ -1097,7 +1058,7 @@ public class AdminController {
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_patient", id_patient);
-        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("specializationsList", specializationService.allSpecialization());
         modelAndView.addObject("direction", new Direction());
         modelAndView.setViewName("admin/forms/form_direction");
         return modelAndView;
@@ -1131,7 +1092,7 @@ public class AdminController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin/forms/form_direction");
         modelAndView.addObject("id_patient", id_patient);
-        modelAndView.addObject("specializationsList", doctorService.allSpecializations());
+        modelAndView.addObject("specializationsList", specializationService.allSpecialization());
         modelAndView.addObject("direction", direction);
         return modelAndView;
     }
@@ -1210,7 +1171,7 @@ public class AdminController {
                                  @ModelAttribute("notes") String notes) throws NoSuchAlgorithmException {
         Patient patient = patientService.getById(id_patient);
         Doctor doctor = doctorService.getById(id_doctor);
-        Disease disease = patientService.getByIdDisease(selected_disease);
+        Disease disease = diseaseService.getById(selected_disease);
 
         String id_visit = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
 
@@ -1264,7 +1225,7 @@ public class AdminController {
                                   @ModelAttribute("id_schedule") int id_schedule) {
         Patient patient = patientService.getById(id_patient);
         Doctor doctor = doctorService.getById(id_doctor);
-        Disease disease = patientService.getByIdDisease(selected_disease);
+        Disease disease = diseaseService.getById(selected_disease);
 
         if (notes == null) {
             visit.setNotes("");
@@ -1327,7 +1288,8 @@ public class AdminController {
     @RequestMapping(value = "/{id_patient}/{id}/delete_visit", method = RequestMethod.GET)
     public ModelAndView deleteVisit(@PathVariable("id_patient") Long id_patient,
                                     @PathVariable("id") String id) {
-        patientService.deleteVisit(id);
+        Patient patient = patientService.getById(id_patient);
+        patientService.deleteVisit(patient.findVisit(id));
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin/" + id_patient + "/visit/1");

@@ -6,7 +6,7 @@
     <a style="font-family: 'Exo2-Bold', cursive, sans-serif;
     font-size: 25px;
     text-decoration: none;"
-       class="navbar-brand logo col-md-3 col-lg-2 me-0 px-3" href="/admin/user/1">MedCardAdm</a>
+       class="navbar-brand logo col-md-3 col-lg-2 me-0 px-3" href="/admin/user/1">MedCardMain</a>
     <button class="navbar-toggler d-md-none collapsed " type="button" data-bs-toggle="collapse" data-bs-target=".sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>

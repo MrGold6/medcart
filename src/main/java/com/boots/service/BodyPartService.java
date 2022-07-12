@@ -2,7 +2,6 @@ package com.boots.service;
 
 
 import com.boots.entity.BodyPart;
-import com.boots.entity.Department;
 import com.boots.repository.BodyPartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,7 @@ public class BodyPartService {
         return diseaseFromDb.orElse(new BodyPart());
     }
 
-    public BodyPart addBodyPart(BodyPart bodyPart) {
-        return bodyPartRepository.save(bodyPart);
+    public void addBodyPart(BodyPart bodyPart) {
+        bodyPartRepository.save(bodyPart);
     }
 }

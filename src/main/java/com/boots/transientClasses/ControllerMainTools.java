@@ -2,23 +2,13 @@ package com.boots.transientClasses;
 
 import com.boots.entity.Department;
 import com.boots.entity.Doctor;
-import com.boots.entity.Patient;
 import com.boots.entity.Specialization;
-import com.boots.entity.User;
-import com.boots.entity.Visit;
-import com.boots.service.DoctorService;
-import com.boots.service.PatientService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 public class ControllerMainTools {
@@ -49,7 +39,7 @@ public class ControllerMainTools {
         Set<Doctor> secondArray = new HashSet<>(secondArrayList);
 
         firstArray.removeAll(secondArray);
-        return new ArrayList<Doctor>(firstArray);
+        return new ArrayList<>(firstArray);
     }
 
     public static List<Department> firstMinusSecondArraysDepartment(List<Department> firstArrayList, List<Department> secondArrayList) {
@@ -57,7 +47,7 @@ public class ControllerMainTools {
         Set<Department> secondArray = new HashSet<>(secondArrayList);
 
         firstArray.removeAll(secondArray);
-        return new ArrayList<Department>(firstArray);
+        return new ArrayList<>(firstArray);
     }
 
     public static List<Specialization> firstMinusSecondArraysSpecialization(List<Specialization> firstArrayList, List<Specialization> secondArrayList) {
@@ -65,7 +55,7 @@ public class ControllerMainTools {
         Set<Specialization> secondArray = new HashSet<>(secondArrayList);
 
         firstArray.removeAll(secondArray);
-        return new ArrayList<Specialization>(firstArray);
+        return new ArrayList<>(firstArray);
     }
 
 }

@@ -2,15 +2,14 @@ package com.boots.service;
 
 import com.boots.entity.*;
 import com.boots.repository.DirectionRepository;
+import com.boots.repository.MedicineCatalogRepository;
 import com.boots.repository.PatientRepository;
+import com.boots.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,12 +20,14 @@ import java.util.Set;
 @Service
 public class PatientService {
 
-    @PersistenceContext
-    private EntityManager em;
     @Autowired
     private PatientRepository patientRepository;
     @Autowired
     private DirectionRepository directionRepository;
+    @Autowired
+    private VisitRepository visitRepository;
+    @Autowired
+    private MedicineCatalogRepository medicineCatalogRepository;
 
     public List<Patient> allPatients() {
         return patientRepository.findAll();
@@ -41,20 +42,14 @@ public class PatientService {
     }
 
     @Transactional
-    public void deleteVisit(String id_visit) {
-
-        Query query = em.createQuery("DELETE FROM Visit d WHERE d.number= :id_visit");
-        query.setParameter("id_visit", id_visit);
-        query.executeUpdate();
-
+    public void deleteVisit(Visit visit) {
+        visitRepository.deleteById(visit.getNumber());
     }
-
 
     public Patient patientByUser(User user) {
         Patient patient = null;
         try {
-            patient = em.createQuery("SELECT d FROM Patient d WHERE d.user= :user", Patient.class)
-                    .setParameter("user", user).getSingleResult();
+            patient = patientRepository.findByUser(user);
 
         } catch (NoResultException nre) {
         }
@@ -79,9 +74,6 @@ public class PatientService {
         return patient;
     }
 
-    public int patientsCount() {
-        return (int) patientRepository.count();
-    }
 
     public boolean checkRNTRC(Long id) {
         Optional<Patient> patientFromDb = patientRepository.findById(id);
@@ -90,31 +82,10 @@ public class PatientService {
     }
 
 
-    public List<Disease> allDiseases() {
-        List<Disease> diseases = null;
-        try {
-            diseases = em.createQuery("SELECT d FROM Disease d", Disease.class).getResultList();
-        } catch (NoResultException nre) {
-        }
-
-        return diseases;
-    }
-
-    public Disease getByIdDisease(String id) {
-        Disease disease = null;
-        try {
-            disease = em.createQuery("SELECT d FROM Disease d WHERE d.ICD_10 = :paramId", Disease.class)
-                    .setParameter("paramId", id).getSingleResult();
-        } catch (NoResultException nre) {
-        }
-
-        return disease;
-    }
-
     public List<MedicineCatalog> allMedicines() {
         List<MedicineCatalog> medicineCatalogs = null;
         try {
-            medicineCatalogs = em.createQuery("SELECT m FROM MedicineCatalog m", MedicineCatalog.class).getResultList();
+            medicineCatalogs = medicineCatalogRepository.findAll();
         } catch (NoResultException nre) {
         }
 
@@ -125,8 +96,7 @@ public class PatientService {
     public List<Patient> findTelephone_number(int telephone_number) {
         List<Patient> patients = null;
         try {
-            patients = em.createQuery("SELECT p FROM Patient p WHERE p.telephone_number = :paramId", Patient.class)
-                    .setParameter("paramId", telephone_number).getResultList();
+            patients = patientRepository.findPatientTelephoneNumber(telephone_number);
         } catch (NoResultException nre) {
         }
 
@@ -148,8 +118,9 @@ public class PatientService {
         List<Patient> patients = new ArrayList<>();
 
         for (Direction direction : directionRepository.findBySpecializationAndStatus(specialization, status)) {
-            if(direction.getPatient().getTelephone_number() == telephone_number)
+            if (direction.getPatient().getTelephone_number() == telephone_number) {
                 patients.add(direction.getPatient());
+            }
         }
 
         return patients;
