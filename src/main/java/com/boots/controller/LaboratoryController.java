@@ -1,16 +1,14 @@
 package com.boots.controller;
 
 import com.boots.entity.Direction;
-import com.boots.entity.Disease;
 import com.boots.entity.Doctor;
 import com.boots.entity.Patient;
 import com.boots.entity.Test;
 import com.boots.entity.User;
-import com.boots.entity.Visit;
 import com.boots.service.DirectionService;
 import com.boots.service.DoctorService;
 import com.boots.service.PatientService;
-import com.boots.transientClasses.Analysis;
+import com.boots.service.TestService;
 import com.boots.transientClasses.Sort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,14 +18,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
@@ -47,13 +43,14 @@ public class LaboratoryController {
     private PatientService patientService;
     @Autowired
     private DirectionService directionService;
+    @Autowired
+    private TestService testService;
 
-    public  Doctor getAuthDoc() {
+    public Doctor getAuthDoc() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return doctorService.doctorByUser(user);
     }
-
 
 
     @GetMapping(value = "/patients/{sort_num}")
@@ -97,7 +94,7 @@ public class LaboratoryController {
     @GetMapping("/doneTests")
     public ModelAndView allTests() {
         Doctor doctor = getAuthDoc();
-        List<Test> tests =doctor.getTests();
+        List<Test> tests = doctor.getTests();
         tests.sort(Comparator.comparing(Test::getDate).reversed());
 
         ModelAndView modelAndView = new ModelAndView();
@@ -145,7 +142,7 @@ public class LaboratoryController {
         Direction direction = directionService.getById(direction_id);
         Doctor doctor = getAuthDoc();
 
-        String id_test = "test:" + SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
+        String id_test = "test-" + SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
         test.setId(id_test);
         test.setDate(currentDate());
         test.setTestsType(direction.getTestsType());
@@ -156,8 +153,7 @@ public class LaboratoryController {
         test.setDoc(doctor);
         test.setPatient(patient);
 
-        patient.addTest(test);
-        patientService.add(patient);
+        testService.add(test);
 
         direction.setStatus(false);
         directionService.add(direction);

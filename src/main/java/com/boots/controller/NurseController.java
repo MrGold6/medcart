@@ -8,6 +8,7 @@ import com.boots.entity.SymptomsHistory;
 import com.boots.entity.User;
 import com.boots.entity.Visit;
 import com.boots.service.DirectionService;
+import com.boots.service.DiseaseService;
 import com.boots.service.DoctorService;
 import com.boots.service.MedicineCatalogService;
 import com.boots.service.PatientService;
@@ -32,11 +33,8 @@ import javax.validation.Valid;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Objects;
 
 import static com.boots.transientClasses.ControllerMainTools.currentDate;
 import static com.boots.transientClasses.ControllerMainTools.dateToString;
@@ -60,6 +58,9 @@ public class NurseController {
 
     @Autowired
     protected DirectionService directionService;
+
+    @Autowired
+    protected DiseaseService diseaseService;
 
     protected Sort sort = new Sort();
 
@@ -208,7 +209,7 @@ public class NurseController {
     @RequestMapping(value = "/{id_patient}/add_visit", method = RequestMethod.GET)
     public ModelAndView addPageVisit(@ModelAttribute("message") String message,
                                      @PathVariable("id_patient") Long id_patient) {
-        List<Disease> diseases = patientService.allDiseases();
+        List<Disease> diseases = diseaseService.allDisease();
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("visit", new Visit());
@@ -229,7 +230,7 @@ public class NurseController {
 
         Patient patient = patientService.getById(id_patient);
         Doctor doctor = getAuthDoc();
-        Disease disease = patientService.getByIdDisease(selected_disease);
+        Disease disease = diseaseService.getById(selected_disease);
 
         String id_visit = SecureRandom.getInstance("SHA1PRNG").nextInt() + "_" + patient.getRNTRC();
         visit.setNumber(id_visit);
@@ -273,7 +274,7 @@ public class NurseController {
     public ModelAndView addPageSickLeave(@ModelAttribute("message") String message,
                                          @PathVariable("id_visit") String id_visit) {
 
-        List<Disease> diseases = patientService.allDiseases();
+        List<Disease> diseases = diseaseService.allDisease();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
 
@@ -299,7 +300,7 @@ public class NurseController {
                                      @ModelAttribute("id_visit") String id_visit) {
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
-        Disease disease = patientService.getByIdDisease(selected_disease1);
+        Disease disease = diseaseService.getById(selected_disease1);
 
         patient.setCount_of_sick_leave(patient.getCount_of_sick_leave() + 1);
         patientService.add(patient);

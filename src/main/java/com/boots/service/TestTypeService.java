@@ -1,7 +1,6 @@
 package com.boots.service;
 
 import com.boots.entity.TestsType;
-import com.boots.entity.TestsType;
 import com.boots.repository.TestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

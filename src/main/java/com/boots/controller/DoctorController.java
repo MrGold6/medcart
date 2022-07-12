@@ -2,6 +2,7 @@ package com.boots.controller;
 
 import com.boots.entity.*;
 import com.boots.service.DirectionService;
+import com.boots.service.DiseaseService;
 import com.boots.service.DoctorService;
 import com.boots.service.MedicineCatalogService;
 import com.boots.service.PatientService;
@@ -34,7 +35,6 @@ import java.security.SecureRandom;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,6 +61,9 @@ public class DoctorController {
     protected DirectionService directionService;
 
     @Autowired
+    private DiseaseService diseaseService;
+
+    @Autowired
     protected TestTypeService testTypeService;
 
     protected Sort sort = new Sort();
@@ -77,10 +80,10 @@ public class DoctorController {
 
     public void deleteExpiredVisits(Doctor doctor) {
         for (Visit visit : doctor.expiredVisits()) {
-            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), doctorService.getByIdSpecialization(1).getName())) {
+            if (!Objects.equals(visit.getDoctor().getSpecialization().getName(), specializationService.getById(1).getName())) {
                 visit.getPatient().findNotActiveDirection(visit.getDoctor().getSpecialization()).setStatus(true);
             }
-            patientService.deleteVisit(visit.getNumber());
+            patientService.deleteVisit(visit);
         }
         doctor.removeExpiredVisits();
     }
@@ -244,7 +247,7 @@ public class DoctorController {
     @RequestMapping(value = "/{id_visit}/add_visit", method = RequestMethod.GET)
     public ModelAndView addPageVisit(@ModelAttribute("message") String message,
                                      @PathVariable("id_visit") String id_visit) {
-        List<Disease> diseases = patientService.allDiseases();
+        List<Disease> diseases = diseaseService.allDisease();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
 
         ModelAndView modelAndView = new ModelAndView();
@@ -266,7 +269,7 @@ public class DoctorController {
                                  @ModelAttribute("id_schedule") int id_schedule) {
         Doctor doctor = getAuthDoc();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
-        Disease disease = patientService.getByIdDisease(selected_disease);
+        Disease disease = diseaseService.getById(selected_disease);
 
         visit.setNumber(id_visit);
         visit.setSchedule(doctor.findSchedule(id_schedule));
@@ -285,7 +288,7 @@ public class DoctorController {
         doctorService.add(doctor);
 
         ModelAndView modelAndView = new ModelAndView();
-        if (doctor.getSpecialization() == doctorService.getByIdSpecialization(1)) {
+        if (doctor.getSpecialization() == specializationService.getById(1)) {
             modelAndView.setViewName("redirect:/doctor1/" + visit.getNumber() + "/choose_action_direction");
         } else {
             modelAndView.setViewName("redirect:/" + visit.getNumber() + "/choose_action_lab_direction");
@@ -413,7 +416,7 @@ public class DoctorController {
     public ModelAndView addPageSickLeave(@ModelAttribute("message") String message,
                                          @PathVariable("id_visit") String id_visit) {
 
-        List<Disease> diseases = patientService.allDiseases();
+        List<Disease> diseases = diseaseService.allDisease();
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
 
@@ -439,7 +442,7 @@ public class DoctorController {
                                      @ModelAttribute("id_visit") String id_visit) {
         Patient patient = patientService.getById(getIdPatientSplit(id_visit));
         Visit visit = patient.findVisit(id_visit);
-        Disease disease = patientService.getByIdDisease(selected_disease1);
+        Disease disease = diseaseService.getById(selected_disease1);
 
         patient.setCount_of_sick_leave(patient.getCount_of_sick_leave() + 1);
         patientService.add(patient);
@@ -481,7 +484,7 @@ public class DoctorController {
                                             @PathVariable("id_visit") String id_visit) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("id_visit", id_visit);
-        modelAndView.addObject("specialization", doctorService.getByIdSpecialization(8));
+        modelAndView.addObject("specialization", specializationService.getById(8));
         modelAndView.addObject("testTypeList", testTypeService.allTestTypes());
         modelAndView.addObject("direction", new Direction());
         modelAndView.setViewName("doctor/form/create_form/new_lab_direction");

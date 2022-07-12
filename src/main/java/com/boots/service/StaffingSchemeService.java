@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -14,11 +13,6 @@ public class StaffingSchemeService {
 
     @Autowired
     private StaffingSchemeRepository staffingSchemeRepository;
-
-    @Transactional
-    public List<StaffingScheme> allStaffingScheme() {
-        return staffingSchemeRepository.findAll();
-    }
 
     @Transactional
     public void add(StaffingScheme staffingScheme) {
@@ -37,9 +31,5 @@ public class StaffingSchemeService {
 
     }
 
-    public boolean checkId(String id) {
-        Optional<StaffingScheme> staffingSchemeFromDb = staffingSchemeRepository.findById(id);
-        return !staffingSchemeFromDb.isPresent();
-    }
 
 }

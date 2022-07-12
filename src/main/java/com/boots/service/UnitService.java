@@ -1,6 +1,5 @@
 package com.boots.service;
 
-import com.boots.entity.TestsType;
 import com.boots.entity.Unit;
 import com.boots.repository.UnitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class UnitService {
+
     @Autowired
     private UnitRepository unitRepository;
 
@@ -38,11 +38,6 @@ public class UnitService {
         Optional<Unit> unitFromDb = unitRepository.findById(id);
         return unitFromDb.orElse(new Unit());
 
-    }
-
-    public boolean checkId(String id) {
-        Optional<Unit> unitFromDb = unitRepository.findById(id);
-        return !unitFromDb.isPresent();
     }
 
 }

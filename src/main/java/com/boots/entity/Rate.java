@@ -10,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import java.sql.Date;
-
 @Entity
 @NoArgsConstructor
 @Getter
