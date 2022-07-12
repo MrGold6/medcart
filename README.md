@@ -6,20 +6,7 @@ It helps centralize data, takes the paperwork out of doctors, compliance with un
 
 Also patient have symptoms mobile app where he can make chronology of symptoms (as a result doctor will have more data for diagnosis).
 
-Project created using design pattern MVC and OOP principles. 
-
-## Stack of technologies:
-* Java on framework Spring Boot
-* Spring Security
-* Hibernate
-* Lombok
-* Maven
-* Maria DB
-* Tomcat
-* HTML
-* CSS
-* JavaScript
-* Bootstrap
+Project created using design pattern MVC and OOP principles.
 
 ## Diagrams:
 * [UseCase](https://drive.google.com/file/d/1Ln7L0-wHYgPsyu3IZJs2-XCHmE3JU6VW/view?usp=sharing)
