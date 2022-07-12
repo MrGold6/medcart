@@ -1,25 +1,12 @@
 # Electronic medicine card 
 ## About project
->Electronic medicine card is a system consisting of cross-platform web and mobile applications.
+Electronic medicine card is a system consisting of cross-platform web and mobile applications.
 
 It helps centralize data, takes the paperwork out of doctors, compliance with uniform standards of document circulation. Users access service through the website interface. There are 7 types of roles: admin, patient, family doctor, doctor specialist, nurse, main doctor and laboratory assistant. In this HIS (Hospital Information System) patient, family doctor, doctor specialist, nurse, main doctor and laboratory assistant can interact with each other. 
 
 Also patient have symptoms mobile app where he can make chronology of symptoms (as a result doctor will have more data for diagnosis).
 
-Project created using design pattern MVC and OOP principles. 
-
-## Project use:
-* Java on framework Spring Boot
-* Spring Security
-* Hibernate
-* Lombok
-* Maven
-* Maria DB
-* Tomcat
-* HTML
-* CSS
-* JavaScript
-* Bootstrap
+Project created using design pattern MVC and OOP principles.
 
 ## Diagrams:
 * [UseCase](https://drive.google.com/file/d/1Ln7L0-wHYgPsyu3IZJs2-XCHmE3JU6VW/view?usp=sharing)
